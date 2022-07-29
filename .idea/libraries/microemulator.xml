@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="microemulator">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/microemulator-2.0.4/microemulator.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
