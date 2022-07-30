@@ -8,12 +8,12 @@ import java.io.DataInputStream;
 public class NPC {
     static String[] NPCNames = new String[]{"Arantamo", "Celegil", "Favela Dralor", "Vander", "Beneca", "Helga", "Varus"};
     static byte[] e = new byte[]{1, 1, 1, 1, 2, 2, 3};
-    static byte[] J = new byte[]{12, 3, 15, 6, 7, 12, 9};
-    static byte[] ia = new byte[]{3, 7, 7, 13, 2, 13, 9};
+    static byte[] NPCXPos = new byte[]{12, 3, 15, 6, 7, 12, 9};
+    static byte[] NPCYPos = new byte[]{3, 7, 7, 13, 2, 13, 9};
     static boolean[] b;
     static boolean[] q;
     static byte f = 0;
-    static boolean d = false;
+    static boolean WardenPresent = false;
     static byte[] c;
     static byte[] n;
     static short[] r;
@@ -23,7 +23,7 @@ public class NPC {
     static short g;
     static boolean l;
     static String[][] NPCStrings;
-    static int[] o = new int[]{20, 20, 20, 20, 5, 22, 5, 41};
+    static int[] NPCDlgCounts = new int[]{20, 20, 20, 20, 5, 22, 5, 41};
     static boolean m = false;
 
     public NPC() {
@@ -36,11 +36,11 @@ public class NPC {
     static void LoadNPCStrings(String File) {
         try {
             DataInputStream data = func.LoadDatStream(File);
-            byte var2 = 8;
-            NPCStrings = new String[var2][];
+            byte NPCCount = 8;
+            NPCStrings = new String[NPCCount][];
 
-            for(int i = 0; i < var2; ++i) {
-                GetNPCDialogue(i, o[i], data);
+            for(int i = 0; i < NPCCount; ++i) {
+                GetNPCDialogue(i, NPCDlgCounts[i], data);
             }
 
             m = true;
@@ -52,32 +52,32 @@ public class NPC {
     }
 
     static boolean a(int var0) {
-        if (f == 0 && !d && var0 >= 13) {
+        if (f == 0 && !WardenPresent && var0 >= 13) {
             return true;
-        } else if (f == 1 && !d && var0 >= 26) {
+        } else if (f == 1 && !WardenPresent && var0 >= 26) {
             return true;
         } else {
-            return f == 2 && !d && var0 >= 39;
+            return f == 2 && !WardenPresent && var0 >= 39;
         }
     }
 
     static void c() {
         System.out.println("WARDEN VISITS!!");
-        d = true;
+        WardenPresent = true;
         ++f;
-        byte var0 = J[6];
-        byte var1 = ia[6];
-        byte[] var10000 = ESGame.dungeons[0].DngnVec[var0];
-        var10000[var1] = (byte)(var10000[var1] | 32);
+        byte X = NPCXPos[6];
+        byte Y = NPCYPos[6];
+        byte[] XVec = ESGame.dungeons[0].DngnVec[X];
+        XVec[Y] = (byte)(XVec[Y] | 32);
     }
 
     static void a() {
         System.out.println("WARDEN LEAVES!!");
-        byte var0 = J[6];
-        byte var1 = ia[6];
-        d = false;
-        byte var2 = ESGame.dungeons[1].DngnVec[var0][var1];
-        ESGame.dungeons[0].DngnVec[var0][var1] = func.c((byte)32, var2);
+        byte X = NPCXPos[6];
+        byte Y = NPCYPos[6];
+        WardenPresent = false;
+        byte WardenPos = ESGame.dungeons[1].DngnVec[X][Y];
+        ESGame.dungeons[0].DngnVec[X][Y] = func.c((byte)32, WardenPos);
     }
 
     static void GetNPCDialogue(int npcNum, int dlgCount, DataInputStream stream) throws Exception {
@@ -137,7 +137,7 @@ public class NPC {
 
     static int a(int var0, int var1) {
         for(int i = 0; i < 7; ++i) {
-            if (var0 == J[i] && var1 == ia[i] && b[i]) {
+            if (var0 == NPCXPos[i] && var1 == NPCYPos[i] && b[i]) {
                 return i;
             }
         }
@@ -298,7 +298,7 @@ public class NPC {
                         if (var2 == 6) {
                             b[var1] = false;
                             Dungeon var7 = ESGame.dungeons[0];
-                            var7.DngnVec[J[var1]][ia[var1]] = func.c((byte)32, var7.DngnVec[J[var1]][ia[var1]]);
+                            var7.DngnVec[NPCXPos[var1]][NPCYPos[var1]] = func.c((byte)32, var7.DngnVec[NPCXPos[var1]][NPCYPos[var1]]);
                             return NPCStrings[var1][19];
                         }
 
@@ -476,8 +476,8 @@ public class NPC {
         if (var0.j != 1) {
             return false;
         } else {
-            int var1 = Math.abs(var0.l - J[6]);
-            int var2 = Math.abs(var0.Ka - ia[6]);
+            int var1 = Math.abs(var0.l - NPCXPos[6]);
+            int var2 = Math.abs(var0.Ka - NPCYPos[6]);
             return var1 + var2 == 1;
         }
     }

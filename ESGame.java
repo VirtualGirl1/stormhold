@@ -105,7 +105,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Form aD;
     private static String[] o = new String[12];
     private static String[] as = new String[12];
-    private static String n = null;
+    private static String CreditString = null;
     public Character k;
     public Character e;
     static Dungeon[] dungeons;
@@ -406,7 +406,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("After HELP STRINGS", true);
         this.u();
         this.a("After HELP TITLES", true);
-        n = this.CreditsStr();
+        CreditString = this.CreditsStr();
         this.a("After CREDITS", true);
         this.MainMenu = new Menu(this, 3, 2);
         String[] var3 = new String[]{"New Game", "Continue Game", "Help", "Credits", "Exit"};
@@ -495,7 +495,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("End of allocateAllUIs", true);
     }
 
-    private Menu Give(int var1) {
+    private Menu GiveMenu(int var1) {
         System.gc();
         Menu menu = new Menu(this, 5, 22);
         menu.N = var1;
@@ -515,7 +515,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         return menu;
     }
 
-    private Menu Train(int var1) {
+    private Menu TrainMenu(int var1) {
         System.gc();
         Log("Start of newTrainWhat");
         Menu var2 = new Menu(this, 5, 20);
@@ -536,7 +536,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private Menu TakeItem(int var1) {
+    private Menu TakeItemMenu(int var1) {
         System.gc();
         Log("Start of newTakeWhat");
         Menu var2 = new Menu(this, 5, 27);
@@ -547,7 +547,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private Menu EnchantItem(int var1) {
+    private Menu EnchantItemMenu(int var1) {
         System.gc();
         Log("Start of newEnchantWhat");
         Menu var2 = new Menu(this, 5, 350);
@@ -564,13 +564,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private Menu D() {
+    private Menu StatsMenu() {
         Menu var1 = new Menu(this, 4, 32);
         var1.a("Stats", this.av.ax.j());
         return var1;
     }
 
-    private Menu c() {
+    private Menu InventoryMenu() {
         System.gc();
         Menu var1 = new Menu(this, 5, 33);
         String[] var2 = new String[this.k.p];
@@ -592,7 +592,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var1;
     }
 
-    private Menu c(Menu var1) {
+    private Menu QuitMenu(Menu var1) {
         System.gc();
         Menu var2 = new Menu(this, 5, 202);
         String[] var3 = new String[]{"Yes", "No"};
@@ -601,7 +601,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private Menu b(Menu var1) {
+    private Menu HelpMenu(Menu var1) {
         System.gc();
         Menu var2 = new Menu(this, 3, 203);
         var2.a("Help", as, (Vector)null);
@@ -617,12 +617,12 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private Menu a(Menu var1) {
+    private Menu CreditsMenu(Menu var1) {
         System.gc();
-        Menu var2 = new Menu(this, 4, 204);
-        var2.a("Credits", n, true);
-        var2.s = var1;
-        return var2;
+        Menu menu = new Menu(this, 4, 204);
+        menu.a("Credits", CreditString, true);
+        menu.s = var1;
+        return menu;
     }
 
     public void pauseApp() {
@@ -670,15 +670,15 @@ public class ESGame extends a implements Runnable, CommandListener {
                             this.a((Object)aQ);
                             break;
                         case 2:
-                            this.D = this.b(ax);
+                            this.D = this.HelpMenu(ax);
                             this.a((Object)this.D);
                             break;
                         case 3:
-                            this.aj = this.a(ax);
+                            this.aj = this.CreditsMenu(ax);
                             this.a((Object)this.aj);
                             break;
                         case 4:
-                            this.C = this.c(ax);
+                            this.C = this.QuitMenu(ax);
                             this.a((Object)this.C);
                     }
                 }
@@ -805,11 +805,11 @@ public class ESGame extends a implements Runnable, CommandListener {
                                     var4 = ax.r();
                                     switch (var3) {
                                         case 0:
-                                            this.B = this.D();
+                                            this.B = this.StatsMenu();
                                             this.a((Object)this.B);
                                             break;
                                         case 1:
-                                            this.aY = this.c();
+                                            this.aY = this.InventoryMenu();
                                             this.a((Object)this.aY);
                                             break;
                                         case 2:
@@ -840,11 +840,11 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             break;
                                         case 6:
                                             Log("Help");
-                                            this.D = this.b(ax);
+                                            this.D = this.HelpMenu(ax);
                                             this.a((Object)this.D);
                                             break;
                                         case 7:
-                                            this.C = this.c(ax);
+                                            this.C = this.QuitMenu(ax);
                                             this.a((Object)this.C);
                                             break;
                                         case 8:
@@ -874,7 +874,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                                     var10 = var11;
                                     if (var10 == 0) {
                                         this.k.i(this.Y);
-                                        this.aY = this.c();
+                                        this.aY = this.InventoryMenu();
                                         this.a((Object)this.aY);
                                     } else if (var10 == 1) {
                                         if (!this.k.C(this.Y)) {
@@ -883,11 +883,11 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             this.k.A(this.Y);
                                         }
 
-                                        this.aY = this.c();
+                                        this.aY = this.InventoryMenu();
                                         this.a((Object)this.aY);
                                     } else if (var10 == 2) {
                                         this.k.r(this.Y);
-                                        this.aY = this.c();
+                                        this.aY = this.InventoryMenu();
                                         this.a((Object)this.aY);
                                     } else if (var10 == 3) {
                                         this.k.a(this.Y);
@@ -895,7 +895,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             this.k.Q = false;
                                             this.a((Object)this.av);
                                         } else {
-                                            this.aY = this.c();
+                                            this.aY = this.InventoryMenu();
                                             this.a((Object)this.aY);
                                         }
                                     }
@@ -1060,7 +1060,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             case 2:
             case 3:
                 if (var3 == 0) {
-                    this.z = this.Train(var4);
+                    this.z = this.TrainMenu(var4);
                     this.a((Object)this.z);
                 } else if (var3 == 1) {
                     if (this.k.p <= 0) {
@@ -1068,7 +1068,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.Give(var4);
+                        this.Q = this.GiveMenu(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 2) {
@@ -1089,11 +1089,11 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.Give(var4);
+                        this.Q = this.GiveMenu(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 1) {
-                    this.I = this.TakeItem(var4);
+                    this.I = this.TakeItemMenu(var4);
                     this.a((Object)this.I);
                 }
                 break;
@@ -1106,11 +1106,11 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.Give(var4);
+                        this.Q = this.GiveMenu(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 2) {
-                    this.aw = this.EnchantItem(var4);
+                    this.aw = this.EnchantItemMenu(var4);
                     this.a((Object)this.aw);
                 } else if (var3 == 3) {
                     this.aL = this.a(var1, var4, 352, 9, 0);
@@ -1157,16 +1157,16 @@ public class ESGame extends a implements Runnable, CommandListener {
 
             store = RecordStore.openRecordStore(RecordName, false);
             int var5 = store.getNumRecords();
-            byte[] var6 = store.getRecord(1);
-            this.k = Character.a(var6, true);
+            byte[] record = store.getRecord(1);
+            this.k = Character.a(record, true);
             this.k.Game = this;
             aQ.m = 20;
             aQ.c();
             aQ.f();
             int var7 = a((RecordStore)store, 2);
             System.out.println("Read the master lists from RecordStore");
-            var6 = store.getRecord(var7);
-            b(var6);
+            record = store.getRecord(var7);
+            b(record);
         } catch (Exception var17) {
             System.out.println("Exception in loadGameState");
             System.out.println(var17);
@@ -1445,7 +1445,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         NPC.f = data.readByte();
-        NPC.d = data.readBoolean();
+        NPC.WardenPresent = data.readBoolean();
         NPC.a = data.readShort();
         NPC.g = data.readShort();
         NPC.l = data.readBoolean();
@@ -1453,7 +1453,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 0; i < 7; ++i) {
             if (!NPC.b[i]) {
                 Dungeon var10 = dungeons[0];
-                var10.DngnVec[NPC.J[i]][NPC.ia[i]] = func.c((byte)32, var10.DngnVec[NPC.J[i]][NPC.ia[i]]);
+                var10.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]] = func.c((byte)32, var10.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]]);
             }
         }
 
@@ -1494,7 +1494,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         var1.writeByte(NPC.f);
-        var1.writeBoolean(NPC.d);
+        var1.writeBoolean(NPC.WardenPresent);
         var1.writeShort(NPC.a);
         var1.writeShort(NPC.g);
         var1.writeBoolean(NPC.l);
@@ -1608,8 +1608,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         DataInputStream data;
         int var7;
         for(int i = 1; i < 37; ++i) {
-            byte[] var4 = store.getRecord(var2++);
-            data = new DataInputStream(new ByteArrayInputStream(var4, 0, var4.length));
+            byte[] record = store.getRecord(var2++);
+            data = new DataInputStream(new ByteArrayInputStream(record, 0, record.length));
             G[i].clear();
             int var6 = data.readInt();
 
@@ -2050,10 +2050,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         return 1 + Math.abs(var0.nextInt() % var1);
     }
 
-    void a(Object var1) {
+    void a(Object obj) {
         if (ax != null) {
-            if (var1 instanceof Menu) {
-                Menu var2 = (Menu)var1;
+            if (obj instanceof Menu) {
+                Menu var2 = (Menu)obj;
                 if (ax != var2) {
                     ax.q();
                 }
@@ -2070,8 +2070,8 @@ public class ESGame extends a implements Runnable, CommandListener {
             this.dspl = Display.getDisplay(this);
         }
 
-        if (var1 instanceof Menu) {
-            ax = (Menu)var1;
+        if (obj instanceof Menu) {
+            ax = (Menu)obj;
             CC var3 = Menu.j();
             var3.menu = ax;
             ax.t = var3;
@@ -2079,8 +2079,8 @@ public class ESGame extends a implements Runnable, CommandListener {
             ax.h();
             ax.c();
             ax.f();
-        } else if (var1 instanceof Displayable) {
-            Displayable var4 = (Displayable)var1;
+        } else if (obj instanceof Displayable) {
+            Displayable var4 = (Displayable)obj;
             ax = null;
             this.dspl.setCurrent(var4);
         }

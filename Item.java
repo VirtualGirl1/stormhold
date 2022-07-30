@@ -156,14 +156,14 @@ public class Item {
 
     static void LoadDroppedItems() throws Exception {
         DataInputStream data = func.LoadDatStream("/droppeditemsin.dat");
-        short var1 = data.readShort();
-        TableRows = (byte)var1;
+        short TR = data.readShort();
+        TableRows = (byte)TR;
         System.out.println("numTableRows=" + TableRows);
-        short var2 = data.readShort();
-        DroppedItemTable = new byte[var1][var2];
+        short TC = data.readShort();
+        DroppedItemTable = new byte[TR][TC];
 
-        for(int i = 0; i < var1; ++i) {
-            for(int j = 0; j < var2; ++j) {
+        for(int i = 0; i < TR; ++i) {
+            for(int j = 0; j < TC; ++j) {
                 DroppedItemTable[i][j] = data.readByte();
             }
         }

@@ -346,7 +346,7 @@ public class EE extends FullCanvas implements Runnable {
             }
         } else {
             W = false;
-            if (!this.d() && NPC.d && this.ax.m == k.f) {
+            if (!this.d() && NPC.WardenPresent && this.ax.m == k.f) {
                 k.a();
             }
         }
@@ -1048,7 +1048,7 @@ public class EE extends FullCanvas implements Runnable {
     }
 
     public void run() {
-        long var1 = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         long var5 = 0L;
         long var7 = 0L;
 
@@ -1074,7 +1074,7 @@ public class EE extends FullCanvas implements Runnable {
                     System.gc();
                     if (this.c == 1) {
                         var10 = false;
-                        if (var1 - this.aC > 2500L) {
+                        if (time - this.aC > 2500L) {
                             if (this.o()) {
                                 this.c = 0;
                                 this.ax.b().a(this.ax);
@@ -1083,7 +1083,7 @@ public class EE extends FullCanvas implements Runnable {
                                 this.ax.e(false);
                                 var10 = true;
                                 if (this.a((String[])N, 1)) {
-                                    as = var1;
+                                    as = time;
                                     ad = true;
                                 }
                             } else {
@@ -1092,13 +1092,13 @@ public class EE extends FullCanvas implements Runnable {
                         }
                     } else if (this.c == 2) {
                         var10 = false;
-                        if (var1 - this.aC > 5000L) {
+                        if (time - this.aC > 5000L) {
                             this.c = 0;
                             this.aC = 0L;
                             this.v = true;
                             this.ax.e(true);
                             if (this.a((String[])b, 1)) {
-                                as = var1;
+                                as = time;
                                 ad = true;
                             }
 
@@ -1112,7 +1112,7 @@ public class EE extends FullCanvas implements Runnable {
                         }
 
                         var10 = false;
-                        if (var1 - this.s > 5000L) {
+                        if (time - this.s > 5000L) {
                             System.out.println("Restart after dead");
                             this.ax.a(this.ax.U);
 
@@ -1160,9 +1160,9 @@ public class EE extends FullCanvas implements Runnable {
                             var9 = true;
                         }
 
-                        this.b(var1);
-                        this.e(var1);
-                        this.a(var1, var5);
+                        this.b(time);
+                        this.e(time);
+                        this.a(time, var5);
                         if (this.ax.o()) {
                             this.e();
                             this.Game.ag = this.Game.j(1);
@@ -1179,7 +1179,7 @@ public class EE extends FullCanvas implements Runnable {
                         this.serviceRepaints();
                     }
 
-                    long var21 = System.currentTimeMillis() - var1;
+                    long var21 = System.currentTimeMillis() - time;
                     ai = var21;
 
                     try {
@@ -1195,9 +1195,9 @@ public class EE extends FullCanvas implements Runnable {
                         return;
                     }
 
-                    var3 = var1;
-                    var1 = System.currentTimeMillis();
-                    var5 = var1 - var3;
+                    var3 = time;
+                    time = System.currentTimeMillis();
+                    var5 = time - var3;
                     this.c(var5);
                     var7 += var5;
                     if (var7 > 1000L) {
@@ -1205,7 +1205,7 @@ public class EE extends FullCanvas implements Runnable {
                         this.l();
                     }
 
-                    if (var1 - as > 3000L) {
+                    if (time - as > 3000L) {
                         ad = false;
                         X = 0;
                     }

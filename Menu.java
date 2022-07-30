@@ -61,8 +61,8 @@ public class Menu implements Runnable {
     int k;
     boolean A = false;
 
-    public Menu(ESGame var1, int var2, int var3) {
-        this.Game = var1;
+    public Menu(ESGame game, int var2, int var3) {
+        this.Game = game;
         this.Q = var2;
         this.B = var3;
         this.N = 0;
@@ -84,8 +84,8 @@ public class Menu implements Runnable {
         this.t = K[x];
     }
 
-    void a(String var1, String[] var2, Vector var3) {
-        this.a(var1, var2, var3, true);
+    void a(String title, String[] var2, Vector var3) {
+        this.a(title, var2, var3, true);
     }
 
     void a(String var1, String[] var2, Vector var3, boolean var4) {
@@ -127,11 +127,11 @@ public class Menu implements Runnable {
         this.a(var1, var2, false);
     }
 
-    void a(String var1, String var2, boolean var3) {
-        Form var4 = new Form(var1);
+    void a(String title, String content, boolean var3) {
+        Form var4 = new Form(title);
         this.Scrn = var4;
         this.f = 2;
-        StringItem var5 = new StringItem((String)null, var2);
+        StringItem var5 = new StringItem((String)null, content);
         var4.append(var5);
         this.g = 10;
         this.F = 10;
@@ -143,23 +143,23 @@ public class Menu implements Runnable {
         this.a((CommandListener)this.Game);
     }
 
-    void a(String var1, String var2, String[] var3, Vector var4) {
-        this.a(var1, var2, var3, var4, false);
+    void a(String title, String content, String[] var3, Vector var4) {
+        this.a(title, content, var3, var4, false);
     }
 
-    void a(String var1, String var2, String[] var3, Vector var4, boolean var5) {
-        Form var6 = new Form(var1);
+    void a(String title, String content, String[] optionsText, Vector var4, boolean var5) {
+        Form var6 = new Form(title);
         this.Scrn = var6;
         this.f = 2;
-        StringItem var7 = new StringItem((String)null, var2);
+        StringItem var7 = new StringItem((String)null, content);
         var6.append(var7);
         this.g = 15;
         this.F = 15;
         ChoiceGroup var8 = new ChoiceGroup((String)null, 1);
-        int var9 = var3.length;
+        int var9 = optionsText.length;
 
         for(int i = 0; i < var9; ++i) {
-            var8.append(var3[i], (Image)null);
+            var8.append(optionsText[i], (Image)null);
         }
 
         this.h = 1;
@@ -172,14 +172,14 @@ public class Menu implements Runnable {
         this.a(u);
         this.a(P);
         this.a((CommandListener)this.Game);
-        if (var2 != null && var2.indexOf("<TAG>") >= 0) {
-            this.M = new String(var2);
+        if (content != null && content.indexOf("<TAG>") >= 0) {
+            this.M = new String(content);
         }
 
     }
 
-    void a(String var1, String var2, String var3, String[] var4, Vector var5) {
-        Form var6 = new Form(var1);
+    void a(String title, String var2, String var3, String[] var4, Vector var5) {
+        Form var6 = new Form(title);
         this.Scrn = var6;
         this.f = 2;
         StringItem var7 = new StringItem((String)null, var2);

@@ -31,31 +31,31 @@ public class Monster { // d
     }
 
     byte[] f() {
-        byte[] var1 = new byte[28];
-        var1[0] = (byte)(this.a >>> 8 & 255);
-        var1[1] = (byte)(this.a & 255);
-        var1[2] = this.l;
-        var1[3] = this.g;
-        var1[4] = this.o;
-        var1[5] = this.m;
-        var1[6] = (byte)(this.ia ? 1 : 0);
-        var1[7] = this.n;
-        var1[8] = this.b;
-        var1[9] = this.f;
-        var1[10] = (byte)((int)(this.k >>> 56 & 255L));
-        var1[11] = (byte)((int)(this.k >>> 48 & 255L));
-        var1[12] = (byte)((int)(this.k >>> 40 & 255L));
-        var1[13] = (byte)((int)(this.k >>> 32 & 255L));
-        var1[14] = (byte)((int)(this.k >>> 24 & 255L));
-        var1[15] = (byte)((int)(this.k >>> 16 & 255L));
-        var1[16] = (byte)((int)(this.k >>> 8 & 255L));
-        var1[17] = (byte)((int)(this.k & 255L));
+        byte[] btarr = new byte[28];
+        btarr[0] = (byte)(this.a >>> 8 & 255);
+        btarr[1] = (byte)(this.a & 255);
+        btarr[2] = this.l;
+        btarr[3] = this.g;
+        btarr[4] = this.o;
+        btarr[5] = this.m;
+        btarr[6] = (byte)(this.ia ? 1 : 0);
+        btarr[7] = this.n;
+        btarr[8] = this.b;
+        btarr[9] = this.f;
+        btarr[10] = (byte)((int)(this.k >>> 56 & 255L));
+        btarr[11] = (byte)((int)(this.k >>> 48 & 255L));
+        btarr[12] = (byte)((int)(this.k >>> 40 & 255L));
+        btarr[13] = (byte)((int)(this.k >>> 32 & 255L));
+        btarr[14] = (byte)((int)(this.k >>> 24 & 255L));
+        btarr[15] = (byte)((int)(this.k >>> 16 & 255L));
+        btarr[16] = (byte)((int)(this.k >>> 8 & 255L));
+        btarr[17] = (byte)((int)(this.k & 255L));
 
         for(int i = 0; i < 10; ++i) {
-            var1[18 + i] = this.c[i];
+            btarr[18 + i] = this.c[i];
         }
 
-        return var1;
+        return btarr;
     }
 
     public Monster() {

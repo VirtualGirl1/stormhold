@@ -28,7 +28,7 @@ public class Character {
     static String[] Attributes;
     static String[] Stats;
     static short[] c;
-    static int[][] ac = new int[][]{{1, 27}, {7, 27}, {7, 22}, {17, 27}, {12, 22}, {17, 27}, {12, 22}};
+    static int[][] StartingGear = new int[][]{{1, 27}, {7, 27}, {7, 22}, {17, 27}, {12, 22}, {17, 27}, {12, 22}};
     private static final String[] Ailments = new String[]{"Stone Blood", "Delusions", "Blind", "Vampirism", "Mana Burn", "Grievous Harm", "Terrified", "Haunted"};
     public static int ag = -1;
     ESGame Game;
@@ -368,95 +368,95 @@ public class Character {
         return strings;
     }
 
-    static Character a(byte[] var0, boolean var1) throws Exception {
-        Character var2 = null;
-        DataInputStream data = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
-        var2 = new Character((ESGame)null);
-        var2.v = data.readUTF();
-        var2.ar = data.readShort();
+    static Character a(byte[] btarr, boolean var1) throws Exception {
+        Character NewChar = null;
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(btarr, 0, btarr.length));
+        NewChar = new Character((ESGame)null);
+        NewChar.v = data.readUTF();
+        NewChar.ar = data.readShort();
         if (!var1) {
-            var2.c(var2.ar);
-            var2.d(var2.ar);
+            NewChar.c(NewChar.ar);
+            NewChar.d(NewChar.ar);
         }
 
-        var2.q = data.readShort();
+        NewChar.q = data.readShort();
 
         for(int i = 0; i < 10; ++i) {
-            var2.U[i] = data.readShort();
+            NewChar.U[i] = data.readShort();
         }
 
         if (var1) {
-            var2.N = data.readByte();
+            NewChar.N = data.readByte();
         }
 
-        var2.n = data.readInt();
+        NewChar.n = data.readInt();
 
         for(int i = 0; i < 16; ++i) {
-            var2.J[i] = data.readShort();
+            NewChar.J[i] = data.readShort();
         }
 
-        var2.V = data.readShort();
-        var2.aq[0] = data.readShort();
-        var2.aq[1] = data.readShort();
+        NewChar.V = data.readShort();
+        NewChar.aq[0] = data.readShort();
+        NewChar.aq[1] = data.readShort();
 
         int j;
         for(int i = 0; i < 14; ++i) {
             for(j = 0; j < 3; ++j) {
-                var2.R[i][j] = data.readShort();
+                NewChar.R[i][j] = data.readShort();
             }
         }
 
         if (var1) {
-            var2.p = data.readByte();
+            NewChar.p = data.readByte();
 
             for(j = 0; j < 24; ++j) {
-                var2.H[j] = data.readByte();
+                NewChar.H[j] = data.readByte();
             }
 
             for(int var8 = 0; var8 < 24; ++var8) {
-                var2.P[var8] = data.readInt();
+                NewChar.P[var8] = data.readInt();
             }
 
             for(int var9 = 0; var9 < 7; ++var9) {
-                var2.T[var9] = data.readByte();
+                NewChar.T[var9] = data.readByte();
             }
 
-            var2.x = data.readInt();
-            var2.b = data.readByte();
+            NewChar.x = data.readInt();
+            NewChar.b = data.readByte();
         } else {
-            var2.x = data.readInt();
+            NewChar.x = data.readInt();
         }
 
         if (var1) {
-            var2.W = data.readShort();
-            var2.Y = data.readShort();
-            var2.m = data.readShort();
-            var2.A = data.readByte();
-            var2.ah = data.readShort();
-            var2.F = data.readShort();
-            var2.ap = data.readShort();
-            var2.f = data.readBoolean();
-            var2.j = data.readByte();
-            var2.l = data.readByte();
-            var2.Ka = data.readByte();
-            var2.ak = data.readByte();
-            var2.C = data.readByte();
-            var2.ao = data.readByte();
-            var2.an = data.readByte();
-            var2.Z = data.readByte();
+            NewChar.W = data.readShort();
+            NewChar.Y = data.readShort();
+            NewChar.m = data.readShort();
+            NewChar.A = data.readByte();
+            NewChar.ah = data.readShort();
+            NewChar.F = data.readShort();
+            NewChar.ap = data.readShort();
+            NewChar.f = data.readBoolean();
+            NewChar.j = data.readByte();
+            NewChar.l = data.readByte();
+            NewChar.Ka = data.readByte();
+            NewChar.ak = data.readByte();
+            NewChar.C = data.readByte();
+            NewChar.ao = data.readByte();
+            NewChar.an = data.readByte();
+            NewChar.Z = data.readByte();
 
             for(j = 0; j < 25; ++j) {
-                var2.G[j] = data.readByte();
+                NewChar.G[j] = data.readByte();
             }
 
-            var2.t = data.readShort();
-            var2.aa = data.readShort();
-            var2.s = data.readBoolean();
-            var2.L = data.readBoolean();
-            var2.I = data.readBoolean();
+            NewChar.t = data.readShort();
+            NewChar.aa = data.readShort();
+            NewChar.s = data.readBoolean();
+            NewChar.L = data.readBoolean();
+            NewChar.I = data.readBoolean();
         }
 
-        return var2;
+        return NewChar;
     }
 
     byte[] g(boolean var1) throws Exception {
@@ -988,7 +988,7 @@ public class Character {
             }
         }
 
-        if (this.j == 1 && NPC.d) {
+        if (this.j == 1 && NPC.WardenPresent) {
             this.a(5, (Object)"W");
         }
 
@@ -1166,8 +1166,8 @@ public class Character {
             var15 = var14[0];
             var16 = var14[1];
         } else if (var1 == 5) {
-            var15 = NPC.J[6];
-            var16 = NPC.ia[6];
+            var15 = NPC.NPCXPos[6];
+            var16 = NPC.NPCYPos[6];
         } else {
             byte[] var13 = (byte[])var2;
             var15 = var13[0];
@@ -1226,9 +1226,9 @@ public class Character {
         return var0 == var2 && var1 == var3;
     }
 
-    private static boolean IsOne(Object var0) {
-        if (var0 instanceof Integer) {
-            Integer var1 = (Integer)var0;
+    private static boolean IsOne(Object obj) {
+        if (obj instanceof Integer) {
+            Integer var1 = (Integer)obj;
             if (var1 == 1) {
                 return true;
             }
@@ -2638,7 +2638,7 @@ public class Character {
 
     private void C() {
         short var1 = Item.a();
-        int[] var2 = ac[this.ar];
+        int[] var2 = StartingGear[this.ar];
 
         for(int i = 0; i < var2.length; ++i) {
             this.c(var2[i], var1);
@@ -2785,7 +2785,7 @@ public class Character {
             this.ak = var1;
         }
 
-        if (NPC.d) {
+        if (NPC.WardenPresent) {
             var2.append("Warden IS visiting now\n");
         } else {
             var2.append("Warden IS NOT visiting now\n");

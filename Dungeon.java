@@ -67,15 +67,15 @@ public class Dungeon { // i
         this.Geomin = geovec;
         this.s = (short)this.Geomin[4];
         this.v = (short)this.Geomin[5];
-        int var6 = 6;
-        if (NPC.d) {
-            ++var6;
+        int NPCCount = 6;
+        if (NPC.WardenPresent) {
+            ++NPCCount;
         }
 
-        for(int i = 0; i < var6; ++i) {
-            byte[] var10000 = this.DngnVec[NPC.J[i]];
-            byte var10001 = NPC.ia[i];
-            var10000[var10001] = (byte)(var10000[var10001] | 32);
+        for(int i = 0; i < NPCCount; ++i) {
+            byte[] Xarr = this.DngnVec[NPC.NPCXPos[i]];
+            byte Ybyte = NPC.NPCYPos[i];
+            Xarr[Ybyte] = (byte)(Xarr[Ybyte] | 32);
         }
 
         this.k = true;
@@ -336,9 +336,9 @@ public class Dungeon { // i
             var10000 = this.DngnVec[var4[0]];
         }
 
-        if (this.DngNum == 1 && NPC.d) {
-            byte var6 = NPC.J[6];
-            byte var7 = NPC.ia[6];
+        if (this.DngNum == 1 && NPC.WardenPresent) {
+            byte var6 = NPC.NPCXPos[6];
+            byte var7 = NPC.NPCYPos[6];
             var10000 = this.DngnVec[var6];
             var10000[var7] = (byte)(var10000[var7] | 32);
         }
@@ -879,10 +879,10 @@ public class Dungeon { // i
                         }
                     }
                 } else {
-                    for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.d); ++var9) {
+                    for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.WardenPresent); ++var9) {
                         if (NPC.b[var9]) {
-                            var19 = var16 * (NPC.ia[var9] - var2) + var6;
-                            var22 = var6 - var16 * (NPC.J[var9] - var1);
+                            var19 = var16 * (NPC.NPCYPos[var9] - var2) + var6;
+                            var22 = var6 - var16 * (NPC.NPCXPos[var9] - var1);
                             var24 = true;
                             if (var19 >= 0 && var19 < var4 && var22 >= 0 && var22 < var4 && var24) {
                                 var5[var19][var22] = (byte)(var5[var19][var22] | 4);
@@ -945,10 +945,10 @@ public class Dungeon { // i
                     }
                 }
             } else {
-                for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.d); ++var9) {
+                for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.WardenPresent); ++var9) {
                     if (NPC.b[var9]) {
-                        var19 = var16 * (NPC.J[var9] - var1) + var6;
-                        var22 = var16 * (NPC.ia[var9] - var2) + var6;
+                        var19 = var16 * (NPC.NPCXPos[var9] - var1) + var6;
+                        var22 = var16 * (NPC.NPCYPos[var9] - var2) + var6;
                         var24 = true;
                         if (var19 >= 0 && var19 < var4 && var22 >= 0 && var22 < var4 && var24) {
                             var5[var19][var22] = (byte)(var5[var19][var22] | 4);
