@@ -44,7 +44,7 @@ public class Menu implements Runnable {
     String M;
     String[] E;
     volatile int m;
-    private boolean j;
+    private boolean ja;
     private Thread thread;
     long C;
     Displayable t;
@@ -94,8 +94,8 @@ public class Menu implements Runnable {
         this.f = 1;
         int var6 = var2.length;
 
-        for(int var7 = 0; var7 < var6; ++var7) {
-            var5.append(var2[var7], (Image)null);
+        for(int i = 0; i < var6; ++i) {
+            var5.append(var2[i], (Image)null);
         }
 
         this.n = var3;
@@ -114,8 +114,8 @@ public class Menu implements Runnable {
     void n() {
         String var1 = "";
 
-        for(int var2 = 0; var2 < y.length; ++var2) {
-            var1 = var1 + y[var2];
+        for(int i = 0; i < y.length; ++i) {
+            var1 = var1 + y[i];
         }
 
         this.a("Exiting", var1);
@@ -158,8 +158,8 @@ public class Menu implements Runnable {
         ChoiceGroup var8 = new ChoiceGroup((String)null, 1);
         int var9 = var3.length;
 
-        for(int var10 = 0; var10 < var9; ++var10) {
-            var8.append(var3[var10], (Image)null);
+        for(int i = 0; i < var9; ++i) {
+            var8.append(var3[i], (Image)null);
         }
 
         this.h = 1;
@@ -191,8 +191,8 @@ public class Menu implements Runnable {
         ChoiceGroup var9 = new ChoiceGroup((String)null, 1);
         int var10 = var4.length;
 
-        for(int var11 = 0; var11 < var10; ++var11) {
-            var9.append(var4[var11], (Image)null);
+        for(int i = 0; i < var10; ++i) {
+            var9.append(var4[i], (Image)null);
         }
 
         this.h = 2;
@@ -248,8 +248,8 @@ public class Menu implements Runnable {
             int var2 = 10 + ESGame.Vir2lLogo.getHeight() + 3;
             var1.setColor(0);
 
-            for(int var3 = 0; var3 < y.length; ++var3) {
-                var1.drawString(y[var3], this.b() / 2, var2, 17);
+            for(int i = 0; i < y.length; ++i) {
+                var1.drawString(y[i], this.b() / 2, var2, 17);
                 var2 += 14;
             }
 
@@ -324,8 +324,8 @@ public class Menu implements Runnable {
         int var5 = Math.min(var3, var4);
         this.v = this.w + var5 - 1;
 
-        for(int var6 = this.w; var6 <= this.v; ++var6) {
-            this.a(var1, var2[var6], var6 == this.a());
+        for(int i = this.w; i <= this.v; ++i) {
+            this.a(var1, var2[i], i == this.a());
         }
 
         if (this.w > 0) {
@@ -350,8 +350,8 @@ public class Menu implements Runnable {
         this.G = 15;
 
         int var8;
-        for(int var4 = 0; var4 < var2; ++var4) {
-            StringItem var5 = (StringItem)var3.get(var4);
+        for(int i = 0; i < var2; ++i) {
+            StringItem var5 = (StringItem)var3.get(i);
             String var6 = var5.getText();
             if (this.A) {
                 String[] var7 = this.c(var6);
@@ -362,7 +362,7 @@ public class Menu implements Runnable {
                     this.e += this.o;
                 }
             } else {
-                if (var4 == 0) {
+                if (i == 0) {
                     var1.setColor(16776960);
                 } else {
                     var1.setColor(16777215);
@@ -380,8 +380,8 @@ public class Menu implements Runnable {
         var8 = Math.min(var11, var12);
         this.v = this.w + var8 - 1;
 
-        for(int var9 = this.w; var9 <= this.v; ++var9) {
-            this.a(var1, var10[var9], var9 == this.a());
+        for(int i = this.w; i <= this.v; ++i) {
+            this.a(var1, var10[i], i == this.a());
         }
 
         if (this.w > 0) {
@@ -427,8 +427,8 @@ public class Menu implements Runnable {
         this.v = this.w + var7 - 1;
         var1.setColor(16776960);
 
-        for(int var8 = this.w; var8 <= this.v; ++var8) {
-            String var9 = var5[var8];
+        for(int i = this.w; i <= this.v; ++i) {
+            String var9 = var5[i];
             var1.drawString(var9, this.G, this.e, 20);
             this.e += this.o;
         }
@@ -465,8 +465,8 @@ public class Menu implements Runnable {
         String[] var3 = this.b(var1);
         int var4 = var3.length;
 
-        for(int var5 = 0; var5 < var4; ++var5) {
-            String var6 = var3[var5];
+        for(int i = 0; i < var4; ++i) {
+            String var6 = var3[i];
             this.a(var2, var6);
         }
 
@@ -499,8 +499,8 @@ public class Menu implements Runnable {
         int var5 = var4.length;
         String var6 = "";
 
-        for(int var7 = 0; var7 < var5; ++var7) {
-            String var8 = var4[var7];
+        for(int i = 0; i < var5; ++i) {
+            String var8 = var4[i];
             String var9 = var6 + var8;
             if (this.b.stringWidth(var9) > var3) {
                 if (this.b.stringWidth(var8) <= var3) {
@@ -513,8 +513,8 @@ public class Menu implements Runnable {
 
                     String[] var10 = this.d(var8);
 
-                    for(int var11 = 0; var11 < var10.length - 1; ++var11) {
-                        var1.addElement(new String(var10[var11]));
+                    for(int j = 0; j < var10.length - 1; ++j) {
+                        var1.addElement(new String(var10[j]));
                     }
 
                     var9 = var10[var10.length - 1];
@@ -522,7 +522,7 @@ public class Menu implements Runnable {
             }
 
             var6 = var9;
-            if (var7 < var5 - 1) {
+            if (i < var5 - 1) {
                 var9 = var9 + " ";
                 if (this.b.stringWidth(var9) > var3) {
                     var1.addElement(new String(var6));
@@ -542,8 +542,8 @@ public class Menu implements Runnable {
         int var4 = var1.length();
         String var5 = "";
 
-        for(int var6 = 0; var6 < var4; ++var6) {
-            char var7 = var1.charAt(var6);
+        for(int i = 0; i < var4; ++i) {
+            char var7 = var1.charAt(i);
             String var8 = var5 + var7;
             if (this.b.stringWidth(var8) > var2) {
                 var3.addElement(new String(var5));
@@ -561,8 +561,8 @@ public class Menu implements Runnable {
         int var1 = var0.size();
         String[] var2 = new String[var1];
 
-        for(int var3 = 0; var3 < var1; ++var3) {
-            var2[var3] = (String)var0.elementAt(var3);
+        for(int i = 0; i < var1; ++i) {
+            var2[i] = (String)var0.elementAt(i);
         }
 
         return var2;
@@ -648,8 +648,8 @@ public class Menu implements Runnable {
                 var6 = var7.size();
                 String[] var8 = new String[var6];
 
-                for(int var9 = 0; var9 < var6; ++var9) {
-                    var8[var9] = var7.getString(var9);
+                for(int i = 0; i < var6; ++i) {
+                    var8[i] = var7.getString(i);
                 }
 
                 return var8;
@@ -663,8 +663,8 @@ public class Menu implements Runnable {
                 var6 = var3.size();
                 String[] var4 = new String[var6];
 
-                for(int var5 = 0; var5 < var6; ++var5) {
-                    var4[var5] = var3.getString(var5);
+                for(int i = 0; i < var6; ++i) {
+                    var4[i] = var3.getString(i);
                 }
 
                 return var4;
@@ -733,12 +733,12 @@ public class Menu implements Runnable {
         this.thread = new Thread(this);
         System.out.println("Helper thread in UICanvas: " + this.thread);
         System.out.println("num active threads = " + Thread.activeCount());
-        this.j = true;
+        this.ja = true;
         this.thread.start();
     }
 
     private void i() {
-        this.j = false;
+        this.ja = false;
     }
 
     public void run() {
@@ -755,7 +755,7 @@ public class Menu implements Runnable {
             this.C = 0L;
             System.out.println("Just before helper thread loop in UICanvas");
 
-            while(this.j && (this.m < 100 || this.C < 4000L)) {
+            while(this.ja && (this.m < 100 || this.C < 4000L)) {
                 long var1 = System.currentTimeMillis();
                 this.c();
                 this.f();
@@ -911,8 +911,8 @@ public class Menu implements Runnable {
         if (var1 == 1) {
             var2 = (Command)this.q.elementAt(0);
         } else if (var1 == 2) {
-            for(int var3 = 0; var3 < 2; ++var3) {
-                Command var4 = (Command)this.q.elementAt(var3);
+            for(int i = 0; i < 2; ++i) {
+                Command var4 = (Command)this.q.elementAt(i);
                 if (var4 == I || var4 == u) {
                     var2 = var4;
                     break;
@@ -927,8 +927,8 @@ public class Menu implements Runnable {
         int var1 = this.q.size();
         Command var2 = null;
         if (var1 == 2) {
-            for(int var3 = 0; var3 < 2; ++var3) {
-                Command var4 = (Command)this.q.elementAt(var3);
+            for(int i = 0; i < 2; ++i) {
+                Command var4 = (Command)this.q.elementAt(i);
                 if (var4 == z || var4 == P) {
                     var2 = var4;
                     break;

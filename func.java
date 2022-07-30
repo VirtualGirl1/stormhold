@@ -121,9 +121,9 @@ public class func { // f
     static long a(byte[] var0, int var1) {
         long var2 = 0L;
 
-        for(int var4 = 0; var4 < 8; ++var4) {
-            long var5 = (long)(var0[var4 + var1] & 255);
-            int var7 = (7 - var4) * 8;
+        for(int i = 0; i < 8; ++i) {
+            long var5 = (long)(var0[i + var1] & 255);
+            int var7 = (7 - i) * 8;
             var2 |= var5 << var7;
         }
 
@@ -136,8 +136,8 @@ public class func { // f
         int var2 = var0.length();
         boolean var3 = false;
 
-        for(int var4 = 0; var4 < var2; ++var4) {
-            if (var0.charAt(var4) == ' ') {
+        for(int i = 0; i < var2; ++i) {
+            if (var0.charAt(i) == ' ') {
                 if (!var3) {
                     ++var1;
                     var3 = true;
@@ -151,11 +151,11 @@ public class func { // f
         int var6 = 0;
         int var7 = 0;
 
-        for(int var8 = 0; var8 < var2; ++var8) {
-            if (var0.charAt(var8) == ' ') {
+        for(int i = 0; i < var2; ++i) {
+            if (var0.charAt(i) == ' ') {
                 if (!var3) {
-                    var5[var7++] = var0.substring(var6, var8);
-                    var6 = var8 + 1;
+                    var5[var7++] = var0.substring(var6, i);
+                    var6 = i + 1;
                     var3 = true;
                 } else {
                     ++var6;

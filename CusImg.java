@@ -43,18 +43,18 @@ public class CusImg { // g
                 throw new Exception("Too many colors in image " + var0);
             } else {
                 int var6;
-                for(int var5 = 0; var5 < var4; ++var5) {
+                for(int i = 0; i < var4; ++i) {
                     var6 = a(var1);
-                    b[var5] = (short)var6;
+                    b[i] = (short)var6;
                     if (var2.c && var2.f < 0 && var2.d == var6) {
-                        var2.f = (short)var5;
+                        var2.f = (short)i;
                     }
                 }
 
                 var6 = var2.e * var2.a;
                 var2.g = new short[var6];
 
-                for(int var7 = 0; var7 < var6; ++var7) {
+                for(int i = 0; i < var6; ++i) {
                     int var8 = var1.read() & 255;
                     short var9 = b[var8];
                     if (var2.c && var8 == var2.f) {
@@ -63,7 +63,7 @@ public class CusImg { // g
                         var9 = (short)(var9 | '\uf000');
                     }
 
-                    var2.g[var7] = var9;
+                    var2.g[i] = var9;
                 }
 
                 return var2;

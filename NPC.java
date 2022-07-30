@@ -8,8 +8,8 @@ import java.io.DataInputStream;
 public class NPC {
     static String[] NPCNames = new String[]{"Arantamo", "Celegil", "Favela Dralor", "Vander", "Beneca", "Helga", "Varus"};
     static byte[] e = new byte[]{1, 1, 1, 1, 2, 2, 3};
-    static byte[] j = new byte[]{12, 3, 15, 6, 7, 12, 9};
-    static byte[] i = new byte[]{3, 7, 7, 13, 2, 13, 9};
+    static byte[] J = new byte[]{12, 3, 15, 6, 7, 12, 9};
+    static byte[] ia = new byte[]{3, 7, 7, 13, 2, 13, 9};
     static boolean[] b;
     static boolean[] q;
     static byte f = 0;
@@ -39,8 +39,8 @@ public class NPC {
             byte var2 = 8;
             NPCStrings = new String[var2][];
 
-            for(int var3 = 0; var3 < var2; ++var3) {
-                GetNPCDialogue(var3, o[var3], var1);
+            for(int i = 0; i < var2; ++i) {
+                GetNPCDialogue(i, o[i], var1);
             }
 
             m = true;
@@ -65,16 +65,16 @@ public class NPC {
         System.out.println("WARDEN VISITS!!");
         d = true;
         ++f;
-        byte var0 = j[6];
-        byte var1 = i[6];
+        byte var0 = J[6];
+        byte var1 = ia[6];
         byte[] var10000 = ESGame.dungeons[0].DngnVec[var0];
         var10000[var1] = (byte)(var10000[var1] | 32);
     }
 
     static void a() {
         System.out.println("WARDEN LEAVES!!");
-        byte var0 = j[6];
-        byte var1 = i[6];
+        byte var0 = J[6];
+        byte var1 = ia[6];
         d = false;
         byte var2 = ESGame.dungeons[1].DngnVec[var0][var1];
         ESGame.dungeons[0].DngnVec[var0][var1] = func.c((byte)32, var2);
@@ -88,8 +88,8 @@ public class NPC {
         } else {
             NPCStrings[var0] = new String[var3];
 
-            for(int var4 = 0; var4 < var3; ++var4) {
-                NPCStrings[var0][var4] = var2.readUTF();
+            for(int i = 0; i < var3; ++i) {
+                NPCStrings[var0][i] = var2.readUTF();
             }
 
         }
@@ -99,9 +99,9 @@ public class NPC {
         b = new boolean[7];
         q = new boolean[7];
 
-        for(int var0 = 0; var0 < 7; ++var0) {
-            b[var0] = true;
-            q[var0] = true;
+        for(int i = 0; i < 7; ++i) {
+            b[i] = true;
+            q[i] = true;
         }
 
         r = new short[4];
@@ -110,12 +110,12 @@ public class NPC {
         c = new byte[4];
         n = new byte[4];
 
-        for(int var1 = 0; var1 < 4; ++var1) {
-            r[var1] = 0;
-            p[var1] = 0;
-            h[var1] = 0;
-            c[var1] = 0;
-            n[var1] = 0;
+        for(int i = 0; i < 4; ++i) {
+            r[i] = 0;
+            p[i] = 0;
+            h[i] = 0;
+            c[i] = 0;
+            n[i] = 0;
         }
 
         a = 0;
@@ -124,9 +124,9 @@ public class NPC {
     }
 
     static void d() {
-        for(int var0 = 0; var0 < 4; ++var0) {
-            c[var0] = 0;
-            n[var0] = 0;
+        for(int i = 0; i < 4; ++i) {
+            c[i] = 0;
+            n[i] = 0;
         }
 
     }
@@ -136,9 +136,9 @@ public class NPC {
     }
 
     static int a(int var0, int var1) {
-        for(int var2 = 0; var2 < 7; ++var2) {
-            if (var0 == j[var2] && var1 == i[var2] && b[var2]) {
-                return var2;
+        for(int i = 0; i < 7; ++i) {
+            if (var0 == J[i] && var1 == ia[i] && b[i]) {
+                return i;
             }
         }
 
@@ -298,7 +298,7 @@ public class NPC {
                         if (var2 == 6) {
                             b[var1] = false;
                             Dungeon var7 = ESGame.dungeons[0];
-                            var7.DngnVec[j[var1]][i[var1]] = func.c((byte)32, var7.DngnVec[j[var1]][i[var1]]);
+                            var7.DngnVec[J[var1]][ia[var1]] = func.c((byte)32, var7.DngnVec[J[var1]][ia[var1]]);
                             return NPCStrings[var1][19];
                         }
 
@@ -476,8 +476,8 @@ public class NPC {
         if (var0.j != 1) {
             return false;
         } else {
-            int var1 = Math.abs(var0.l - j[6]);
-            int var2 = Math.abs(var0.k - i[6]);
+            int var1 = Math.abs(var0.l - J[6]);
+            int var2 = Math.abs(var0.Ka - ia[6]);
             return var1 + var2 == 1;
         }
     }

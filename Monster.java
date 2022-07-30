@@ -16,18 +16,18 @@ public class Monster { // d
     byte g;
     byte o;
     byte m;
-    boolean i;
+    boolean ia;
     byte n;
     byte[] c;
     byte b;
     byte f;
     long k;
     static Monster Mon = new Monster();
-    static short j;
+    static short J;
 
     static short b() {
-        ++j;
-        return j;
+        ++J;
+        return J;
     }
 
     byte[] f() {
@@ -38,7 +38,7 @@ public class Monster { // d
         var1[3] = this.g;
         var1[4] = this.o;
         var1[5] = this.m;
-        var1[6] = (byte)(this.i ? 1 : 0);
+        var1[6] = (byte)(this.ia ? 1 : 0);
         var1[7] = this.n;
         var1[8] = this.b;
         var1[9] = this.f;
@@ -51,8 +51,8 @@ public class Monster { // d
         var1[16] = (byte)((int)(this.k >>> 8 & 255L));
         var1[17] = (byte)((int)(this.k & 255L));
 
-        for(int var2 = 0; var2 < 10; ++var2) {
-            var1[18 + var2] = this.c[var2];
+        for(int i = 0; i < 10; ++i) {
+            var1[18 + i] = this.c[i];
         }
 
         return var1;
@@ -60,7 +60,7 @@ public class Monster { // d
 
     public Monster() {
         this.c = new byte[10];
-        this.i = false;
+        this.ia = false;
     }
 
     public Monster(int var1, int var2, int var3) {
@@ -68,7 +68,7 @@ public class Monster { // d
         this.l = (byte)var2;
         this.g = MonAttributes[this.l - 1][14];
         this.c = new byte[10];
-        this.i = false;
+        this.ia = false;
         this.n = (byte)var3;
         this.f = 0;
     }
@@ -81,14 +81,14 @@ public class Monster { // d
         Mon.g = var0[3];
         Mon.o = var0[4];
         Mon.m = var0[5];
-        Mon.i = var0[6] != 0;
+        Mon.ia = var0[6] != 0;
         Mon.n = var0[7];
         Mon.b = var0[8];
         Mon.f = var0[9];
         Mon.k = func.a(var0, 10);
 
-        for(int var3 = 0; var3 < 10; ++var3) {
-            Mon.c[var3] = var0[18 + var3];
+        for(int i = 0; i < 10; ++i) {
+            Mon.c[i] = var0[18 + i];
         }
 
         return Mon;
@@ -102,14 +102,14 @@ public class Monster { // d
         var0.g = var1[3];
         var0.o = var1[4];
         var0.m = var1[5];
-        var0.i = var1[6] != 0;
+        var0.ia = var1[6] != 0;
         var0.n = var1[7];
         var0.b = var1[8];
         var0.f = var1[9];
         var0.k = func.a(var1, 10);
 
-        for(int var4 = 0; var4 < 10; ++var4) {
-            var0.c[var4] = var1[18 + var4];
+        for(int i = 0; i < 10; ++i) {
+            var0.c[i] = var1[18 + i];
         }
 
         return var0;
@@ -164,7 +164,7 @@ public class Monster { // d
         }
 
         if (var3 >= 0 && var4 >= 0) {
-            if (var3 < var5.g && var4 < var5.y) {
+            if (var3 < var5.Width && var4 < var5.Height) {
                 if (this.a(var3, var4)) {
                     return false;
                 } else if (!var5.d(var3, var4)) {
@@ -200,7 +200,7 @@ public class Monster { // d
 
     private void e(Character var1) {
         int var6 = Math.abs(var1.l - this.o);
-        int var7 = Math.abs(var1.k - this.m);
+        int var7 = Math.abs(var1.Ka - this.m);
         byte var2;
         if (this.o < var1.l) {
             var2 = 2;
@@ -211,9 +211,9 @@ public class Monster { // d
         }
 
         byte var3;
-        if (this.m < var1.k) {
+        if (this.m < var1.Ka) {
             var3 = 3;
-        } else if (this.m > var1.k) {
+        } else if (this.m > var1.Ka) {
             var3 = 1;
         } else {
             var3 = -1;
@@ -272,7 +272,7 @@ public class Monster { // d
 
     int c(Character var1) {
         int var2 = Math.abs(var1.l - this.o);
-        int var3 = Math.abs(var1.k - this.m);
+        int var3 = Math.abs(var1.Ka - this.m);
         return var2 + var3;
     }
 
@@ -369,19 +369,19 @@ public class Monster { // d
     }
 
     static void LoadMonsters() throws Exception {
-        DataInputStream var0 = func.LoadDatStream("/monstersin.dat");
-        j = 0;
-        MonCount = var0.readInt();
+        DataInputStream stream = func.LoadDatStream("/monstersin.dat");
+        J = 0;
+        MonCount = stream.readInt();
         MonNames = new String[MonCount];
         MonAttributes = new byte[MonCount][17];
 
-        for(int var1 = 0; var1 < MonCount; ++var1) {
-            MonNames[var1] = var0.readUTF();
+        for(int i = 0; i < MonCount; ++i) {
+            MonNames[i] = stream.readUTF();
         }
 
-        for(int var2 = 0; var2 < MonCount; ++var2) {
-            for(int var3 = 0; var3 < 17; ++var3) {
-                MonAttributes[var2][var3] = var0.readByte();
+        for(int i = 0; i < MonCount; ++i) {
+            for(int j = 0; j < 17; ++j) {
+                MonAttributes[i][j] = stream.readByte();
             }
         }
 
@@ -394,14 +394,14 @@ public class Monster { // d
         var1.g = var0.readByte();
         var1.o = var0.readByte();
         var1.m = var0.readByte();
-        var1.i = var0.readBoolean();
+        var1.ia = var0.readBoolean();
         var1.n = var0.readByte();
         var1.b = var0.readByte();
         var1.f = var0.readByte();
         var1.k = var0.readLong();
 
-        for(int var2 = 0; var2 < 10; ++var2) {
-            var1.c[var2] = var0.readByte();
+        for(int i = 0; i < 10; ++i) {
+            var1.c[i] = var0.readByte();
         }
 
         return var1;
@@ -413,14 +413,14 @@ public class Monster { // d
         var1.writeByte(this.g);
         var1.writeByte(this.o);
         var1.writeByte(this.m);
-        var1.writeBoolean(this.i);
+        var1.writeBoolean(this.ia);
         var1.writeByte(this.n);
         var1.writeByte(this.b);
         var1.writeByte(this.f);
         var1.writeLong(this.k);
 
-        for(int var2 = 0; var2 < 10; ++var2) {
-            var1.writeByte(this.c[var2]);
+        for(int i = 0; i < 10; ++i) {
+            var1.writeByte(this.c[i]);
         }
 
     }
@@ -496,7 +496,7 @@ public class Monster { // d
             var4 = Dungeon.l[var5][var9];
         }
 
-        Monster var8 = new Monster(var3, var4, var1.o);
+        Monster var8 = new Monster(var3, var4, var1.DngNum);
         return var8;
     }
 }

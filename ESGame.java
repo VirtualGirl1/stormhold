@@ -125,7 +125,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     static Image Vir2lLogo;
     boolean ac;
     static Random P;
-    private static boolean j = false;
+    private static boolean jj = false;
 
     public ESGame() {
         super.name = "The Elder Scrolls";
@@ -138,9 +138,9 @@ public class ESGame extends a implements Runnable, CommandListener {
             System.out.println("Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm");
         }
 
-        String var1 = this.getAppProperty("Mserver-User-Id");
-        if (var1 != null) {
-            Character.UsrID = var1;
+        String usrid = this.getAppProperty("Mserver-User-Id");
+        if (usrid != null) {
+            Character.UsrID = usrid;
             System.out.println("User ID is " + Character.UsrID);
         } else {
             System.out.println("User ID is NULL!");
@@ -209,8 +209,8 @@ public class ESGame extends a implements Runnable, CommandListener {
                 this.J();
                 this.a = this.k.j;
                 this.ak = true;
-                j = true;
-                j = false;
+                jj = true;
+                jj = false;
                 this.ak = false;
                 aQ.m = 100;
                 aQ.c();
@@ -293,13 +293,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         System.gc();
         Log("    After camp dungeon after GC");
 
-        for(int var1 = 1; var1 < 37; ++var1) {
-            dungeons[var1] = new Dungeon((byte)(var1 + 1), Geomin[var1]);
-            Log("Before dungeon " + var1);
-            dungeons[var1].MapGen();
-            Log("    After dungeon " + var1 + " before GC");
+        for(int i = 1; i < 37; ++i) {
+            dungeons[i] = new Dungeon((byte)(i + 1), Geomin[i]);
+            Log("Before dungeon " + i);
+            dungeons[i].MapGen();
+            Log("    After dungeon " + i + " before GC");
             System.gc();
-            Log("    After dungeon " + var1);
+            Log("    After dungeon " + i);
             ++this.ay.m;
         }
 
@@ -314,8 +314,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.aZ.m = 0;
         int var1 = d(0);
 
-        for(int var2 = 0; var2 <= var1; ++var2) {
-            this.PopulateDungeons(var2);
+        for(int i = 0; i <= var1; ++i) {
+            this.PopulateDungeons(i);
         }
 
         this.a((Object)this.NewGameMenu);
@@ -343,8 +343,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("After floor and wall images", true);
         EE.MonImgs = new CusImg[33];
 
-        for(int var1 = 0; var1 < 33; ++var1) {
-            EE.MonImgs[var1] = null;
+        for(int i = 0; i < 33; ++i) {
+            EE.MonImgs[i] = null;
         }
 
         this.a("After alloc monster images", true);
@@ -376,8 +376,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("After oracle images ", true);
         EE.AttackImgs = new Image[3];
 
-        for(int var2 = 0; var2 < 3; ++var2) {
-            EE.AttackImgs[var2] = null;
+        for(int i = 0; i < 3; ++i) {
+            EE.AttackImgs[i] = null;
         }
 
         EE.AttackImgs[0] = this.LoadImage("blood1.png");
@@ -444,11 +444,11 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.NPCDlgMenus = new Menu[6];
 
         String[] var9;
-        for(int var8 = 0; var8 < 4; ++var8) {
-            this.NPCDlgMenus[var8] = new Menu(this, 5, 9 + var8);
+        for(int i = 0; i < 4; ++i) {
+            this.NPCDlgMenus[i] = new Menu(this, 5, 9 + i);
             var9 = new String[]{"Train", "Give", "Befriend", "Threaten", "Kill"};
-            this.NPCDlgMenus[var8].a("Name", "Aid: <TAG>", var9, (Vector)null);
-            this.NPCDlgMenus[var8].s = this.av;
+            this.NPCDlgMenus[i].a("Name", "Aid: <TAG>", var9, (Vector)null);
+            this.NPCDlgMenus[i].s = this.av;
         }
 
         this.NPCDlgMenus[4] = new Menu(this, 5, 13);
@@ -495,24 +495,24 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("End of allocateAllUIs", true);
     }
 
-    private Menu a(int var1) {
+    private Menu Give(int var1) {
         System.gc();
-        Menu var2 = new Menu(this, 5, 22);
-        var2.N = var1;
+        Menu menu = new Menu(this, 5, 22);
+        menu.N = var1;
         String[] var3 = new String[this.k.p];
 
-        for(int var4 = 0; var4 < this.k.p; ++var4) {
-            int var5 = Math.abs(this.k.H[var4]);
-            if (this.k.C(var4)) {
-                var3[var4] = "E:" + Item.d(var5);
+        for(int i = 0; i < this.k.p; ++i) {
+            int var5 = Math.abs(this.k.H[i]);
+            if (this.k.C(i)) {
+                var3[i] = "E:" + Item.d(var5);
             } else {
-                var3[var4] = Item.d(var5);
+                var3[i] = Item.d(var5);
             }
         }
 
-        var2.a(NPC.NPCNames[var1], "Give What?", var3, (Vector)null, true);
-        var2.s = this.av;
-        return var2;
+        menu.a(NPC.NPCNames[var1], "Give What?", var3, (Vector)null, true);
+        menu.s = this.av;
+        return menu;
     }
 
     private Menu Train(int var1) {
@@ -523,10 +523,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         String[] var3 = new String[3];
         int var4 = 0;
 
-        for(int var5 = 0; var5 < 14; ++var5) {
-            int var6 = this.k.b(var5, false);
-            String var7 = Character.Skills[var5] + " (<TAG>)";
-            if (k.c(var1, var5)) {
+        for(int i = 0; i < 14; ++i) {
+            int var6 = this.k.b(i, false);
+            String var7 = Character.Skills[i] + " (<TAG>)";
+            if (k.c(var1, i)) {
                 var3[var4++] = func.StringInsert(var7, "<TAG>", var6);
             }
         }
@@ -554,9 +554,9 @@ public class ESGame extends a implements Runnable, CommandListener {
         var2.N = var1;
         String[] var3 = new String[this.k.p];
 
-        for(int var4 = 0; var4 < this.k.p; ++var4) {
-            int var5 = Math.abs(this.k.H[var4]);
-            var3[var4] = Item.d(var5);
+        for(int i = 0; i < this.k.p; ++i) {
+            int var5 = Math.abs(this.k.H[i]);
+            var3[i] = Item.d(var5);
         }
 
         var2.a(NPC.NPCNames[var1], "Enchant What?", var3, (Vector)null, true);
@@ -575,15 +575,15 @@ public class ESGame extends a implements Runnable, CommandListener {
         Menu var1 = new Menu(this, 5, 33);
         String[] var2 = new String[this.k.p];
 
-        for(int var3 = 0; var3 < this.k.p; ++var3) {
-            byte var4 = this.k.H[var3];
+        for(int i = 0; i < this.k.p; ++i) {
+            byte var4 = this.k.H[i];
             System.out.println("itemid is " + var4);
             if (var4 < 0) {
-                var2[var3] = "E: " + Item.d(Math.abs(var4));
-                System.out.println("item is " + var2[var3]);
+                var2[i] = "E: " + Item.d(Math.abs(var4));
+                System.out.println("item is " + var2[i]);
             } else {
-                var2[var3] = Item.d(var4);
-                System.out.println("item is " + var2[var3]);
+                var2[i] = Item.d(var4);
+                System.out.println("item is " + var2[i]);
             }
         }
 
@@ -734,13 +734,13 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.d(ax);
                     }
                 } else {
-                    int var8;
+                    int i;
                     int var10;
                     if (ax.B == 20) {
                         if (var1 == Menu.u) {
                             var3 = ax.N;
-                            var8 = ax.a();
-                            var10 = k.b(var3, var8);
+                            i = ax.a();
+                            var10 = k.b(var3, i);
                             this.ae = this.a(ax, var3, 21, 5, var10);
                             this.a((Object)this.ae);
                         } else if (var1 == Menu.P) {
@@ -752,9 +752,9 @@ public class ESGame extends a implements Runnable, CommandListener {
                         if (var1 == Menu.u) {
                             System.out.println("Found give what select");
                             var3 = ax.N;
-                            var8 = ax.a();
-                            if (var8 >= 0) {
-                                this.ap = this.a(ax, var3, 23, 4, var8);
+                            i = ax.a();
+                            if (i >= 0) {
+                                this.ap = this.a(ax, var3, 23, 4, i);
                                 this.a((Object)this.ap);
                             }
                         } else if (var1 == Menu.P) {
@@ -765,8 +765,8 @@ public class ESGame extends a implements Runnable, CommandListener {
                     } else if (ax.B == 27) {
                         if (var1 == Menu.u) {
                             var3 = ax.N;
-                            var8 = ax.a() + 87;
-                            this.aJ = this.a(ax, var3, 28, 7, var8);
+                            i = ax.a() + 87;
+                            this.aJ = this.a(ax, var3, 28, 7, i);
                             this.a((Object)this.aJ);
                         } else if (var1 == Menu.P) {
                             var3 = ax.N;
@@ -776,9 +776,9 @@ public class ESGame extends a implements Runnable, CommandListener {
                     } else if (ax.B == 350) {
                         if (var1 == Menu.u) {
                             var3 = ax.N;
-                            var8 = ax.a();
-                            if (var8 >= 0) {
-                                this.aI = this.a(ax, var3, 351, 8, var8);
+                            i = ax.a();
+                            if (i >= 0) {
+                                this.aI = this.a(ax, var3, 351, 8, i);
                                 this.a((Object)this.aI);
                             }
                         } else if (var1 == Menu.P) {
@@ -934,9 +934,9 @@ public class ESGame extends a implements Runnable, CommandListener {
                                     String var14 = ax.p();
                                     l[ax.N] = -1;
 
-                                    for(var8 = 0; var8 < Character.Stats.length; ++var8) {
-                                        if (var14.equals(Character.Stats[var8])) {
-                                            l[ax.N] = var8;
+                                    for(i = 0; i < Character.Stats.length; ++i) {
+                                        if (var14.equals(Character.Stats[i])) {
+                                            l[ax.N] = i;
                                             break;
                                         }
                                     }
@@ -1068,7 +1068,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.a(var4);
+                        this.Q = this.Give(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 2) {
@@ -1089,7 +1089,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.a(var4);
+                        this.Q = this.Give(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 1) {
@@ -1106,7 +1106,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                         this.ap.e("You have nothing to give me!");
                         this.a((Object)this.ap);
                     } else {
-                        this.Q = this.a(var4);
+                        this.Q = this.Give(var4);
                         this.a((Object)this.Q);
                     }
                 } else if (var3 == 2) {
@@ -1286,8 +1286,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         int[] var2 = x[var1];
         int var3 = var2.length;
 
-        for(int var4 = 0; var4 < var3; ++var4) {
-            int var5 = x[var1][var4];
+        for(int i = 0; i < var3; ++i) {
+            int var5 = x[var1][i];
             int var6 = var5 - 1;
             if (!dungeons[var6].k) {
                 dungeons[var6].k = true;
@@ -1295,7 +1295,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             if (this.aZ != null) {
-                this.aZ.m = 100 * (var4 + 1) / var3;
+                this.aZ.m = 100 * (i + 1) / var3;
                 if (this.aZ.m > 100) {
                     this.aZ.m = 100;
                 }
@@ -1311,18 +1311,18 @@ public class ESGame extends a implements Runnable, CommandListener {
         int var1 = 0;
         int var2 = 0;
 
-        for(int var3 = 0; var3 <= var0; ++var3) {
-            int[] var4 = x[var3];
+        for(int i = 0; i <= var0; ++i) {
+            int[] var4 = x[i];
             int var5 = var4.length;
             var2 += var5;
         }
 
-        for(int var10 = 0; var10 <= var0; ++var10) {
-            int[] var11 = x[var10];
+        for(int i = 0; i <= var0; ++i) {
+            int[] var11 = x[i];
             int var6 = var11.length;
 
-            for(int var7 = 0; var7 < var6; ++var7) {
-                int var8 = x[var10][var7];
+            for(int j = 0; j < var6; ++j) {
+                int var8 = x[i][j];
                 int var9 = var8 - 1;
                 dungeons[var9].k = true;
                 dungeons[var9].h();
@@ -1345,24 +1345,24 @@ public class ESGame extends a implements Runnable, CommandListener {
         CampHeight = 19;
         Camp = new byte[CampHeight][CampWidth];
 
-        int var1;
-        for(int var0 = 0; var0 < CampHeight; ++var0) {
-            for(var1 = 0; var1 < CampWidth; ++var1) {
-                Camp[var0][var1] = 1;
+        int j;
+        for(int i = 0; i < CampHeight; ++i) {
+            for(j = 0; j < CampWidth; ++j) {
+                Camp[i][j] = 1;
             }
         }
 
-        for(var1 = 0; var1 < CampWidth; ++var1) {
-            Camp[var1][9] = 0;
+        for(j = 0; j < CampWidth; ++j) {
+            Camp[j][9] = 0;
         }
 
-        for(int var2 = 0; var2 < CampHeight; ++var2) {
-            Camp[9][var2] = 0;
+        for(int i = 0; i < CampHeight; ++i) {
+            Camp[9][i] = 0;
         }
 
-        for(int var3 = 0; var3 < 3; ++var3) {
-            for(int var4 = 0; var4 < 3; ++var4) {
-                Camp[8 + var3][8 + var4] = 0;
+        for(int i = 0; i < 3; ++i) {
+            for(int k = 0; k < 3; ++k) {
+                Camp[8 + i][8 + k] = 0;
             }
         }
 
@@ -1393,55 +1393,55 @@ public class ESGame extends a implements Runnable, CommandListener {
     private static void K() {
         G = new Hashtable[37];
 
-        for(int var0 = 1; var0 < 37; ++var0) {
-            G[var0] = new Hashtable();
+        for(int i = 1; i < 37; ++i) {
+            G[i] = new Hashtable();
         }
 
         S = new Hashtable[37];
 
-        for(int var1 = 1; var1 < 37; ++var1) {
-            S[var1] = new Hashtable();
+        for(int i = 1; i < 37; ++i) {
+            S[i] = new Hashtable();
         }
 
         au = new Vector[37];
 
-        for(int var2 = 0; var2 < 37; ++var2) {
-            au[var2] = new Vector();
+        for(int i = 0; i < 37; ++i) {
+            au[i] = new Vector();
         }
 
     }
 
     private static void b(byte[] var0) throws Exception {
         DataInputStream var1 = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
-        Item.i = var1.readShort();
-        Monster.j = var1.readShort();
+        Item.ia = var1.readShort();
+        Monster.J = var1.readShort();
 
-        for(int var2 = 0; var2 < 7; ++var2) {
-            NPC.b[var2] = var1.readBoolean();
+        for(int i = 0; i < 7; ++i) {
+            NPC.b[i] = var1.readBoolean();
         }
 
-        for(int var3 = 0; var3 < 7; ++var3) {
-            NPC.q[var3] = var1.readBoolean();
+        for(int i = 0; i < 7; ++i) {
+            NPC.q[i] = var1.readBoolean();
         }
 
-        for(int var4 = 0; var4 < 4; ++var4) {
-            NPC.r[var4] = var1.readShort();
+        for(int i = 0; i < 4; ++i) {
+            NPC.r[i] = var1.readShort();
         }
 
-        for(int var5 = 0; var5 < 4; ++var5) {
-            NPC.p[var5] = var1.readShort();
+        for(int i = 0; i < 4; ++i) {
+            NPC.p[i] = var1.readShort();
         }
 
-        for(int var6 = 0; var6 < 4; ++var6) {
-            NPC.h[var6] = var1.readShort();
+        for(int i = 0; i < 4; ++i) {
+            NPC.h[i] = var1.readShort();
         }
 
-        for(int var7 = 0; var7 < 4; ++var7) {
-            NPC.c[var7] = var1.readByte();
+        for(int i = 0; i < 4; ++i) {
+            NPC.c[i] = var1.readByte();
         }
 
-        for(int var8 = 0; var8 < 4; ++var8) {
-            NPC.n[var8] = var1.readByte();
+        for(int i = 0; i < 4; ++i) {
+            NPC.n[i] = var1.readByte();
         }
 
         NPC.f = var1.readByte();
@@ -1450,10 +1450,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         NPC.g = var1.readShort();
         NPC.l = var1.readBoolean();
 
-        for(int var9 = 0; var9 < 7; ++var9) {
-            if (!NPC.b[var9]) {
+        for(int i = 0; i < 7; ++i) {
+            if (!NPC.b[i]) {
                 Dungeon var10 = dungeons[0];
-                var10.DngnVec[NPC.j[var9]][NPC.i[var9]] = func.c((byte)32, var10.DngnVec[NPC.j[var9]][NPC.i[var9]]);
+                var10.DngnVec[NPC.J[i]][NPC.ia[i]] = func.c((byte)32, var10.DngnVec[NPC.J[i]][NPC.ia[i]]);
             }
         }
 
@@ -1462,35 +1462,35 @@ public class ESGame extends a implements Runnable, CommandListener {
     private static byte[] k() throws Exception {
         ByteArrayOutputStream var0 = new ByteArrayOutputStream(60);
         DataOutputStream var1 = new DataOutputStream(var0);
-        var1.writeShort(Item.i);
-        var1.writeShort(Monster.j);
+        var1.writeShort(Item.ia);
+        var1.writeShort(Monster.J);
 
-        for(int var2 = 0; var2 < 7; ++var2) {
-            var1.writeBoolean(NPC.b[var2]);
+        for(int i = 0; i < 7; ++i) {
+            var1.writeBoolean(NPC.b[i]);
         }
 
-        for(int var3 = 0; var3 < 7; ++var3) {
-            var1.writeBoolean(NPC.q[var3]);
+        for(int i = 0; i < 7; ++i) {
+            var1.writeBoolean(NPC.q[i]);
         }
 
-        for(int var4 = 0; var4 < 4; ++var4) {
-            var1.writeShort(NPC.r[var4]);
+        for(int i = 0; i < 4; ++i) {
+            var1.writeShort(NPC.r[i]);
         }
 
-        for(int var5 = 0; var5 < 4; ++var5) {
-            var1.writeShort(NPC.p[var5]);
+        for(int i = 0; i < 4; ++i) {
+            var1.writeShort(NPC.p[i]);
         }
 
-        for(int var6 = 0; var6 < 4; ++var6) {
-            var1.writeShort(NPC.h[var6]);
+        for(int i = 0; i < 4; ++i) {
+            var1.writeShort(NPC.h[i]);
         }
 
-        for(int var7 = 0; var7 < 4; ++var7) {
-            var1.writeByte(NPC.c[var7]);
+        for(int i = 0; i < 4; ++i) {
+            var1.writeByte(NPC.c[i]);
         }
 
-        for(int var8 = 0; var8 < 4; ++var8) {
-            var1.writeByte(NPC.n[var8]);
+        for(int i = 0; i < 4; ++i) {
+            var1.writeByte(NPC.n[i]);
         }
 
         var1.writeByte(NPC.f);
@@ -1508,13 +1508,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         Enumeration var6;
         Monster var8;
         Enumeration var19;
-        for(int var2 = 1; var2 < 37; ++var2) {
-            var3 = G[var2].size();
+        for(int i = 1; i < 37; ++i) {
+            var3 = G[i].size();
             var1 = 4 + var3 * 28;
             ByteArrayOutputStream var4 = new ByteArrayOutputStream(var1);
             DataOutputStream var5 = new DataOutputStream(var4);
             var5.writeInt(var3);
-            var6 = G[var2].elements();
+            var6 = G[i].elements();
 
             byte[] var7;
             while(var6.hasMoreElements()) {
@@ -1534,7 +1534,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5 = null;
             var19 = null;
             System.gc();
-            al.m = 20 + 30 * (var2 + 1) / 37;
+            al.m = 20 + 30 * (i + 1) / 37;
             al.c();
             al.f();
         }
@@ -1607,16 +1607,16 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         DataInputStream var5;
         int var7;
-        for(int var3 = 1; var3 < 37; ++var3) {
+        for(int i = 1; i < 37; ++i) {
             byte[] var4 = var0.getRecord(var2++);
             var5 = new DataInputStream(new ByteArrayInputStream(var4, 0, var4.length));
-            G[var3].clear();
+            G[i].clear();
             int var6 = var5.readInt();
 
             for(var7 = 0; var7 < var6; ++var7) {
                 Monster var8 = Monster.a(var5);
                 String var9 = String.valueOf(var8.a);
-                G[var3].put(var9, var8.f());
+                G[i].put(var9, var8.f());
             }
 
             try {
@@ -1627,23 +1627,23 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5 = null;
             Object var14 = null;
             System.gc();
-            aQ.m = 20 + 30 * (var3 + 1) / 37;
+            aQ.m = 20 + 30 * (i + 1) / 37;
             aQ.c();
             aQ.f();
         }
 
         DataInputStream var18;
         int var21;
-        for(int var15 = 1; var15 < 37; ++var15) {
+        for(int i = 1; i < 37; ++i) {
             byte[] var16 = var0.getRecord(var2++);
             var18 = new DataInputStream(new ByteArrayInputStream(var16, 0, var16.length));
-            S[var15].clear();
+            S[i].clear();
             var7 = var18.readInt();
 
             for(var21 = 0; var21 < var7; ++var21) {
                 byte[] var22 = a((DataInputStream)var18, 8);
                 String var10 = func.StrCatComma((int)var22[0], var22[1]);
-                S[var15].put(var10, var22);
+                S[i].put(var10, var22);
             }
 
             try {
@@ -1654,20 +1654,20 @@ public class ESGame extends a implements Runnable, CommandListener {
             var18 = null;
             var5 = null;
             System.gc();
-            aQ.m = 50 + 30 * (var15 + 1) / 37;
+            aQ.m = 50 + 30 * (i + 1) / 37;
             aQ.c();
             aQ.f();
         }
 
-        for(int var17 = 0; var17 < 37; ++var17) {
+        for(int i = 0; i < 37; ++i) {
             byte[] var19 = var0.getRecord(var2++);
             DataInputStream var20 = new DataInputStream(new ByteArrayInputStream(var19, 0, var19.length));
-            au[var17].removeAllElements();
+            au[i].removeAllElements();
             var21 = var20.readInt();
 
-            for(int var23 = 0; var23 < var21; ++var23) {
+            for(int j = 0; j < var21; ++j) {
                 byte[] var24 = a((DataInputStream)var20, 7);
-                au[var17].addElement(var24);
+                au[i].addElement(var24);
             }
 
             try {
@@ -1678,7 +1678,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             var20 = null;
             var18 = null;
             System.gc();
-            aQ.m = 80 + 19 * (var17 + 1) / 37;
+            aQ.m = 80 + 19 * (i + 1) / 37;
             aQ.c();
             aQ.f();
         }
@@ -1689,16 +1689,16 @@ public class ESGame extends a implements Runnable, CommandListener {
     private static byte[] a(DataInputStream var0, int var1) throws Exception {
         byte[] var2 = new byte[var1];
 
-        for(int var3 = 0; var3 < var1; ++var3) {
-            var2[var3] = var0.readByte();
+        for(int i = 0; i < var1; ++i) {
+            var2[i] = var0.readByte();
         }
 
         return var2;
     }
 
     private static void a(DataOutputStream var0, byte[] var1, int var2) throws Exception {
-        for(int var3 = 0; var3 < var2; ++var3) {
-            var0.writeByte(var1[var3]);
+        for(int i = 0; i < var2; ++i) {
+            var0.writeByte(var1[i]);
         }
 
     }
@@ -1740,7 +1740,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     void LoadDngImgs() {
         System.out.println("Running image loader thread for new dungeon ID: " + this.a);
         this.am = false;
-        if (j) {
+        if (jj) {
             aQ.m = 80;
         } else {
             this.ab.m = 0;
@@ -1748,8 +1748,8 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         byte[] var1 = new byte[5];
 
-        for(int var2 = 0; var2 < 5; ++var2) {
-            var1[var2] = 0;
+        for(int i = 0; i < 5; ++i) {
+            var1[i] = 0;
         }
 
         if (this.a == 1) {
@@ -1807,16 +1807,16 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("Inside runImageLoader", true);
 
         try {
-            for(int var2 = 0; var2 < 5; ++var2) {
-                if (var1[var2] > 0) {
-                    this.a("Handling ichunk = " + var2, true);
-                    int var3 = ah[var2][0];
-                    int var4 = ah[var2][1];
+            for(int i = 0; i < 5; ++i) {
+                if (var1[i] > 0) {
+                    this.a("Handling ichunk = " + i, true);
+                    int var3 = ah[i][0];
+                    int var4 = ah[i][1];
 
-                    for(int var5 = 0; var5 < var4; ++var5) {
-                        int var6 = var3 + var5;
+                    for(int j = 0; j < var4; ++j) {
+                        int var6 = var3 + j;
                         if (!this.m(var6)) {
-                            EE.MonImgs[var6] = CusImg.LoadCus(MonFNames[var2][var5]);
+                            EE.MonImgs[var6] = CusImg.LoadCus(MonFNames[i][j]);
                         }
 
                         if (!this.ak) {
@@ -1830,12 +1830,12 @@ public class ESGame extends a implements Runnable, CommandListener {
                     }
                 }
 
-                if (j) {
-                    aQ.m = 80 + (var2 + 1) * 20 / 5;
+                if (jj) {
+                    aQ.m = 80 + (i + 1) * 20 / 5;
                     aQ.c();
                     aQ.f();
                 } else {
-                    this.ab.m = (var2 + 1) * 100 / 5;
+                    this.ab.m = (i + 1) * 100 / 5;
                     this.ab.c();
                     this.ab.f();
                 }
@@ -1854,10 +1854,10 @@ public class ESGame extends a implements Runnable, CommandListener {
     void UnloadMonImg() {
         int var1 = EE.MonImgs.length;
 
-        for(int var2 = 0; var2 < var1; ++var2) {
-            if (EE.MonImgs[var2] != null) {
-                EE.MonImgs[var2].g = null;
-                EE.MonImgs[var2] = null;
+        for(int i = 0; i < var1; ++i) {
+            if (EE.MonImgs[i] != null) {
+                EE.MonImgs[i].g = null;
+                EE.MonImgs[i] = null;
             }
         }
 
@@ -1908,8 +1908,8 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         String[] var6 = new String[var4.size()];
 
-        for(int var7 = 0; var7 < var4.size(); ++var7) {
-            var6[var7] = (String)var4.elementAt(var7);
+        for(int i = 0; i < var4.size(); ++i) {
+            var6[i] = (String)var4.elementAt(i);
         }
 
         var2.a("Item", var3, var6, var5);
@@ -1926,8 +1926,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         int var3 = var2.size();
         String[] var4 = new String[var3];
 
-        for(int var5 = 0; var5 < var3; ++var5) {
-            var4[var5] = (String)var2.elementAt(var5);
+        for(int i = 0; i < var3; ++i) {
+            var4[i] = (String)var2.elementAt(i);
         }
 
         var1.a("Skills", "Your Skills:", var4, (Vector)null, true);
@@ -1954,8 +1954,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         int var3 = var2.size();
         String[] var4 = new String[var3];
 
-        for(int var5 = 0; var5 < var3; ++var5) {
-            var4[var5] = (String)var2.elementAt(var5);
+        for(int i = 0; i < var3; ++i) {
+            var4[i] = (String)var2.elementAt(i);
         }
 
         var1.a("Spells", "Your Spells:", var4, (Vector)null, true);
@@ -2091,9 +2091,9 @@ public class ESGame extends a implements Runnable, CommandListener {
         DataInputStream var0 = func.LoadDatStream("/geomin.dat");
         Geomin = new byte[37][6];
 
-        for(int var1 = 0; var1 < 37; ++var1) {
-            for(int var2 = 0; var2 < 6; ++var2) {
-                Geomin[var1][var2] = var0.readByte();
+        for(int i = 0; i < 37; ++i) {
+            for(int j = 0; j < 6; ++j) {
+                Geomin[i][j] = var0.readByte();
             }
         }
 
@@ -2105,9 +2105,9 @@ public class ESGame extends a implements Runnable, CommandListener {
         DataInputStream var2 = new DataInputStream(new ByteArrayInputStream(var1));
         MonFNames = new String[5][7];
 
-        for(int var3 = 0; var3 < 5; ++var3) {
-            for(int var4 = 0; var4 < 7; ++var4) {
-                MonFNames[var3][var4] = var2.readUTF();
+        for(int i = 0; i < 5; ++i) {
+            for(int j = 0; j < 7; ++j) {
+                MonFNames[i][j] = var2.readUTF();
             }
         }
 
@@ -2241,8 +2241,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         while(true) {
             boolean var5 = false;
 
-            for(int var6 = 0; var6 < var7; ++var6) {
-                if (var4.equals(var1[var6])) {
+            for(int i = 0; i < var7; ++i) {
+                if (var4.equals(var1[i])) {
                     var5 = true;
                 }
             }
@@ -2273,13 +2273,13 @@ public class ESGame extends a implements Runnable, CommandListener {
             long var4 = 0L;
             RecordStore var6 = null;
 
-            for(int var7 = 0; var7 < var22; ++var7) {
+            for(int i = 0; i < var22; ++i) {
                 try {
-                    var6 = RecordStore.openRecordStore(var1[var7], false);
+                    var6 = RecordStore.openRecordStore(var1[i], false);
                     int var8 = var6.getNumRecords();
                     long var9 = var6.getLastModified();
                     if (var9 > var4) {
-                        var3 = var1[var7];
+                        var3 = var1[i];
                         var4 = var9;
                     }
                 } catch (Throwable var20) {
@@ -2312,10 +2312,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         if (var7 != 0) {
-            for(int var4 = 0; var4 < var7; ++var4) {
-                if (var1 == null || !var1.equals(var2[var4])) {
+            for(int i = 0; i < var7; ++i) {
+                if (var1 == null || !var1.equals(var2[i])) {
                     try {
-                        RecordStore.deleteRecordStore(var2[var4]);
+                        RecordStore.deleteRecordStore(var2[i]);
                     } catch (Exception var6) {
                     }
                 }

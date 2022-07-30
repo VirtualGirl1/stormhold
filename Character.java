@@ -59,7 +59,7 @@ public class Character {
     boolean f;
     byte j;
     byte l;
-    byte k;
+    byte Ka;
     byte ak;
     byte C;
     byte ao;
@@ -118,9 +118,9 @@ public class Character {
         byte var2 = 8;
 
         int var4;
-        for(int var3 = 0; var3 < var2; ++var3) {
-            var4 = 2 * var3;
-            this.J[var4] = ClassPreset[this.ar][2 + var3];
+        for(int i = 0; i < var2; ++i) {
+            var4 = 2 * i;
+            this.J[var4] = ClassPreset[this.ar][2 + i];
             this.J[var4 + 1] = 0;
         }
 
@@ -139,19 +139,19 @@ public class Character {
         this.n = 0;
         var4 = 13;
 
-        for(int var5 = 0; var5 < 14; ++var5) {
-            this.R[var5][0] = ClassPreset[this.ar][var4++];
-            this.R[var5][1] = ClassPreset[this.ar][var4++];
-            this.R[var5][2] = 0;
+        for(int i = 0; i < 14; ++i) {
+            this.R[i][0] = ClassPreset[this.ar][var4++];
+            this.R[i][1] = ClassPreset[this.ar][var4++];
+            this.R[i][2] = 0;
         }
 
-        for(int var6 = 0; var6 < 24; ++var6) {
-            this.H[var6] = 0;
-            this.P[var6] = 0;
+        for(int i = 0; i < 24; ++i) {
+            this.H[i] = 0;
+            this.P[i] = 0;
         }
 
-        for(int var7 = 0; var7 < 7; ++var7) {
-            this.T[var7] = 0;
+        for(int i = 0; i < 7; ++i) {
+            this.T[i] = 0;
         }
 
         this.x = this.A();
@@ -169,11 +169,11 @@ public class Character {
         boolean var3 = true;
         boolean var4 = true;
 
-        for(int var5 = 0; var5 < 14; ++var5) {
+        for(int i = 0; i < 14; ++i) {
             short var6 = ClassPreset[this.ar][var2++];
             short var7 = ClassPreset[this.ar][var2++];
             byte var8;
-            switch (var5) {
+            switch (i) {
                 case 1:
                     var8 = 0;
                     break;
@@ -235,8 +235,8 @@ public class Character {
             this.Z = 0;
         }
 
-        for(int var3 = 0; var3 < 25; ++var3) {
-            this.G[var3] = 0;
+        for(int i = 0; i < 25; ++i) {
+            this.G[i] = 0;
         }
 
         this.t = 0;
@@ -254,12 +254,12 @@ public class Character {
         if (!var1) {
             this.j = this.ab = 1;
             this.l = this.z = 9;
-            this.k = this.w = 10;
+            this.Ka = this.w = 10;
             this.ak = this.e = 1;
         } else {
             this.j = this.ab = 1;
             this.l = this.z = 12;
-            this.k = this.w = 14;
+            this.Ka = this.w = 14;
             this.ak = this.e = 1;
         }
 
@@ -291,8 +291,8 @@ public class Character {
         var1.append('\n');
 
         int var5;
-        for(int var4 = 0; var4 < 8; ++var4) {
-            var5 = 2 * var4;
+        for(int i = 0; i < 8; ++i) {
+            var5 = 2 * i;
             var1.append(Stats[var5]);
             var1.append(var3);
             var1.append(this.J[var5]);
@@ -341,16 +341,16 @@ public class Character {
         } else {
             c = new short[var3];
 
-            for(int var4 = 0; var4 < var3; ++var4) {
-                c[var4] = var1.readShort();
+            for(int i = 0; i < var3; ++i) {
+                c[i] = var1.readShort();
             }
 
             int var5 = 13 + 2 * var3;
             ClassPreset = new short[B][var5];
 
-            for(int var6 = 0; var6 < B; ++var6) {
-                for(int var7 = 0; var7 < var5; ++var7) {
-                    ClassPreset[var6][var7] = var1.readShort();
+            for(int i = 0; i < B; ++i) {
+                for(int j = 0; j < var5; ++j) {
+                    ClassPreset[i][j] = var1.readShort();
                 }
             }
 
@@ -361,8 +361,8 @@ public class Character {
         short var1 = var0.readShort();
         String[] var2 = new String[var1];
 
-        for(int var3 = 0; var3 < var1; ++var3) {
-            var2[var3] = var0.readUTF();
+        for(int i = 0; i < var1; ++i) {
+            var2[i] = var0.readUTF();
         }
 
         return var2;
@@ -381,8 +381,8 @@ public class Character {
 
         var2.q = var3.readShort();
 
-        for(int var4 = 0; var4 < 10; ++var4) {
-            var2.U[var4] = var3.readShort();
+        for(int i = 0; i < 10; ++i) {
+            var2.U[i] = var3.readShort();
         }
 
         if (var1) {
@@ -391,26 +391,26 @@ public class Character {
 
         var2.n = var3.readInt();
 
-        for(int var5 = 0; var5 < 16; ++var5) {
-            var2.J[var5] = var3.readShort();
+        for(int i = 0; i < 16; ++i) {
+            var2.J[i] = var3.readShort();
         }
 
         var2.V = var3.readShort();
         var2.aq[0] = var3.readShort();
         var2.aq[1] = var3.readShort();
 
-        int var7;
-        for(int var6 = 0; var6 < 14; ++var6) {
-            for(var7 = 0; var7 < 3; ++var7) {
-                var2.R[var6][var7] = var3.readShort();
+        int j;
+        for(int i = 0; i < 14; ++i) {
+            for(j = 0; j < 3; ++j) {
+                var2.R[i][j] = var3.readShort();
             }
         }
 
         if (var1) {
             var2.p = var3.readByte();
 
-            for(var7 = 0; var7 < 24; ++var7) {
-                var2.H[var7] = var3.readByte();
+            for(j = 0; j < 24; ++j) {
+                var2.H[j] = var3.readByte();
             }
 
             for(int var8 = 0; var8 < 24; ++var8) {
@@ -438,15 +438,15 @@ public class Character {
             var2.f = var3.readBoolean();
             var2.j = var3.readByte();
             var2.l = var3.readByte();
-            var2.k = var3.readByte();
+            var2.Ka = var3.readByte();
             var2.ak = var3.readByte();
             var2.C = var3.readByte();
             var2.ao = var3.readByte();
             var2.an = var3.readByte();
             var2.Z = var3.readByte();
 
-            for(var7 = 0; var7 < 25; ++var7) {
-                var2.G[var7] = var3.readByte();
+            for(j = 0; j < 25; ++j) {
+                var2.G[j] = var3.readByte();
             }
 
             var2.t = var3.readShort();
@@ -466,50 +466,50 @@ public class Character {
         var4.writeUTF(this.v);
         var4.writeShort(this.ar);
         var4.writeShort(this.q);
-        int var5;
-        int var6;
-        int var7;
+        int i;
+        int j;
+        int k;
         if (var1) {
-            for(var5 = 0; var5 < 10; ++var5) {
-                var4.writeShort(this.U[var5]);
+            for(i = 0; i < 10; ++i) {
+                var4.writeShort(this.U[i]);
             }
 
             var4.writeByte(this.N);
         } else {
             short[] var10 = new short[10];
 
-            for(var6 = 0; var6 < 10; ++var6) {
-                var10[var6] = this.U[var6];
+            for(j = 0; j < 10; ++j) {
+                var10[j] = this.U[j];
             }
 
             this.a(var10);
 
-            for(var7 = 0; var7 < 10; ++var7) {
-                var4.writeShort(var10[var7]);
+            for(k = 0; k < 10; ++k) {
+                var4.writeShort(var10[k]);
             }
         }
 
         var4.writeInt(this.n);
 
-        for(var5 = 0; var5 < 16; ++var5) {
-            var4.writeShort(this.J[var5]);
+        for(i = 0; i < 16; ++i) {
+            var4.writeShort(this.J[i]);
         }
 
         var4.writeShort(this.V);
         var4.writeShort(this.aq[0]);
         var4.writeShort(this.aq[1]);
 
-        for(var6 = 0; var6 < 14; ++var6) {
-            for(var7 = 0; var7 < 3; ++var7) {
-                var4.writeShort(this.R[var6][var7]);
+        for(j = 0; j < 14; ++j) {
+            for(k = 0; k < 3; ++k) {
+                var4.writeShort(this.R[j][k]);
             }
         }
 
         if (var1) {
             var4.writeByte(this.p);
 
-            for(var7 = 0; var7 < 24; ++var7) {
-                var4.writeByte(this.H[var7]);
+            for(k = 0; k < 24; ++k) {
+                var4.writeByte(this.H[k]);
             }
 
             for(int var8 = 0; var8 < 24; ++var8) {
@@ -523,8 +523,8 @@ public class Character {
             var4.writeInt(this.x);
             var4.writeByte(this.b);
         } else {
-            var7 = this.A();
-            var4.writeInt(var7);
+            k = this.A();
+            var4.writeInt(k);
         }
 
         if (var1) {
@@ -538,15 +538,15 @@ public class Character {
             var4.writeBoolean(this.f);
             var4.writeByte(this.j);
             var4.writeByte(this.l);
-            var4.writeByte(this.k);
+            var4.writeByte(this.Ka);
             var4.writeByte(this.ak);
             var4.writeByte(this.C);
             var4.writeByte(this.ao);
             var4.writeByte(this.an);
             var4.writeByte(this.Z);
 
-            for(var7 = 0; var7 < 25; ++var7) {
-                var4.writeByte(this.G[var7]);
+            for(k = 0; k < 25; ++k) {
+                var4.writeByte(this.G[k]);
             }
 
             var4.writeShort(this.t);
@@ -569,58 +569,58 @@ public class Character {
                 this.e = this.ak;
                 if (this.ak == 1) {
                     this.z = this.l;
-                    this.w = (byte)(this.k - var2);
+                    this.w = (byte)(this.Ka - var2);
                 } else if (this.ak == 3) {
                     this.z = this.l;
-                    this.w = (byte)(this.k + var2);
+                    this.w = (byte)(this.Ka + var2);
                 } else if (this.ak == 2) {
                     this.z = (byte)(this.l + var2);
-                    this.w = this.k;
+                    this.w = this.Ka;
                 } else if (this.ak == 4) {
                     this.z = (byte)(this.l - var2);
-                    this.w = this.k;
+                    this.w = this.Ka;
                 }
 
                 Dungeon var3 = ESGame.dungeons[this.j - 1];
                 Dungeon var4;
                 if (this.z < 0) {
                     this.i = true;
-                    this.ab = var3.x[3];
+                    this.ab = var3.Geomin[3];
                     var4 = ESGame.dungeons[this.ab - 1];
                     if (this.ab != 1 && this.j != 1) {
-                        this.z = (byte)(var4.g - 1);
+                        this.z = (byte)(var4.Width - 1);
                     } else {
-                        this.z = (byte)(var4.g - 1);
-                        this.w = (byte)(this.w + (var4.y - var3.y) / 2);
+                        this.z = (byte)(var4.Width - 1);
+                        this.w = (byte)(this.w + (var4.Height - var3.Height) / 2);
                     }
-                } else if (this.z >= var3.g) {
+                } else if (this.z >= var3.Width) {
                     this.i = true;
-                    this.ab = var3.x[1];
+                    this.ab = var3.Geomin[1];
                     var4 = ESGame.dungeons[this.ab - 1];
                     if (this.ab != 1 && this.j != 1) {
                         this.z = 0;
                     } else {
                         this.z = 0;
-                        this.w = (byte)(this.w + (var4.y - var3.y) / 2);
+                        this.w = (byte)(this.w + (var4.Height - var3.Height) / 2);
                     }
                 } else if (this.w < 0) {
                     this.i = true;
-                    this.ab = var3.x[0];
+                    this.ab = var3.Geomin[0];
                     var4 = ESGame.dungeons[this.ab - 1];
                     if (this.ab != 1 && this.j != 1) {
-                        this.w = (byte)(var4.y - 1);
+                        this.w = (byte)(var4.Height - 1);
                     } else {
-                        this.z = (byte)(this.z + (var4.g - var3.g) / 2);
-                        this.w = (byte)(var4.y - 1);
+                        this.z = (byte)(this.z + (var4.Width - var3.Width) / 2);
+                        this.w = (byte)(var4.Height - 1);
                     }
-                } else if (this.w >= var3.y) {
+                } else if (this.w >= var3.Height) {
                     this.i = true;
-                    this.ab = ESGame.dungeons[this.j - 1].x[2];
+                    this.ab = ESGame.dungeons[this.j - 1].Geomin[2];
                     var4 = ESGame.dungeons[this.ab - 1];
                     if (this.ab != 1 && this.j != 1) {
                         this.w = 0;
                     } else {
-                        this.z = (byte)(this.z + (var4.g - var3.g) / 2);
+                        this.z = (byte)(this.z + (var4.Width - var3.Width) / 2);
                         this.w = 0;
                     }
                 } else {
@@ -637,7 +637,7 @@ public class Character {
                 }
 
                 this.z = this.l;
-                this.w = this.k;
+                this.w = this.Ka;
                 break;
             case 4:
                 this.ab = this.j;
@@ -648,14 +648,14 @@ public class Character {
                 }
 
                 this.z = this.l;
-                this.w = this.k;
+                this.w = this.Ka;
         }
 
     }
 
     boolean a(int var1, boolean var2) {
         Dungeon var3 = this.b();
-        var3.a(this.l, this.k);
+        var3.a(this.l, this.Ka);
         if (this.U[6] <= 0) {
             return false;
         } else {
@@ -719,13 +719,13 @@ public class Character {
                             var5 = null;
                         }
 
-                        if (!this.a(this.j, this.l, this.k) && this.a(this.ab, this.z, this.w)) {
+                        if (!this.a(this.j, this.l, this.Ka) && this.a(this.ab, this.z, this.w)) {
                             this.u = true;
                         } else {
                             this.u = false;
                         }
 
-                        if (this.a(this.j, this.l, this.k) && !this.a(this.ab, this.z, this.w)) {
+                        if (this.a(this.j, this.l, this.Ka) && !this.a(this.ab, this.z, this.w)) {
                             this.O = true;
                         } else {
                             this.O = false;
@@ -733,9 +733,9 @@ public class Character {
 
                         this.j = this.ab;
                         this.d = this.l;
-                        this.a = this.k;
+                        this.a = this.Ka;
                         this.l = this.z;
-                        this.k = this.w;
+                        this.Ka = this.w;
                         this.ak = this.e;
                         var3.h = true;
                         if (var1 == 1 || var1 == 2) {
@@ -750,9 +750,9 @@ public class Character {
 
                         boolean var12 = (var4 & 4) != 0;
                         if (var12) {
-                            int var13 = var3.f(this.l, this.k);
+                            int var13 = var3.f(this.l, this.Ka);
                             if (var13 == 1) {
-                                byte[] var14 = var3.e(this.l, this.k);
+                                byte[] var14 = var3.e(this.l, this.Ka);
                                 if ((var14[6] & 4) != 0) {
                                     g = true;
                                     this.w();
@@ -776,7 +776,7 @@ public class Character {
                                 }
                             } else if (var13 > 1) {
                                 System.out.println("Found several items in square");
-                                Vector var15 = var3.b(this.l, this.k);
+                                Vector var15 = var3.b(this.l, this.Ka);
                                 Enumeration var16 = var15.elements();
 
                                 while(var16.hasMoreElements()) {
@@ -920,9 +920,9 @@ public class Character {
         }
 
         if (this.ak == 1) {
-            var5 = this.k - var8;
+            var5 = this.Ka - var8;
         } else if (this.ak == 3) {
-            var5 = var8 - this.k;
+            var5 = var8 - this.Ka;
         } else if (this.ak == 2) {
             var5 = var7 - this.l;
         } else {
@@ -946,7 +946,7 @@ public class Character {
                 var6[6] = 1;
                 Monster var5 = Monster.a(var6);
                 var4 = String.valueOf(var5.a);
-                var5.i = true;
+                var5.ia = true;
                 var5.d();
                 break;
             case 2:
@@ -1017,8 +1017,8 @@ public class Character {
         Dungeon var1 = this.b();
         boolean var2 = false;
 
-        for(int var3 = 0; var3 < 13; ++var3) {
-            ad.setElementAt(aj, var3);
+        for(int i = 0; i < 13; ++i) {
+            ad.setElementAt(aj, i);
         }
 
         byte var5 = var1.a(-1, 1, this.ae);
@@ -1093,9 +1093,9 @@ public class Character {
         }
 
         if (a(ad.elementAt(1))) {
-            for(int var4 = 0; var4 < 13; ++var4) {
-                if (var4 != 1) {
-                    ad.setElementAt(o, var4);
+            for(int i = 0; i < 13; ++i) {
+                if (i != 1) {
+                    ad.setElementAt(o, i);
                 }
             }
         }
@@ -1166,15 +1166,15 @@ public class Character {
             var15 = var14[0];
             var16 = var14[1];
         } else if (var1 == 5) {
-            var15 = NPC.j[6];
-            var16 = NPC.i[6];
+            var15 = NPC.J[6];
+            var16 = NPC.ia[6];
         } else {
             byte[] var13 = (byte[])var2;
             var15 = var13[0];
             var16 = var13[1];
         }
 
-        int[] var10 = var3.a(this.l, this.k, this.ak, var15, var16);
+        int[] var10 = var3.a(this.l, this.Ka, this.ak, var15, var16);
         boolean var11 = false;
         if (a(var10[0], var10[1], 3, 2)) {
             var11 = true;
@@ -1598,7 +1598,7 @@ public class Character {
         int var3 = this.b(var2, true);
         int var4 = this.z(var2);
         byte g1 = Spell.GetSpell(var1).g;
-        byte j1 = Spell.GetSpell(var1).j;
+        byte j1 = Spell.GetSpell(var1).J;
         byte cost = Spell.GetSpell(var1).Cost;
         byte f1 = Spell.GetSpell(var1).f;
         int var9 = var3 - g1;
@@ -1672,7 +1672,7 @@ public class Character {
                 this.G[var1 - 1] = -4;
                 break;
             case 25:
-                for(int var16 = 1; var16 <= var13; ++var16) {
+                for(int i = 1; i <= var13; ++i) {
                     this.H();
                 }
         }
@@ -1698,7 +1698,7 @@ public class Character {
         int var5 = this.z(var3);
         int var6 = var2.c(10);
         int var7 = var2.c(9);
-        byte var8 = Spell.GetSpell(var1).Cost;
+        byte cost = Spell.GetSpell(var1).Cost;
         byte var9 = Spell.GetSpell(var1).f;
         int var10 = var4 - var6;
         int var11 = var2.c(2);
@@ -1712,16 +1712,16 @@ public class Character {
         short[] var10000;
         if (var14 == 0) {
             var10000 = this.U;
-            var10000[4] = (short)(var10000[4] - 3 * var8);
+            var10000[4] = (short)(var10000[4] - 3 * cost);
         } else if (var14 == 1) {
             var10000 = this.U;
-            var10000[4] = (short)(var10000[4] - 3 * var8 / 2);
+            var10000[4] = (short)(var10000[4] - 3 * cost / 2);
         } else if (var14 == 2) {
             var10000 = this.U;
-            var10000[4] = (short)(var10000[4] - var8);
+            var10000[4] = (short)(var10000[4] - cost);
         } else if (var14 == 3) {
             var10000 = this.U;
-            var10000[4] = (short)(var10000[4] - var8);
+            var10000[4] = (short)(var10000[4] - cost);
             var15 = 2;
         }
 
@@ -1890,9 +1890,9 @@ public class Character {
             this.A(var1);
             this.H[var1] = 0;
 
-            for(int var2 = var1; var2 < this.p - 1; ++var2) {
-                this.H[var2] = this.H[var2 + 1];
-                this.P[var2] = this.P[var2 + 1];
+            for(int i = var1; i < this.p - 1; ++i) {
+                this.H[i] = this.H[i + 1];
+                this.P[i] = this.P[i + 1];
             }
 
             --this.p;
@@ -1903,7 +1903,7 @@ public class Character {
     void i(int var1) {
         int var2 = Math.abs(this.H[var1]);
         if (var2 != 109) {
-            byte[] var3 = new byte[]{this.l, this.k, (byte)var2, 0, 0, (byte)(this.P[var1] & 255), 0};
+            byte[] var3 = new byte[]{this.l, this.Ka, (byte)var2, 0, 0, (byte)(this.P[var1] & 255), 0};
             int var4 = this.P[var1] >>> 16 & '\uffff';
             var3[3] = (byte)(var4 >> 8 & 255);
             var3[4] = (byte)(var4 & 255);
@@ -1948,12 +1948,12 @@ public class Character {
     }
 
     private void f(int var1) {
-        for(int var2 = 0; var2 < this.p; ++var2) {
-            byte var3 = this.H[var2];
+        for(int i = 0; i < this.p; ++i) {
+            byte var3 = this.H[i];
             var3 = (byte)Math.abs(var3);
             int var4 = Item.a(var3);
             if (var4 == var1) {
-                this.A(var2);
+                this.A(i);
             }
         }
 
@@ -1971,9 +1971,9 @@ public class Character {
                 var2 = (byte)Math.abs(var2);
                 this.H[var1] = var2;
 
-                for(int var3 = 0; var3 < 7; ++var3) {
-                    if (this.T[var3] == var2) {
-                        this.T[var3] = 0;
+                for(int i = 0; i < 7; ++i) {
+                    if (this.T[i] == var2) {
+                        this.T[i] = 0;
                         break;
                     }
                 }
@@ -2015,9 +2015,9 @@ public class Character {
         int var2 = -1;
         int var3 = -Math.abs(var1);
 
-        for(int var4 = 0; var4 < this.p; ++var4) {
-            if (var3 == this.H[var4]) {
-                var2 = var4;
+        for(int i = 0; i < this.p; ++i) {
+            if (var3 == this.H[i]) {
+                var2 = i;
                 break;
             }
         }
@@ -2185,7 +2185,7 @@ public class Character {
     void D() {
         this.C = this.j;
         this.ao = this.l;
-        this.an = this.k;
+        this.an = this.Ka;
         this.Z = this.ak;
         this.c(true);
         this.w();
@@ -2195,7 +2195,7 @@ public class Character {
     void e() {
         this.j = this.ab = this.C;
         this.l = this.z = this.ao;
-        this.k = this.w = this.an;
+        this.Ka = this.w = this.an;
         this.w();
         this.Q = true;
     }
@@ -2203,8 +2203,8 @@ public class Character {
     int E() {
         int var1 = 0;
 
-        for(int var2 = 0; var2 < 8; ++var2) {
-            int var3 = this.A >> var2 & 1;
+        for(int i = 0; i < 8; ++i) {
+            int var3 = this.A >> i & 1;
             if (var3 != 0) {
                 ++var1;
             }
@@ -2226,12 +2226,12 @@ public class Character {
 
             int var3 = 0;
 
-            for(int var4 = 0; var4 < 8; ++var4) {
-                int var5 = this.A >> var4 & 1;
+            for(int i = 0; i < 8; ++i) {
+                int var5 = this.A >> i & 1;
                 if (var5 == 1) {
                     ++var3;
                     if (var3 == var6) {
-                        this.A = (byte)func.c(var4, this.A);
+                        this.A = (byte)func.c(i, this.A);
                         break;
                     }
                 }
@@ -2249,7 +2249,7 @@ public class Character {
     }
 
     void w() {
-        this.b().b(this.l, this.k, this.ak, this.ae);
+        this.b().b(this.l, this.Ka, this.ak, this.ae);
     }
 
     String j() {
@@ -2285,10 +2285,10 @@ public class Character {
         var1.append("Status ailments: ");
         int var4 = 0;
 
-        for(int var5 = 1; var5 <= 8; ++var5) {
-            if (this.k(var5)) {
+        for(int i = 1; i <= 8; ++i) {
+            if (this.k(i)) {
                 var1.append('\n');
-                var1.append(Ailments[var5 - 1]);
+                var1.append(Ailments[i - 1]);
                 ++var4;
             }
         }
@@ -2307,8 +2307,8 @@ public class Character {
         var1.append("Attributes:");
         var1.append('\n');
 
-        for(int var6 = 0; var6 < 8; ++var6) {
-            int var7 = 2 * var6;
+        for(int i = 0; i < 8; ++i) {
+            int var7 = 2 * i;
             var1.append(Stats[var7]);
             var1.append(var3);
             var1.append(this.J[var7]);
@@ -2323,7 +2323,7 @@ public class Character {
     static Vector G() {
         Vector var0 = new Vector();
 
-        for(int var1 = 0; var1 < 13; ++var1) {
+        for(int i = 0; i < 13; ++i) {
             var0.addElement(new Object());
         }
 
@@ -2344,9 +2344,9 @@ public class Character {
     Vector f() {
         Vector var1 = new Vector();
 
-        for(int var2 = 0; var2 < 14; ++var2) {
-            if (this.R[var2][0] > 0) {
-                String var3 = Skills[var2] + ": " + this.R[var2][0];
+        for(int i = 0; i < 14; ++i) {
+            if (this.R[i][0] > 0) {
+                String var3 = Skills[i] + ": " + this.R[i][0];
                 var1.addElement(var3);
             }
         }
@@ -2357,10 +2357,10 @@ public class Character {
     int l(int var1) {
         int var2 = 0;
 
-        for(int var3 = 0; var3 < 14; ++var3) {
-            if (this.R[var3][0] > 0) {
+        for(int i = 0; i < 14; ++i) {
+            if (this.R[i][0] > 0) {
                 if (var2 == var1) {
-                    return var3;
+                    return i;
                 }
 
                 ++var2;
@@ -2378,10 +2378,10 @@ public class Character {
     Vector J() {
         Vector var1 = new Vector();
 
-        for(int var2 = 0; var2 < Spell.SpellCount; ++var2) {
-            if ((this.x & 1 << var2) != 0) {
-                int var3 = var2 + 1;
-                String var4 = Spell.spells[var2].Name;
+        for(int i = 0; i < Spell.SpellCount; ++i) {
+            if ((this.x & 1 << i) != 0) {
+                int var3 = i + 1;
+                String var4 = Spell.spells[i].Name;
                 if (var3 == this.b) {
                     var4 = "R: " + var4;
                 }
@@ -2396,11 +2396,11 @@ public class Character {
     int B(int var1) {
         int var2 = 0;
 
-        for(int var3 = 0; var3 < Spell.SpellCount; ++var3) {
-            if ((this.x & 1 << var3) != 0) {
-                int var4 = var3 + 1;
+        for(int i = 0; i < Spell.SpellCount; ++i) {
+            if ((this.x & 1 << i) != 0) {
+                int var4 = i + 1;
                 if (var2 == var1) {
-                    return var3;
+                    return i;
                 }
 
                 ++var2;
@@ -2585,12 +2585,12 @@ public class Character {
     }
 
     boolean o() {
-        for(int var1 = 0; var1 < 14; ++var1) {
-            if (this.R[var1][2] >= 10) {
-                short[] var10000 = this.R[var1];
+        for(int i = 0; i < 14; ++i) {
+            if (this.R[i][2] >= 10) {
+                short[] var10000 = this.R[i];
                 var10000[2] = (short)(var10000[2] - 10);
-                ++this.R[var1][0];
-                short var2 = c[var1];
+                ++this.R[i][0];
+                short var2 = c[i];
                 int var3 = var2 / 2;
                 this.N = (byte)(this.N | 1 << var3);
                 ++this.U[1];
@@ -2615,9 +2615,9 @@ public class Character {
         Vector var1 = new Vector();
 
         int var3;
-        for(int var2 = 0; var2 < 8; ++var2) {
-            if ((this.N & 1 << var2) != 0) {
-                var3 = var2 * 2;
+        for(int i = 0; i < 8; ++i) {
+            if ((this.N & 1 << i) != 0) {
+                var3 = i * 2;
                 var1.addElement(Stats[var3]);
             }
         }
@@ -2628,8 +2628,8 @@ public class Character {
         } else {
             String[] var4 = new String[var3];
 
-            for(int var5 = 0; var5 < var3; ++var5) {
-                var4[var5] = (String)var1.elementAt(var5);
+            for(int i = 0; i < var3; ++i) {
+                var4[i] = (String)var1.elementAt(i);
             }
 
             return var4;
@@ -2640,8 +2640,8 @@ public class Character {
         short var1 = Item.a();
         int[] var2 = ac[this.ar];
 
-        for(int var3 = 0; var3 < var2.length; ++var3) {
-            this.c(var2[var3], var1);
+        for(int i = 0; i < var2.length; ++i) {
+            this.c(var2[i], var1);
             int var4 = this.p - 1;
             this.d(var4, true);
         }
@@ -2715,25 +2715,25 @@ public class Character {
         String[] var3 = this.b().a();
         var2.append("Current dungeon is " + var3[0] + " " + var3[1] + "\n");
 
-        for(int var4 = 1; var4 <= 4; ++var4) {
-            if (var4 <= 2) {
-                this.g(var4);
-            } else if (var4 == 3) {
+        for(int i = 1; i <= 4; ++i) {
+            if (i <= 2) {
+                this.g(i);
+            } else if (i == 3) {
                 this.a();
                 this.g(1);
-            } else if (var4 == 4) {
+            } else if (i == 4) {
                 this.B();
                 this.g(1);
             }
 
-            System.out.println("here 2, i =" + var4);
-            if (var4 == 1) {
+            System.out.println("here 2, i =" + i);
+            if (i == 1) {
                 var2.append("FORWARD SQUARE: \n");
-            } else if (var4 == 2) {
+            } else if (i == 2) {
                 var2.append("BACKWARD SQUARE: \n");
-            } else if (var4 == 3) {
+            } else if (i == 3) {
                 var2.append("RIGHT SIDE SQUARE: \n");
-            } else if (var4 == 4) {
+            } else if (i == 4) {
                 var2.append("LEFT SIDE SQUARE: \n");
             }
 
@@ -2757,7 +2757,7 @@ public class Character {
                 }
             }
 
-            System.out.println("here 3, i =" + var4);
+            System.out.println("here 3, i =" + i);
             var5 = ESGame.S[this.ab - 1];
             if (var5 != null) {
                 var6 = var5.elements();
@@ -2771,7 +2771,7 @@ public class Character {
                 }
             }
 
-            System.out.println("here 4, i =" + var4);
+            System.out.println("here 4, i =" + i);
             var6 = ESGame.au[this.ab - 1].elements();
 
             while(var6.hasMoreElements()) {

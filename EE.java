@@ -272,24 +272,24 @@ public class EE extends FullCanvas implements Runnable {
     }
 
     private void b(Graphics var1) {
-        for(int var2 = 8; var2 <= 12; ++var2) {
-            Object var3 = Character.ad.elementAt(var2);
+        for(int i = 8; i <= 12; ++i) {
+            Object var3 = Character.ad.elementAt(i);
             if (var3 instanceof byte[]) {
                 byte[] var4 = (byte[])var3;
                 if (var4.length == 8 || var4.length == 7) {
-                    this.a(var1, var4, var2);
+                    this.a(var1, var4, i);
                 }
             }
         }
 
         byte[] var5;
         Object var7;
-        for(int var6 = 4; var6 <= 6; ++var6) {
-            var7 = Character.ad.elementAt(var6);
+        for(int i = 4; i <= 6; ++i) {
+            var7 = Character.ad.elementAt(i);
             if (var7 instanceof byte[]) {
                 var5 = (byte[])var7;
                 if (var5.length == 8 || var5.length == 7) {
-                    this.a(var1, var5, var6);
+                    this.a(var1, var5, i);
                 }
             }
         }
@@ -405,36 +405,36 @@ public class EE extends FullCanvas implements Runnable {
     private void g(Graphics var1) {
         A = false;
 
-        for(int var2 = 8; var2 <= 12; ++var2) {
-            Object var3 = Character.ad.elementAt(var2);
+        for(int i = 8; i <= 12; ++i) {
+            Object var3 = Character.ad.elementAt(i);
             if (var3 instanceof byte[]) {
                 byte[] var4 = (byte[])var3;
                 if (var4.length == 28 && var4[6] != 0) {
                     A = true;
-                    this.c(var1, var4[2], var2);
+                    this.c(var1, var4[2], i);
                 }
             } else if (var3 instanceof String) {
                 String var7 = (String)var3;
                 if (var7.equals("W")) {
-                    this.b(var1, 32, var2);
+                    this.b(var1, 32, i);
                 }
             }
         }
 
         byte[] var5;
         Object var8;
-        for(int var6 = 4; var6 <= 6; ++var6) {
-            var8 = Character.ad.elementAt(var6);
+        for(int i = 4; i <= 6; ++i) {
+            var8 = Character.ad.elementAt(i);
             if (var8 instanceof byte[]) {
                 var5 = (byte[])var8;
                 if (var5.length == 28 && var5[6] != 0) {
                     A = true;
-                    this.c(var1, var5[2], var6);
+                    this.c(var1, var5[2], i);
                 }
             } else if (var8 instanceof String) {
                 String var9 = (String)var8;
                 if (var9.equals("W")) {
-                    this.d(var1, 31, var6);
+                    this.d(var1, 31, i);
                 }
             }
         }
@@ -899,29 +899,29 @@ public class EE extends FullCanvas implements Runnable {
     private void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, byte[][] var7) {
         int var8 = var4 / 2;
 
-        for(int var9 = 0; var9 < var4; ++var9) {
-            int var10 = var3 + var6 + var9 * var5;
+        for(int i = 0; i < var4; ++i) {
+            int var10 = var3 + var6 + i * var5;
 
-            for(int var11 = 0; var11 < var4; ++var11) {
-                int var12 = var2 + var6 + var11 * var5;
-                if (var7[var11][var9] == 1) {
+            for(int j = 0; j < var4; ++j) {
+                int var12 = var2 + var6 + j * var5;
+                if (var7[j][i] == 1) {
                     var1.setColor(0);
                     var1.fillRect(var12, var10, var5, var5);
-                } else if (var7[var11][var9] == 0) {
+                } else if (var7[j][i] == 0) {
                     var1.setColor(16777215);
                     var1.fillRect(var12, var10, var5, var5);
-                } else if ((var7[var11][var9] & 2) != 0) {
+                } else if ((var7[j][i] & 2) != 0) {
                     var1.setColor(16711680);
                     var1.fillRect(var12, var10, var5, var5);
-                } else if ((var7[var11][var9] & 4) != 0) {
+                } else if ((var7[j][i] & 4) != 0) {
                     var1.setColor(255);
                     var1.fillRect(var12, var10, var5, var5);
-                } else if ((var7[var11][var9] & 8) != 0) {
+                } else if ((var7[j][i] & 8) != 0) {
                     var1.setColor(13369599);
                     var1.fillRect(var12, var10, var5, var5);
                 }
 
-                if (var9 == var8 && var11 == var8) {
+                if (i == var8 && j == var8) {
                     var1.setColor(65280);
                     var1.fillRect(var12, var10, var5, var5);
                 }
@@ -932,14 +932,14 @@ public class EE extends FullCanvas implements Runnable {
 
     void q() {
         byte var1 = this.ax.l;
-        byte var2 = this.ax.k;
+        byte var2 = this.ax.Ka;
         byte var3 = this.ax.ak;
         this.ax.b().c(var1, var2, var3, l);
     }
 
     void p() {
         byte var1 = this.ax.l;
-        byte var2 = this.ax.k;
+        byte var2 = this.ax.Ka;
         byte var3 = this.ax.ak;
         this.ax.b().a(var1, var2, var3, F);
     }
@@ -1116,9 +1116,9 @@ public class EE extends FullCanvas implements Runnable {
                             System.out.println("Restart after dead");
                             this.ax.a(this.ax.U);
 
-                            for(int var11 = this.ax.p - 1; var11 >= 0; --var11) {
-                                if (!this.ax.C(var11)) {
-                                    this.ax.y(var11);
+                            for(int i = this.ax.p - 1; i >= 0; --i) {
+                                if (!this.ax.C(i)) {
+                                    this.ax.y(i);
                                 }
                             }
 
@@ -1556,8 +1556,8 @@ public class EE extends FullCanvas implements Runnable {
             var4[0] = var3[0] + " " + var3[1];
             var4[1] = var3[2];
         } else {
-            for(int var5 = 0; var5 < var3.length; ++var5) {
-                var4[var5] = var3[var5];
+            for(int i = 0; i < var3.length; ++i) {
+                var4[i] = var3[i];
             }
         }
 
@@ -1798,7 +1798,7 @@ public class EE extends FullCanvas implements Runnable {
             return false;
         } else if (this.ax.j == 37 && j.l == 41) {
             int var1 = Math.abs(this.ax.l - j.o);
-            int var2 = Math.abs(this.ax.k - j.m);
+            int var2 = Math.abs(this.ax.Ka - j.m);
             return var1 + var2 == 1;
         } else {
             return false;

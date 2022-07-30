@@ -20,14 +20,14 @@ public class Item {
     static String[][] l = new String[][]{{"Warp to camp", ""}, {"Cures ailment", ""}, {"Restores Health", ""}, {"Restores Magicka", ""}, {"", ""}, {"Grants level", "experience"}, {"Health & Magicka", ""}, {"Increase harm", ""}, {"Increase armor", ""}, {"Safe camping", ""}, {"Kill monster", ""}, {"Kill monster", ""}, {"Kill monster", ""}};
     static byte[][] DroppedItemTable;
     static byte TableRows;
-    static short i;
+    static short ia;
 
     Item() {
     }
 
     static short a() {
-        ++i;
-        return i;
+        ++ia;
+        return ia;
     }
 
     static int e(int var0) {
@@ -100,7 +100,7 @@ public class Item {
     }
 
     static void LoadAllItems() throws Exception {
-        i = 0;
+        ia = 0;
         LoadItems();
         LoadDroppedItems();
     }
@@ -110,8 +110,8 @@ public class Item {
         TypeCount = var0.readShort();
         ItemType = new String[TypeCount];
 
-        for(int var1 = 0; var1 < TypeCount; ++var1) {
-            ItemType[var1] = var0.readUTF();
+        for(int i = 0; i < TypeCount; ++i) {
+            ItemType[i] = var0.readUTF();
         }
 
         ItemCount = var0.readShort();
@@ -123,32 +123,32 @@ public class Item {
         a = new short[ItemCount];
         Slot = new byte[ItemCount];
 
-        for(int var2 = 0; var2 < ItemCount; ++var2) {
-            ItemName[var2] = var0.readUTF();
+        for(int i = 0; i < ItemCount; ++i) {
+            ItemName[i] = var0.readUTF();
         }
 
-        for(int var3 = 0; var3 < ItemCount; ++var3) {
-            Type[var3] = var0.readByte();
+        for(int i = 0; i < ItemCount; ++i) {
+            Type[i] = var0.readByte();
         }
 
-        for(int var4 = 0; var4 < ItemCount; ++var4) {
-            Level[var4] = var0.readByte();
+        for(int i = 0; i < ItemCount; ++i) {
+            Level[i] = var0.readByte();
         }
 
-        for(int var5 = 0; var5 < ItemCount; ++var5) {
-            Rating[var5] = var0.readByte();
+        for(int i = 0; i < ItemCount; ++i) {
+            Rating[i] = var0.readByte();
         }
 
-        for(int var6 = 0; var6 < ItemCount; ++var6) {
-            f[var6] = var0.readShort();
+        for(int i = 0; i < ItemCount; ++i) {
+            f[i] = var0.readShort();
         }
 
-        for(int var7 = 0; var7 < ItemCount; ++var7) {
-            a[var7] = var0.readShort();
+        for(int i = 0; i < ItemCount; ++i) {
+            a[i] = var0.readShort();
         }
 
-        for(int var8 = 0; var8 < ItemCount; ++var8) {
-            Slot[var8] = var0.readByte();
+        for(int i = 0; i < ItemCount; ++i) {
+            Slot[i] = var0.readByte();
         }
 
         var0.close();
@@ -162,9 +162,9 @@ public class Item {
         short var2 = var0.readShort();
         DroppedItemTable = new byte[var1][var2];
 
-        for(int var3 = 0; var3 < var1; ++var3) {
-            for(int var4 = 0; var4 < var2; ++var4) {
-                DroppedItemTable[var3][var4] = var0.readByte();
+        for(int i = 0; i < var1; ++i) {
+            for(int j = 0; j < var2; ++j) {
+                DroppedItemTable[i][j] = var0.readByte();
             }
         }
 
@@ -175,13 +175,13 @@ public class Item {
         int var2 = -1;
         int var3 = -1;
 
-        for(int var4 = 0; var4 < ItemCount; ++var4) {
-            if (Type[var4] == 11 && Level[var4] == (byte)var1) {
+        for(int i = 0; i < ItemCount; ++i) {
+            if (Type[i] == 11 && Level[i] == (byte)var1) {
                 if (var2 == -1) {
-                    var2 = var4;
+                    var2 = i;
                 }
 
-                var3 = var4;
+                var3 = i;
             }
         }
 
@@ -194,7 +194,7 @@ public class Item {
         int var3 = func.a(var0, 100);
         int var4 = var3;
 
-        for(int var5 = 1; var5 < var2; ++var5) {
+        for(int i = 1; i < var2; ++i) {
             var3 = func.a(var0, 100);
             if (var3 > var4) {
                 var4 = var3;
@@ -236,8 +236,8 @@ public class Item {
     static String[] b() {
         String[] var0 = new String[13];
 
-        for(int var1 = 0; var1 < 13; ++var1) {
-            var0[var1] = ItemName[86 + var1];
+        for(int i = 0; i < 13; ++i) {
+            var0[i] = ItemName[86 + i];
         }
 
         return var0;
