@@ -9,36 +9,36 @@ import java.io.InputStream;
 import java.util.Random;
 
 public class func { // f
-    private static Object b = new Object();
+    private static Object obj = new Object();
     static int a = 0;
 
     private func() {
     }
 
-    static byte[] LoadBytes(int var0, InputStream var1) throws Exception {
-        if (var0 > 0) {
-            byte[] var5 = new byte[var0];
-            var1.read(var5);
-            return var5;
+    static byte[] LoadBytes(int offset, InputStream stream) throws Exception {
+        if (offset > 0) {
+            byte[] bytearr = new byte[offset];
+            stream.read(bytearr);
+            return bytearr;
         } else {
-            ByteArrayOutputStream var2 = new ByteArrayOutputStream();
+            ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
 
-            int var3;
-            while((var3 = var1.read()) != -1) {
-                var2.write(var3);
+            int bt;
+            while((bt = stream.read()) != -1) {
+                bytestream.write(bt);
             }
 
-            byte[] var4 = var2.toByteArray();
-            return var4;
+            byte[] bytearr = bytestream.toByteArray();
+            return bytearr;
         }
     }
 
-    static String FormatString(String var0) {
-        return var0.startsWith("/") ? var0 : "/" + var0;
+    static String FormatString(String name) {
+        return name.startsWith("/") ? name : "/" + name;
     }
 
-    static DataInputStream LoadDatStream(String var0) throws Exception {
-        return ESGame.LoadDatRaw(var0);
+    static DataInputStream LoadDatStream(String name) throws Exception {
+        return ESGame.LoadDatRaw(name);
     }
 
     static int a(int var0) {
@@ -49,22 +49,22 @@ public class func { // f
         return ESGame.a(var0, var1);
     }
 
-    static String StrCatComma(int var0, int var1) {
-        return var0 + "," + var1;
+    static String StrCatComma(int v1, int v2) {
+        return v1 + "," + v2;
     }
 
     static String StringInsert(String string, String del, int value) {
-        String var3 = "" + value;
-        return StringInsert(string, del, var3);
+        String str = "" + value;
+        return StringInsert(string, del, str);
     }
 
     static String StringInsert(String string, String del, String[] values) {
-        int var3 = values.length;
+        int valCount = values.length;
         String FinalString = string;
 
-        for(int i = 0; i < var3; ++i) {
-            String var6 = values[i];
-            FinalString = StringInsert(FinalString, del, var6);
+        for(int i = 0; i < valCount; ++i) {
+            String val = values[i];
+            FinalString = StringInsert(FinalString, del, val);
         }
 
         return FinalString;
@@ -72,21 +72,21 @@ public class func { // f
 
     static String StringInsert(String string, String del, String value) {
         if (string != null && del != null) {
-            int var3 = string.indexOf(del);
-            if (var3 < 0) {
+            int indx = string.indexOf(del);
+            if (indx < 0) {
                 return string;
             } else {
-                String var4 = string.substring(0, var3);
-                if (var4 == null) {
-                    var4 = "";
+                String str1 = string.substring(0, indx);
+                if (str1 == null) {
+                    str1 = "";
                 }
 
-                String var5 = string.substring(var3 + del.length());
-                if (var5 == null) {
-                    var5 = "";
+                String str2 = string.substring(indx + del.length());
+                if (str2 == null) {
+                    str2 = "";
                 }
 
-                String FinalString = var4 + value + var5;
+                String FinalString = str1 + value + str2;
                 return FinalString;
             }
         } else {
@@ -130,42 +130,42 @@ public class func { // f
         return var2;
     }
 
-    public static String[] c(String var0) {
-        var0 = var0.trim();
-        int var1 = 1;
-        int var2 = var0.length();
-        boolean var3 = false;
+    public static String[] c(String str) {
+        str = str.trim();
+        int spcCount = 1;
+        int strlen = str.length();
+        boolean space = false;
 
-        for(int i = 0; i < var2; ++i) {
-            if (var0.charAt(i) == ' ') {
-                if (!var3) {
-                    ++var1;
-                    var3 = true;
+        for(int i = 0; i < strlen; ++i) {
+            if (str.charAt(i) == ' ') {
+                if (!space) {
+                    ++spcCount;
+                    space = true;
                 }
             } else {
-                var3 = false;
+                space = false;
             }
         }
 
-        String[] var5 = new String[var1];
-        int var6 = 0;
-        int var7 = 0;
+        String[] strList = new String[spcCount];
+        int offset = 0;
+        int indx = 0;
 
-        for(int i = 0; i < var2; ++i) {
-            if (var0.charAt(i) == ' ') {
-                if (!var3) {
-                    var5[var7++] = var0.substring(var6, i);
-                    var6 = i + 1;
-                    var3 = true;
+        for(int i = 0; i < strlen; ++i) {
+            if (str.charAt(i) == ' ') {
+                if (!space) {
+                    strList[indx++] = str.substring(offset, i);
+                    offset = i + 1;
+                    space = true;
                 } else {
-                    ++var6;
+                    ++offset;
                 }
             } else {
-                var3 = false;
+                space = false;
             }
         }
 
-        var5[var7] = var0.substring(var6, var2);
-        return var5;
+        strList[indx] = str.substring(offset, strlen);
+        return strList;
     }
 }

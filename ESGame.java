@@ -1146,35 +1146,35 @@ public class ESGame extends a implements Runnable, CommandListener {
     private boolean LoadGame() {
         boolean var1 = true;
         boolean var2 = false;
-        RecordStore var3 = null;
+        RecordStore store = null;
         aQ.m = 0;
-        String var4 = this.M();
+        String RecordName = this.GetLastSave();
 
         try {
-            if (var4 == null) {
+            if (RecordName == null) {
                 throw new Exception("No valid record store!");
             }
 
-            var3 = RecordStore.openRecordStore(var4, false);
-            int var5 = var3.getNumRecords();
-            byte[] var6 = var3.getRecord(1);
+            store = RecordStore.openRecordStore(RecordName, false);
+            int var5 = store.getNumRecords();
+            byte[] var6 = store.getRecord(1);
             this.k = Character.a(var6, true);
-            this.k.game = this;
+            this.k.Game = this;
             aQ.m = 20;
             aQ.c();
             aQ.f();
-            int var7 = a((RecordStore)var3, 2);
+            int var7 = a((RecordStore)store, 2);
             System.out.println("Read the master lists from RecordStore");
-            var6 = var3.getRecord(var7);
+            var6 = store.getRecord(var7);
             b(var6);
         } catch (Exception var17) {
             System.out.println("Exception in loadGameState");
             System.out.println(var17);
             var1 = false;
         } finally {
-            if (var3 != null) {
+            if (store != null) {
                 try {
-                    var3.closeRecordStore();
+                    store.closeRecordStore();
                 } catch (Exception var16) {
                 }
             }
@@ -1602,29 +1602,29 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     }
 
-    private static int a(RecordStore var0, int var1) throws Exception {
+    private static int a(RecordStore store, int var1) throws Exception {
         int var2 = var1;
 
-        DataInputStream var5;
+        DataInputStream data;
         int var7;
         for(int i = 1; i < 37; ++i) {
-            byte[] var4 = var0.getRecord(var2++);
-            var5 = new DataInputStream(new ByteArrayInputStream(var4, 0, var4.length));
+            byte[] var4 = store.getRecord(var2++);
+            data = new DataInputStream(new ByteArrayInputStream(var4, 0, var4.length));
             G[i].clear();
-            int var6 = var5.readInt();
+            int var6 = data.readInt();
 
             for(var7 = 0; var7 < var6; ++var7) {
-                Monster var8 = Monster.a(var5);
+                Monster var8 = Monster.a(data);
                 String var9 = String.valueOf(var8.a);
                 G[i].put(var9, var8.f());
             }
 
             try {
-                var5.close();
+                data.close();
             } catch (Exception var13) {
             }
 
-            var5 = null;
+            data = null;
             Object var14 = null;
             System.gc();
             aQ.m = 20 + 30 * (i + 1) / 37;
@@ -1635,7 +1635,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         DataInputStream var18;
         int var21;
         for(int i = 1; i < 37; ++i) {
-            byte[] var16 = var0.getRecord(var2++);
+            byte[] var16 = store.getRecord(var2++);
             var18 = new DataInputStream(new ByteArrayInputStream(var16, 0, var16.length));
             S[i].clear();
             var7 = var18.readInt();
@@ -1652,7 +1652,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             var18 = null;
-            var5 = null;
+            data = null;
             System.gc();
             aQ.m = 50 + 30 * (i + 1) / 37;
             aQ.c();
@@ -1660,7 +1660,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         for(int i = 0; i < 37; ++i) {
-            byte[] var19 = var0.getRecord(var2++);
+            byte[] var19 = store.getRecord(var2++);
             DataInputStream var20 = new DataInputStream(new ByteArrayInputStream(var19, 0, var19.length));
             au[i].removeAllElements();
             var21 = var20.readInt();
@@ -1686,19 +1686,19 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    private static byte[] a(DataInputStream var0, int var1) throws Exception {
-        byte[] var2 = new byte[var1];
+    private static byte[] a(DataInputStream stream, int len) throws Exception {
+        byte[] btarr = new byte[len];
 
-        for(int i = 0; i < var1; ++i) {
-            var2[i] = var0.readByte();
+        for(int i = 0; i < len; ++i) {
+            btarr[i] = stream.readByte();
         }
 
-        return var2;
+        return btarr;
     }
 
-    private static void a(DataOutputStream var0, byte[] var1, int var2) throws Exception {
-        for(int i = 0; i < var2; ++i) {
-            var0.writeByte(var1[i]);
+    private static void a(DataOutputStream stream, byte[] btarr, int len) throws Exception {
+        for(int i = 0; i < len; ++i) {
+            stream.writeByte(btarr[i]);
         }
 
     }
@@ -1706,15 +1706,15 @@ public class ESGame extends a implements Runnable, CommandListener {
     public static void Log(String var0) {
     }
 
-    static String CheckMem(String var0) {
-        if (var0 == null) {
-            var0 = "";
+    static String CheckMem(String str) {
+        if (str == null) {
+            str = "";
         }
 
-        Runtime var1 = Runtime.getRuntime();
-        long var2 = var1.freeMemory();
-        long var4 = var1.totalMemory();
-        return ">>> MEMORY: " + var0 + ": Free memory is " + var2 + ", Total memory is " + var4;
+        Runtime runtime = Runtime.getRuntime();
+        long freeMemory = runtime.freeMemory();
+        long totalMemory = runtime.totalMemory();
+        return ">>> MEMORY: " + str + ": Free memory is " + freeMemory + ", Total memory is " + totalMemory;
     }
 
     private void h() {
@@ -1865,17 +1865,17 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("After unloading all monster images");
     }
 
-    static void KillMonster(int var0, int var1) {
-        System.out.println("In killMonster! dungid is " + var0);
-        byte[] var2 = (byte[])G[var0 - 1].remove(String.valueOf(var1));
+    static void KillMonster(int dngnID, int var1) {
+        System.out.println("In killMonster! dungid is " + dngnID);
+        byte[] var2 = (byte[])G[dngnID - 1].remove(String.valueOf(var1));
         byte var3 = var2[4];
         byte var4 = var2[5];
-        Dungeon var5 = dungeons[var0 - 1];
+        Dungeon var5 = dungeons[dngnID - 1];
         if (var2 != null) {
             var5.DngnVec[var3][var4] = func.c((byte)2, var5.DngnVec[var3][var4]);
         }
 
-        System.out.println("End of killMonster, size of HT is " + G[var0 - 1].size());
+        System.out.println("End of killMonster, size of HT is " + G[dngnID - 1].size());
     }
 
     private Menu l(int var1) {
@@ -2028,13 +2028,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         return var2;
     }
 
-    static DataInputStream LoadDatRaw(String var0) throws Exception {
-        InputStream var1 = (new Object()).getClass().getResourceAsStream(func.FormatString(var0));
-        if (var1 == null) {
+    static DataInputStream LoadDatRaw(String file) throws Exception {
+        InputStream stream = (new Object()).getClass().getResourceAsStream(func.FormatString(file));
+        if (stream == null) {
             return null;
         } else {
-            byte[] var2 = func.LoadBytes(var1.available(), var1);
-            return new DataInputStream(new ByteArrayInputStream(var2));
+            byte[] btarr = func.LoadBytes(stream.available(), stream);
+            return new DataInputStream(new ByteArrayInputStream(btarr));
         }
     }
 
@@ -2088,26 +2088,26 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private static void LoadGeomin() throws Exception {
-        DataInputStream var0 = func.LoadDatStream("/geomin.dat");
+        DataInputStream data = func.LoadDatStream("/geomin.dat");
         Geomin = new byte[37][6];
 
         for(int i = 0; i < 37; ++i) {
             for(int j = 0; j < 6; ++j) {
-                Geomin[i][j] = var0.readByte();
+                Geomin[i][j] = data.readByte();
             }
         }
 
     }
 
     private static void LoadMonsterFPaths() throws Exception {
-        InputStream var0 = (new Object()).getClass().getResourceAsStream("/monsterfilenamesin.dat");
-        byte[] var1 = func.LoadBytes(var0.available(), var0);
-        DataInputStream var2 = new DataInputStream(new ByteArrayInputStream(var1));
+        InputStream stream = (new Object()).getClass().getResourceAsStream("/monsterfilenamesin.dat");
+        byte[] btarr = func.LoadBytes(stream.available(), stream);
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(btarr));
         MonFNames = new String[5][7];
 
         for(int i = 0; i < 5; ++i) {
             for(int j = 0; j < 7; ++j) {
-                MonFNames[i][j] = var2.readUTF();
+                MonFNames[i][j] = data.readUTF();
             }
         }
 
@@ -2256,52 +2256,52 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
     }
 
-    private String M() {
-        String[] var1 = RecordStore.listRecordStores();
+    private String GetLastSave() {
+        String[] StoreList = RecordStore.listRecordStores();
         boolean var2 = false;
-        int var22;
-        if (var1 == null) {
-            var22 = 0;
+        int StoreCount;
+        if (StoreList == null) {
+            StoreCount = 0;
         } else {
-            var22 = var1.length;
+            StoreCount = StoreList.length;
         }
 
-        String var3 = null;
-        if (var22 == 0) {
+        String RecordName = null;
+        if (StoreCount == 0) {
             return null;
         } else {
-            long var4 = 0L;
-            RecordStore var6 = null;
+            long time = 0L;
+            RecordStore Store = null;
 
-            for(int i = 0; i < var22; ++i) {
+            for(int i = 0; i < StoreCount; ++i) {
                 try {
-                    var6 = RecordStore.openRecordStore(var1[i], false);
-                    int var8 = var6.getNumRecords();
-                    long var9 = var6.getLastModified();
-                    if (var9 > var4) {
-                        var3 = var1[i];
-                        var4 = var9;
+                    Store = RecordStore.openRecordStore(StoreList[i], false);
+                    int recordCount = Store.getNumRecords();
+                    long lastModified = Store.getLastModified();
+                    if (lastModified > time) {
+                        RecordName = StoreList[i];
+                        time = lastModified;
                     }
                 } catch (Throwable var20) {
                 } finally {
                     try {
-                        if (var6 != null) {
-                            var6.closeRecordStore();
+                        if (Store != null) {
+                            Store.closeRecordStore();
                         }
 
-                        var6 = null;
+                        Store = null;
                     } catch (Exception var19) {
                     }
 
                 }
             }
 
-            return var3;
+            return RecordName;
         }
     }
 
     private void L() {
-        String var1 = this.M();
+        String var1 = this.GetLastSave();
         String[] var2 = RecordStore.listRecordStores();
         boolean var3 = false;
         int var7;
@@ -2357,7 +2357,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             RunLoadCamp();
             LoadMonsterFPaths();
             K();
-        } catch (Exception var1) {
+        } catch (Exception err) {
             System.out.println("ERROR: problem with loading camp or image record HT");
         }
 

@@ -31,7 +31,7 @@ public class Character {
     static int[][] ac = new int[][]{{1, 27}, {7, 27}, {7, 22}, {17, 27}, {12, 22}, {17, 27}, {12, 22}};
     private static final String[] Ailments = new String[]{"Stone Blood", "Delusions", "Blind", "Vampirism", "Mana Burn", "Grievous Harm", "Terrified", "Haunted"};
     public static int ag = -1;
-    ESGame game;
+    ESGame Game;
     public static String UsrID = null;
     String v;
     short ar;
@@ -87,7 +87,7 @@ public class Character {
         return var1 ? 400 : 200;
     }
 
-    public Character(ESGame var1) {
+    public Character(ESGame game) {
         g = false;
         LoadCharData();
         this.v = null;
@@ -101,7 +101,7 @@ public class Character {
         this.T = new byte[7];
         this.G = new byte[25];
         this.ae = new byte[9][5];
-        this.game = var1;
+        this.Game = game;
         this.Q = false;
     }
 
@@ -317,143 +317,143 @@ public class Character {
             try {
                 LoadCharData("/charin.dat");
                 S = true;
-            } catch (Exception var1) {
+            } catch (Exception err) {
                 System.out.println("Error: could not load character data");
-                System.out.println("Exception: " + var1);
+                System.out.println("Exception: " + err);
             }
         }
 
     }
 
     private static void LoadCharData(String var0) throws Exception {
-        DataInputStream var1 = ESGame.LoadDatRaw(var0);
-        int var2 = var1.available();
-        Attributes = a(var1);
-        Stats = a(var1);
-        Classes = a(var1);
+        DataInputStream data = ESGame.LoadDatRaw(var0);
+        int available = data.available();
+        Attributes = GetFields(data);
+        Stats = GetFields(data);
+        Classes = GetFields(data);
         B = (short) Classes.length;
-        Races = a(var1);
+        Races = GetFields(data);
         al = (short) Classes.length;
-        Skills = a(var1);
-        short var3 = (short) Skills.length;
-        if (var3 != 14) {
+        Skills = GetFields(data);
+        short skillslen = (short) Skills.length;
+        if (skillslen != 14) {
             throw new Exception("Error: mismatch between input number of skill types and that specified in code");
         } else {
-            c = new short[var3];
+            c = new short[skillslen];
 
-            for(int i = 0; i < var3; ++i) {
-                c[i] = var1.readShort();
+            for(int i = 0; i < skillslen; ++i) {
+                c[i] = data.readShort();
             }
 
-            int var5 = 13 + 2 * var3;
-            ClassPreset = new short[B][var5];
+            int resetRows = 13 + 2 * skillslen;
+            ClassPreset = new short[B][resetRows];
 
             for(int i = 0; i < B; ++i) {
-                for(int j = 0; j < var5; ++j) {
-                    ClassPreset[i][j] = var1.readShort();
+                for(int j = 0; j < resetRows; ++j) {
+                    ClassPreset[i][j] = data.readShort();
                 }
             }
 
         }
     }
 
-    private static String[] a(DataInputStream var0) throws Exception {
-        short var1 = var0.readShort();
-        String[] var2 = new String[var1];
+    private static String[] GetFields(DataInputStream strm) throws Exception {
+        short strCnt = strm.readShort();
+        String[] strings = new String[strCnt];
 
-        for(int i = 0; i < var1; ++i) {
-            var2[i] = var0.readUTF();
+        for(int i = 0; i < strCnt; ++i) {
+            strings[i] = strm.readUTF();
         }
 
-        return var2;
+        return strings;
     }
 
     static Character a(byte[] var0, boolean var1) throws Exception {
         Character var2 = null;
-        DataInputStream var3 = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
         var2 = new Character((ESGame)null);
-        var2.v = var3.readUTF();
-        var2.ar = var3.readShort();
+        var2.v = data.readUTF();
+        var2.ar = data.readShort();
         if (!var1) {
             var2.c(var2.ar);
             var2.d(var2.ar);
         }
 
-        var2.q = var3.readShort();
+        var2.q = data.readShort();
 
         for(int i = 0; i < 10; ++i) {
-            var2.U[i] = var3.readShort();
+            var2.U[i] = data.readShort();
         }
 
         if (var1) {
-            var2.N = var3.readByte();
+            var2.N = data.readByte();
         }
 
-        var2.n = var3.readInt();
+        var2.n = data.readInt();
 
         for(int i = 0; i < 16; ++i) {
-            var2.J[i] = var3.readShort();
+            var2.J[i] = data.readShort();
         }
 
-        var2.V = var3.readShort();
-        var2.aq[0] = var3.readShort();
-        var2.aq[1] = var3.readShort();
+        var2.V = data.readShort();
+        var2.aq[0] = data.readShort();
+        var2.aq[1] = data.readShort();
 
         int j;
         for(int i = 0; i < 14; ++i) {
             for(j = 0; j < 3; ++j) {
-                var2.R[i][j] = var3.readShort();
+                var2.R[i][j] = data.readShort();
             }
         }
 
         if (var1) {
-            var2.p = var3.readByte();
+            var2.p = data.readByte();
 
             for(j = 0; j < 24; ++j) {
-                var2.H[j] = var3.readByte();
+                var2.H[j] = data.readByte();
             }
 
             for(int var8 = 0; var8 < 24; ++var8) {
-                var2.P[var8] = var3.readInt();
+                var2.P[var8] = data.readInt();
             }
 
             for(int var9 = 0; var9 < 7; ++var9) {
-                var2.T[var9] = var3.readByte();
+                var2.T[var9] = data.readByte();
             }
 
-            var2.x = var3.readInt();
-            var2.b = var3.readByte();
+            var2.x = data.readInt();
+            var2.b = data.readByte();
         } else {
-            var2.x = var3.readInt();
+            var2.x = data.readInt();
         }
 
         if (var1) {
-            var2.W = var3.readShort();
-            var2.Y = var3.readShort();
-            var2.m = var3.readShort();
-            var2.A = var3.readByte();
-            var2.ah = var3.readShort();
-            var2.F = var3.readShort();
-            var2.ap = var3.readShort();
-            var2.f = var3.readBoolean();
-            var2.j = var3.readByte();
-            var2.l = var3.readByte();
-            var2.Ka = var3.readByte();
-            var2.ak = var3.readByte();
-            var2.C = var3.readByte();
-            var2.ao = var3.readByte();
-            var2.an = var3.readByte();
-            var2.Z = var3.readByte();
+            var2.W = data.readShort();
+            var2.Y = data.readShort();
+            var2.m = data.readShort();
+            var2.A = data.readByte();
+            var2.ah = data.readShort();
+            var2.F = data.readShort();
+            var2.ap = data.readShort();
+            var2.f = data.readBoolean();
+            var2.j = data.readByte();
+            var2.l = data.readByte();
+            var2.Ka = data.readByte();
+            var2.ak = data.readByte();
+            var2.C = data.readByte();
+            var2.ao = data.readByte();
+            var2.an = data.readByte();
+            var2.Z = data.readByte();
 
             for(j = 0; j < 25; ++j) {
-                var2.G[j] = var3.readByte();
+                var2.G[j] = data.readByte();
             }
 
-            var2.t = var3.readShort();
-            var2.aa = var3.readShort();
-            var2.s = var3.readBoolean();
-            var2.L = var3.readBoolean();
-            var2.I = var3.readBoolean();
+            var2.t = data.readShort();
+            var2.aa = data.readShort();
+            var2.s = data.readBoolean();
+            var2.L = data.readBoolean();
+            var2.I = data.readBoolean();
         }
 
         return var2;
@@ -770,7 +770,7 @@ public class Character {
                                         if (Item.Type[var9] == 11) {
                                             this.W += (short) Item.Level[var9];
                                             int var10 = ESGame.d(this.W);
-                                            this.game.PopulateDungeons(var10);
+                                            this.Game.PopulateDungeons(var10);
                                         }
                                     }
                                 }
@@ -795,7 +795,7 @@ public class Character {
                                             System.out.println("item index=" + var11);
                                             if (Item.Type[var11] == 11) {
                                                 this.W += (short) Item.Level[var11];
-                                                this.game.PopulateDungeons(ESGame.d(this.W));
+                                                this.Game.PopulateDungeons(ESGame.d(this.W));
                                             }
                                         }
                                     }
@@ -1086,13 +1086,13 @@ public class Character {
             ad.setElementAt(am, 12);
         }
 
-        if (a(ad.elementAt(0))) {
+        if (IsOne(ad.elementAt(0))) {
             ad.setElementAt(o, 4);
             ad.setElementAt(o, 8);
             ad.setElementAt(o, 9);
         }
 
-        if (a(ad.elementAt(1))) {
+        if (IsOne(ad.elementAt(1))) {
             for(int i = 0; i < 13; ++i) {
                 if (i != 1) {
                     ad.setElementAt(o, i);
@@ -1100,22 +1100,22 @@ public class Character {
             }
         }
 
-        if (a(ad.elementAt(2))) {
+        if (IsOne(ad.elementAt(2))) {
             ad.setElementAt(o, 6);
             ad.setElementAt(o, 11);
             ad.setElementAt(o, 12);
         }
 
-        if (a(ad.elementAt(3))) {
+        if (IsOne(ad.elementAt(3))) {
             ad.setElementAt(o, 8);
         }
 
-        if (a(ad.elementAt(4))) {
+        if (IsOne(ad.elementAt(4))) {
             ad.setElementAt(o, 8);
             ad.setElementAt(o, 9);
         }
 
-        if (a(ad.elementAt(5))) {
+        if (IsOne(ad.elementAt(5))) {
             ad.setElementAt(o, 9);
             ad.setElementAt(o, 10);
             ad.setElementAt(o, 11);
@@ -1123,25 +1123,25 @@ public class Character {
             ad.setElementAt(o, 6);
         }
 
-        if (a(ad.elementAt(6))) {
+        if (IsOne(ad.elementAt(6))) {
             ad.setElementAt(o, 11);
             ad.setElementAt(o, 12);
         }
 
-        if (a(ad.elementAt(7))) {
+        if (IsOne(ad.elementAt(7))) {
             ad.setElementAt(o, 12);
         }
 
-        if (a(ad.elementAt(9))) {
+        if (IsOne(ad.elementAt(9))) {
             ad.setElementAt(o, 8);
         }
 
-        if (a(ad.elementAt(10))) {
+        if (IsOne(ad.elementAt(10))) {
             ad.setElementAt(o, 9);
             ad.setElementAt(o, 11);
         }
 
-        if (a(ad.elementAt(11))) {
+        if (IsOne(ad.elementAt(11))) {
             ad.setElementAt(o, 12);
         }
 
@@ -1180,41 +1180,41 @@ public class Character {
             var11 = true;
             ad.setElementAt(var2, 1);
         } else if (a(var10[0], var10[1], 2, 1)) {
-            if (!a(ad.elementAt(0)) && !a(ad.elementAt(1)) && !a(ad.elementAt(5))) {
+            if (!IsOne(ad.elementAt(0)) && !IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(5))) {
                 var11 = true;
                 ad.setElementAt(var2, 4);
             }
         } else if (a(var10[0], var10[1], 3, 1)) {
-            if (!a(ad.elementAt(1))) {
+            if (!IsOne(ad.elementAt(1))) {
                 var11 = true;
                 ad.setElementAt(var2, 5);
             }
         } else if (a(var10[0], var10[1], 4, 1)) {
-            if (!a(ad.elementAt(1)) && !a(ad.elementAt(2)) && !a(ad.elementAt(5))) {
+            if (!IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(2)) && !IsOne(ad.elementAt(5))) {
                 var11 = true;
                 ad.setElementAt(var2, 6);
             }
         } else if (a(var10[0], var10[1], 1, 0)) {
-            if (!a(ad.elementAt(0)) && !a(ad.elementAt(1)) && !a(ad.elementAt(3)) && !a(ad.elementAt(4)) && !a(ad.elementAt(9))) {
+            if (!IsOne(ad.elementAt(0)) && !IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(3)) && !IsOne(ad.elementAt(4)) && !IsOne(ad.elementAt(9))) {
                 var11 = true;
                 ad.setElementAt(var2, 8);
             }
         } else if (a(var10[0], var10[1], 2, 0)) {
-            if (!a(ad.elementAt(0)) && !a(ad.elementAt(1)) && !a(ad.elementAt(4)) && !a(ad.elementAt(5)) && !a(ad.elementAt(10))) {
+            if (!IsOne(ad.elementAt(0)) && !IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(4)) && !IsOne(ad.elementAt(5)) && !IsOne(ad.elementAt(10))) {
                 var11 = true;
                 ad.setElementAt(var2, 9);
             }
         } else if (a(var10[0], var10[1], 3, 0)) {
-            if (!a(ad.elementAt(1)) && !a(ad.elementAt(5))) {
+            if (!IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(5))) {
                 var11 = true;
                 ad.setElementAt(var2, 10);
             }
         } else if (a(var10[0], var10[1], 4, 0)) {
-            if (!a(ad.elementAt(1)) && !a(ad.elementAt(2)) && !a(ad.elementAt(5)) && !a(ad.elementAt(6)) && !a(ad.elementAt(10))) {
+            if (!IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(2)) && !IsOne(ad.elementAt(5)) && !IsOne(ad.elementAt(6)) && !IsOne(ad.elementAt(10))) {
                 var11 = true;
                 ad.setElementAt(var2, 11);
             }
-        } else if (a(var10[0], var10[1], 5, 0) && !a(ad.elementAt(1)) && !a(ad.elementAt(2)) && !a(ad.elementAt(6)) && !a(ad.elementAt(7)) && !a(ad.elementAt(11))) {
+        } else if (a(var10[0], var10[1], 5, 0) && !IsOne(ad.elementAt(1)) && !IsOne(ad.elementAt(2)) && !IsOne(ad.elementAt(6)) && !IsOne(ad.elementAt(7)) && !IsOne(ad.elementAt(11))) {
             var11 = true;
             ad.setElementAt(var2, 12);
         }
@@ -1226,7 +1226,7 @@ public class Character {
         return var0 == var2 && var1 == var3;
     }
 
-    private static boolean a(Object var0) {
+    private static boolean IsOne(Object var0) {
         if (var0 instanceof Integer) {
             Integer var1 = (Integer)var0;
             if (var1 == 1) {
@@ -1508,7 +1508,7 @@ public class Character {
             if (Item.Type[var5] == 11) {
                 this.W += (short) Item.Level[var5];
                 int var6 = ESGame.d(this.W);
-                this.game.PopulateDungeons(var6);
+                this.Game.PopulateDungeons(var6);
             }
 
             return 1;

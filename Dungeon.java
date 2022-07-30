@@ -1077,12 +1077,12 @@ public class Dungeon { // i
     }
 
     static void LoadDungNames() throws Exception {
-        DataInputStream var0 = func.LoadDatStream("/dungnamesin.dat");
+        DataInputStream data = func.LoadDatStream("/dungnamesin.dat");
         DngnNames = new String[37][2];
 
         for(int i = 0; i < 37; ++i) {
             for(int j = 0; j < 2; ++j) {
-                DngnNames[i][j] = var0.readUTF();
+                DngnNames[i][j] = data.readUTF();
             }
         }
 
