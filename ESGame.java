@@ -1412,43 +1412,43 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private static void b(byte[] var0) throws Exception {
-        DataInputStream var1 = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
-        Item.ia = var1.readShort();
-        Monster.J = var1.readShort();
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
+        Item.ia = data.readShort();
+        Monster.J = data.readShort();
 
         for(int i = 0; i < 7; ++i) {
-            NPC.b[i] = var1.readBoolean();
+            NPC.b[i] = data.readBoolean();
         }
 
         for(int i = 0; i < 7; ++i) {
-            NPC.q[i] = var1.readBoolean();
+            NPC.q[i] = data.readBoolean();
         }
 
         for(int i = 0; i < 4; ++i) {
-            NPC.r[i] = var1.readShort();
+            NPC.r[i] = data.readShort();
         }
 
         for(int i = 0; i < 4; ++i) {
-            NPC.p[i] = var1.readShort();
+            NPC.p[i] = data.readShort();
         }
 
         for(int i = 0; i < 4; ++i) {
-            NPC.h[i] = var1.readShort();
+            NPC.h[i] = data.readShort();
         }
 
         for(int i = 0; i < 4; ++i) {
-            NPC.c[i] = var1.readByte();
+            NPC.c[i] = data.readByte();
         }
 
         for(int i = 0; i < 4; ++i) {
-            NPC.n[i] = var1.readByte();
+            NPC.n[i] = data.readByte();
         }
 
-        NPC.f = var1.readByte();
-        NPC.d = var1.readBoolean();
-        NPC.a = var1.readShort();
-        NPC.g = var1.readShort();
-        NPC.l = var1.readBoolean();
+        NPC.f = data.readByte();
+        NPC.d = data.readBoolean();
+        NPC.a = data.readShort();
+        NPC.g = data.readShort();
+        NPC.l = data.readBoolean();
 
         for(int i = 0; i < 7; ++i) {
             if (!NPC.b[i]) {

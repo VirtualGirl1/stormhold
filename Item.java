@@ -106,15 +106,15 @@ public class Item {
     }
 
     static void LoadItems() throws Exception {
-        DataInputStream var0 = func.LoadDatStream("/itemsin.dat");
-        TypeCount = var0.readShort();
+        DataInputStream data = func.LoadDatStream("/itemsin.dat");
+        TypeCount = data.readShort();
         ItemType = new String[TypeCount];
 
         for(int i = 0; i < TypeCount; ++i) {
-            ItemType[i] = var0.readUTF();
+            ItemType[i] = data.readUTF();
         }
 
-        ItemCount = var0.readShort();
+        ItemCount = data.readShort();
         ItemName = new String[ItemCount];
         Type = new byte[ItemCount];
         Level = new byte[ItemCount];
@@ -124,51 +124,51 @@ public class Item {
         Slot = new byte[ItemCount];
 
         for(int i = 0; i < ItemCount; ++i) {
-            ItemName[i] = var0.readUTF();
+            ItemName[i] = data.readUTF();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            Type[i] = var0.readByte();
+            Type[i] = data.readByte();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            Level[i] = var0.readByte();
+            Level[i] = data.readByte();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            Rating[i] = var0.readByte();
+            Rating[i] = data.readByte();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            f[i] = var0.readShort();
+            f[i] = data.readShort();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            a[i] = var0.readShort();
+            a[i] = data.readShort();
         }
 
         for(int i = 0; i < ItemCount; ++i) {
-            Slot[i] = var0.readByte();
+            Slot[i] = data.readByte();
         }
 
-        var0.close();
+        data.close();
     }
 
     static void LoadDroppedItems() throws Exception {
-        DataInputStream var0 = func.LoadDatStream("/droppeditemsin.dat");
-        short var1 = var0.readShort();
+        DataInputStream data = func.LoadDatStream("/droppeditemsin.dat");
+        short var1 = data.readShort();
         TableRows = (byte)var1;
         System.out.println("numTableRows=" + TableRows);
-        short var2 = var0.readShort();
+        short var2 = data.readShort();
         DroppedItemTable = new byte[var1][var2];
 
         for(int i = 0; i < var1; ++i) {
             for(int j = 0; j < var2; ++j) {
-                DroppedItemTable[i][j] = var0.readByte();
+                DroppedItemTable[i][j] = data.readByte();
             }
         }
 
-        var0.close();
+        data.close();
     }
 
     static int a(Random var0, int var1) {

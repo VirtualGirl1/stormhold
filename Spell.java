@@ -40,8 +40,8 @@ public class Spell { // b
 
     static void LoadSpells() {
         try {
-            DataInputStream var0 = func.LoadDatStream("/spellsin.dat");
-            SpellCount = var0.readShort();
+            DataInputStream data = func.LoadDatStream("/spellsin.dat");
+            SpellCount = data.readShort();
             spells = new Spell[SpellCount];
 
             for(int i = 0; i < SpellCount; ++i) {
@@ -51,41 +51,41 @@ public class Spell { // b
             System.out.println("Number of spells is " + SpellCount);
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].Name = var0.readUTF();
+                spells[i].Name = data.readUTF();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].School = var0.readByte();
+                spells[i].School = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].Cost = var0.readByte();
+                spells[i].Cost = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].f = var0.readByte();
+                spells[i].f = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].d = var0.readByte();
+                spells[i].d = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].J = var0.readByte();
+                spells[i].J = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].g = var0.readByte();
+                spells[i].g = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].Description = var0.readUTF();
+                spells[i].Description = data.readUTF();
             }
 
-            var0.close();
-        } catch (Exception var10) {
+            data.close();
+        } catch (Exception err) {
             System.out.println("ERROR: cannot load spells!");
-            System.out.println(var10);
+            System.out.println(err);
         }
 
     }

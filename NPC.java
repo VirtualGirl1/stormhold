@@ -33,14 +33,14 @@ public class NPC {
         LoadNPCStrings("/npcstrings.dat");
     }
 
-    static void LoadNPCStrings(String var0) {
+    static void LoadNPCStrings(String File) {
         try {
-            DataInputStream var1 = func.LoadDatStream(var0);
+            DataInputStream data = func.LoadDatStream(File);
             byte var2 = 8;
             NPCStrings = new String[var2][];
 
             for(int i = 0; i < var2; ++i) {
-                GetNPCDialogue(i, o[i], var1);
+                GetNPCDialogue(i, o[i], data);
             }
 
             m = true;
@@ -80,16 +80,16 @@ public class NPC {
         ESGame.dungeons[0].DngnVec[var0][var1] = func.c((byte)32, var2);
     }
 
-    static void GetNPCDialogue(int var0, int var1, DataInputStream var2) throws Exception {
-        int var3 = var2.readInt();
-        if (var3 != var1) {
-            System.out.println("Unexpected number of messages for whichNPC = " + var0);
-            throw new Exception("Error in readNPCMessages: npc is " + var0);
+    static void GetNPCDialogue(int npcNum, int dlgCount, DataInputStream stream) throws Exception {
+        int EncodedCount = stream.readInt();
+        if (EncodedCount != dlgCount) {
+            System.out.println("Unexpected number of messages for whichNPC = " + npcNum);
+            throw new Exception("Error in readNPCMessages: npc is " + npcNum);
         } else {
-            NPCStrings[var0] = new String[var3];
+            NPCStrings[npcNum] = new String[EncodedCount];
 
-            for(int i = 0; i < var3; ++i) {
-                NPCStrings[var0][i] = var2.readUTF();
+            for(int i = 0; i < EncodedCount; ++i) {
+                NPCStrings[npcNum][i] = stream.readUTF();
             }
 
         }

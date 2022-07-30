@@ -369,39 +369,39 @@ public class Monster { // d
     }
 
     static void LoadMonsters() throws Exception {
-        DataInputStream stream = func.LoadDatStream("/monstersin.dat");
+        DataInputStream data = func.LoadDatStream("/monstersin.dat");
         J = 0;
-        MonCount = stream.readInt();
+        MonCount = data.readInt();
         MonNames = new String[MonCount];
         MonAttributes = new byte[MonCount][17];
 
         for(int i = 0; i < MonCount; ++i) {
-            MonNames[i] = stream.readUTF();
+            MonNames[i] = data.readUTF();
         }
 
         for(int i = 0; i < MonCount; ++i) {
             for(int j = 0; j < 17; ++j) {
-                MonAttributes[i][j] = stream.readByte();
+                MonAttributes[i][j] = data.readByte();
             }
         }
 
     }
 
-    static Monster a(DataInputStream var0) throws Exception {
+    static Monster a(DataInputStream stream) throws Exception {
         Monster var1 = new Monster();
-        var1.a = var0.readShort();
-        var1.l = var0.readByte();
-        var1.g = var0.readByte();
-        var1.o = var0.readByte();
-        var1.m = var0.readByte();
-        var1.ia = var0.readBoolean();
-        var1.n = var0.readByte();
-        var1.b = var0.readByte();
-        var1.f = var0.readByte();
-        var1.k = var0.readLong();
+        var1.a = stream.readShort();
+        var1.l = stream.readByte();
+        var1.g = stream.readByte();
+        var1.o = stream.readByte();
+        var1.m = stream.readByte();
+        var1.ia = stream.readBoolean();
+        var1.n = stream.readByte();
+        var1.b = stream.readByte();
+        var1.f = stream.readByte();
+        var1.k = stream.readLong();
 
         for(int i = 0; i < 10; ++i) {
-            var1.c[i] = var0.readByte();
+            var1.c[i] = stream.readByte();
         }
 
         return var1;
