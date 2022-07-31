@@ -23,21 +23,21 @@ public class CC extends FullCanvas {
 
     public void addCommand(Command var1) {
         if (this.menu != null) {
-            this.menu.a(var1);
+            this.menu.AddElement(var1);
         }
 
     }
 
     public void removeCommand(Command var1) {
         if (this.menu != null) {
-            this.menu.b(var1);
+            this.menu.RemoveElement(var1);
         }
 
     }
 
     public void setCommandListener(CommandListener var1) {
         if (this.menu != null) {
-            this.menu.a(var1);
+            this.menu.SetListener(var1);
         }
 
     }

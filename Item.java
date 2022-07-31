@@ -30,17 +30,17 @@ public class Item {
         return ia;
     }
 
-    static int e(int var0) {
-        return var0 - 1;
+    static int FormatIndex(int indx) {
+        return indx - 1;
     }
 
     static boolean c(int var0) {
-        int var1 = e(var0);
+        int var1 = FormatIndex(var0);
         return Slot[var1] != -1;
     }
 
     static boolean b(int var0) {
-        int var1 = e(var0);
+        int var1 = FormatIndex(var0);
         byte var2 = Type[var1];
         switch (var2) {
             case 1:
@@ -60,18 +60,18 @@ public class Item {
     }
 
     static int a(int var0) {
-        int var1 = e(var0);
+        int var1 = FormatIndex(var0);
         byte var2 = Slot[var1];
         return var2;
     }
 
-    static String d(int var0) {
-        int var1 = e(var0);
-        return ItemName[var1];
+    static String GetItemName(int indx0) {
+        int indx = FormatIndex(indx0);
+        return ItemName[indx];
     }
 
     static int a(int var0, int var1) {
-        int var2 = e(var1);
+        int var2 = FormatIndex(var1);
         short var3;
         switch (var0) {
             case 1:

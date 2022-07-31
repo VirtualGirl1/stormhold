@@ -331,10 +331,10 @@ public class Monster { // d
 
             int var16 = var14 - var15;
             var16 = Math.max(var16, 4);
-            int var17 = var16 * var1.U[3] / 100;
-            short[] var10000 = var1.U;
+            int var17 = var16 * var1.CharCritAtt[3] / 100;
+            short[] var10000 = var1.CharCritAtt;
             var10000[2] = (short)(var10000[2] - var17);
-            var1.U[2] = (short)Math.max(var1.U[2], 0);
+            var1.CharCritAtt[2] = (short)Math.max(var1.CharCritAtt[2], 0);
             if (var12) {
                 var1.a(var1.y(), 1);
             }

@@ -21,21 +21,21 @@ public class Menu implements Runnable {
     static int x;
     static Image r;
     Vector q;
-    CommandListener J;
-    static final Font O;
-    private static final Font H;
-    private static final Font p;
-    static final Font d;
-    static final Font l;
-    static final Command I;
-    static final Command u;
-    static final Command P;
-    static final Command z;
-    static final Command a;
-    static final String[] y;
+    CommandListener Listener;
+    static final Font SmallBold1;
+    private static final Font MedBold1;
+    private static final Font SmallPlain;
+    static final Font SmallBold2;
+    static final Font MedBold2;
+    static final Command OKComm;
+    static final Command SelectComm;
+    static final Command CancelComm;
+    static final Command BackComm;
+    static final Command ExitComm;
+    static final String[] CRStrings;
     int Q;
     int B;
-    int N;
+    int npcID;
     private ESGame Game;
     Screen Scrn;
     int f;
@@ -48,7 +48,7 @@ public class Menu implements Runnable {
     private Thread thread;
     long C;
     Displayable t;
-    Object s;
+    Object prev;
     Object c;
     int o;
     int e;
@@ -65,10 +65,10 @@ public class Menu implements Runnable {
         this.Game = game;
         this.Q = var2;
         this.B = var3;
-        this.N = 0;
+        this.npcID = 0;
         this.Scrn = null;
         this.f = 0;
-        this.s = null;
+        this.prev = null;
         this.c = null;
         this.M = null;
         this.E = null;
@@ -88,8 +88,8 @@ public class Menu implements Runnable {
         this.a(title, var2, var3, true);
     }
 
-    void a(String var1, String[] var2, Vector var3, boolean var4) {
-        List var5 = new List(var1, 3);
+    void a(String title, String[] var2, Vector var3, boolean var4) {
+        List var5 = new List(title, 3);
         this.Scrn = var5;
         this.f = 1;
         int var6 = var2.length;
@@ -103,24 +103,24 @@ public class Menu implements Runnable {
         this.v = 0;
         this.k = 0;
         this.t = K[x];
-        this.a(u);
+        this.AddElement(SelectComm);
         if (var4) {
-            this.a(P);
+            this.AddElement(CancelComm);
         }
 
-        this.a((CommandListener)this.Game);
+        this.SetListener((CommandListener)this.Game);
     }
 
     void n() {
         String var1 = "";
 
-        for(int i = 0; i < y.length; ++i) {
-            var1 = var1 + y[i];
+        for(int i = 0; i < CRStrings.length; ++i) {
+            var1 = var1 + CRStrings[i];
         }
 
         this.a("Exiting", var1);
-        this.b(I);
-        this.a(a);
+        this.RemoveElement(OKComm);
+        this.AddElement(ExitComm);
     }
 
     void a(String var1, String var2) {
@@ -139,8 +139,8 @@ public class Menu implements Runnable {
         this.v = 0;
         this.k = 0;
         this.t = K[x];
-        this.a(I);
-        this.a((CommandListener)this.Game);
+        this.AddElement(OKComm);
+        this.SetListener((CommandListener)this.Game);
     }
 
     void a(String title, String content, String[] var3, Vector var4) {
@@ -169,9 +169,9 @@ public class Menu implements Runnable {
         this.v = 0;
         this.k = 0;
         this.t = K[x];
-        this.a(u);
-        this.a(P);
-        this.a((CommandListener)this.Game);
+        this.AddElement(SelectComm);
+        this.AddElement(CancelComm);
+        this.SetListener((CommandListener)this.Game);
         if (content != null && content.indexOf("<TAG>") >= 0) {
             this.M = new String(content);
         }
@@ -199,9 +199,9 @@ public class Menu implements Runnable {
         var6.append(var9);
         this.n = var5;
         this.t = K[x];
-        this.a(u);
-        this.a(P);
-        this.a((CommandListener)this.Game);
+        this.AddElement(SelectComm);
+        this.AddElement(CancelComm);
+        this.SetListener((CommandListener)this.Game);
     }
 
     public void e(Graphics var1) {
@@ -248,8 +248,8 @@ public class Menu implements Runnable {
             int var2 = 10 + ESGame.Vir2lLogo.getHeight() + 3;
             var1.setColor(0);
 
-            for(int i = 0; i < y.length; ++i) {
-                var1.drawString(y[i], this.b() / 2, var2, 17);
+            for(int i = 0; i < CRStrings.length; ++i) {
+                var1.drawString(CRStrings[i], this.b() / 2, var2, 17);
                 var2 += 14;
             }
 
@@ -276,7 +276,7 @@ public class Menu implements Runnable {
     private void b(Graphics var1) {
         var1.setColor(11429934);
         var1.fillRect(0, 0, this.b(), 20 + this.k());
-        var1.setFont(l);
+        var1.setFont(MedBold2);
         var1.setColor(16777215);
         int var2 = this.b() / 2;
         if (this.Q == 8) {
@@ -299,7 +299,7 @@ public class Menu implements Runnable {
 
     private void a(Graphics var1, String var2) {
         Font var3 = var1.getFont();
-        var1.setFont(H);
+        var1.setFont(MedBold1);
         int var4 = var1.getColor();
         var1.setColor(0);
         var1.fillRect(0, 0, this.b(), 14);
@@ -313,7 +313,7 @@ public class Menu implements Runnable {
         var1.setColor(11429934);
         var1.fillRect(0, 0, this.b(), 20 + this.k());
         this.a(var1, this.Scrn.getTitle());
-        this.b = d;
+        this.b = SmallBold2;
         var1.setFont(this.b);
         this.o = this.b.getHeight();
         this.e = 20;
@@ -343,7 +343,7 @@ public class Menu implements Runnable {
         var1.setColor(11429934);
         var1.fillRect(0, 0, this.b(), 20 + this.k());
         this.a(var1, var3.getTitle());
-        this.b = d;
+        this.b = SmallBold2;
         var1.setFont(this.b);
         this.o = this.b.getHeight();
         this.e = 20;
@@ -413,7 +413,7 @@ public class Menu implements Runnable {
         var1.setColor(11429934);
         var1.fillRect(0, 0, this.b(), 20 + this.k());
         this.a(var1, var2.getTitle());
-        this.b = d;
+        this.b = SmallBold2;
         var1.setFont(this.b);
         this.o = this.b.getHeight();
         this.e = 20;
@@ -573,13 +573,13 @@ public class Menu implements Runnable {
         if (var1 == -6) {
             var2 = this.s();
             if (var2 != null) {
-                this.J.commandAction(var2, this.t);
+                this.Listener.commandAction(var2, this.t);
                 return;
             }
         } else if (var1 == -7) {
             var2 = this.l();
             if (var2 != null) {
-                this.J.commandAction(var2, this.t);
+                this.Listener.commandAction(var2, this.t);
                 return;
             }
         }
@@ -873,16 +873,16 @@ public class Menu implements Runnable {
         return null;
     }
 
-    public void a(Command var1) {
+    public void AddElement(Command var1) {
         this.q.addElement(var1);
     }
 
-    public void b(Command var1) {
+    public void RemoveElement(Command var1) {
         this.q.removeElement(var1);
     }
 
-    public void a(CommandListener var1) {
-        this.J = var1;
+    public void SetListener(CommandListener listener) {
+        this.Listener = listener;
     }
 
     private void a(Graphics var1) {
@@ -891,7 +891,7 @@ public class Menu implements Runnable {
             var1.fillRect(0, 190, this.b(), 20);
             int var2 = this.q.size();
             var1.setColor(0);
-            var1.setFont(O);
+            var1.setFont(SmallBold1);
             Command var3 = this.s();
             if (var3 != null) {
                 var1.drawString(var3.getLabel(), 10, 192, 20);
@@ -913,7 +913,7 @@ public class Menu implements Runnable {
         } else if (var1 == 2) {
             for(int i = 0; i < 2; ++i) {
                 Command var4 = (Command)this.q.elementAt(i);
-                if (var4 == I || var4 == u) {
+                if (var4 == OKComm || var4 == SelectComm) {
                     var2 = var4;
                     break;
                 }
@@ -929,7 +929,7 @@ public class Menu implements Runnable {
         if (var1 == 2) {
             for(int i = 0; i < 2; ++i) {
                 Command var4 = (Command)this.q.elementAt(i);
-                if (var4 == z || var4 == P) {
+                if (var4 == BackComm || var4 == CancelComm) {
                     var2 = var4;
                     break;
                 }
@@ -976,16 +976,16 @@ public class Menu implements Runnable {
             System.out.println("Error allocating bufferImage");
         }
 
-        O = Font.getFont(0, 1, 8);
-        H = Font.getFont(0, 1, 0);
-        p = Font.getFont(64, 0, 8);
-        d = Font.getFont(0, 1, 8);
-        l = Font.getFont(0, 1, 0);
-        I = new Command("Ok", 3, 0);
-        u = new Command("Select", 3, 0);
-        P = new Command("Cancel", 4, 0);
-        z = new Command("Back", 4, 0);
-        a = new Command("Exit", 7, 0);
-        y = new String[]{"(c) 2003 Vir2L Studios, ", "a ZeniMax Media company. ", "The Elder Scrolls and Vir2L ", "are registered trademarks ", "of ZeniMax Media Inc. ", "All rights reserved."};
+        SmallBold1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
+        MedBold1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
+        SmallPlain = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
+        SmallBold2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
+        MedBold2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
+        OKComm = new Command("Ok", 3, 0);
+        SelectComm = new Command("Select", 3, 0);
+        CancelComm = new Command("Cancel", 4, 0);
+        BackComm = new Command("Back", 4, 0);
+        ExitComm = new Command("Exit", 7, 0);
+        CRStrings = new String[]{"(c) 2003 Vir2L Studios, ", "a ZeniMax Media company. ", "The Elder Scrolls and Vir2L ", "are registered trademarks ", "of ZeniMax Media Inc. ", "All rights reserved."};
     }
 }

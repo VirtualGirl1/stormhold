@@ -53,7 +53,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Form W;
     static Image SplashTop = null;
     static Image SplashBot = null;
-    private Menu aR;
+    private Menu IntroMenu;
     private Menu aZ;
     private static Menu al;
     private static Menu aQ;
@@ -61,50 +61,50 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu MainMenu;
     private Menu NewGameMenu;
     private Menu CharacterMenu;
-    private Menu h;
+    private Menu InfoMenu;
     private Menu NewCharMenu;
     private Menu WelcomeMenu;
-    private Menu ba;
+    private Menu NoSaveGameMenu;
     private Menu f;
     Menu ab;
-    Menu aq;
-    Menu m;
+    Menu NPCHelloMenu;
+    Menu RumorMenu;
     Menu[] NPCDlgMenus;
-    Menu Q;
-    Menu ap;
-    Menu z;
+    Menu GiveMenu;
+    Menu OracleMenu;
+    Menu TrainMenu;
     Menu ae;
-    Menu I;
+    Menu TakeItemMenu;
     Menu X;
     Menu V;
     Menu aJ;
     Menu an;
-    Menu aw;
+    Menu EnchantItemMenu;
     Menu aI;
     Menu aL;
     Menu H;
     Menu K;
     Menu s;
-    Menu t;
-    Menu B;
-    Menu aY;
+    Menu OptionsMenu;
+    Menu StatsMenu;
+    Menu InventoryMenu;
     Menu aB;
-    Menu L;
-    Menu N;
-    Menu v;
-    Menu q;
-    Menu ag;
+    Menu SkillsListMenu;
+    Menu SkillInfoMenu;
+    Menu SpellsListMenu;
+    Menu SpellInfoMenu;
+    Menu LevelUpMenu;
     Menu aV;
-    Menu aP;
-    Menu C;
-    Menu D;
+    Menu EndOfGameMenu;
+    Menu QuitMenu;
+    Menu HelpMenu;
     private Menu F;
-    Menu aj;
+    Menu CreditsMenu;
     Menu SaveErrMenu;
     private EE av;
     private Form aD;
-    private static String[] o = new String[12];
-    private static String[] as = new String[12];
+    private static String[] HelpStrings = new String[12];
+    private static String[] helpCats = new String[12];
     private static String CreditString = null;
     public Character k;
     public Character e;
@@ -207,7 +207,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         } else if (J == 6) {
             if (this.LoadGame()) {
                 this.J();
-                this.a = this.k.j;
+                this.a = this.k.CurDung;
                 this.ak = true;
                 jj = true;
                 jj = false;
@@ -221,7 +221,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                 this.av.StartGame();
                 this.a((Object)this.av);
             } else {
-                this.a((Object)this.ba);
+                this.a((Object)this.NoSaveGameMenu);
             }
         } else {
             this.LoadDngImgs();
@@ -322,7 +322,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void J() {
-        int var1 = d(this.k.W);
+        int var1 = d(this.k.GiftPoints);
         i(var1);
     }
 
@@ -409,25 +409,25 @@ public class ESGame extends a implements Runnable, CommandListener {
         CreditString = this.CreditsStr();
         this.a("After CREDITS", true);
         this.MainMenu = new Menu(this, 3, 2);
-        String[] var3 = new String[]{"New Game", "Continue Game", "Help", "Credits", "Exit"};
+        String[] MainMenuText = new String[]{"New Game", "Continue Game", "Help", "Credits", "Exit"};
         Object var4 = null;
-        this.MainMenu.a("Main Menu", var3, (Vector)var4, false);
+        this.MainMenu.a("Main Menu", MainMenuText, (Vector)var4, false);
         this.NewGameMenu = new Menu(this, 5, 3);
-        String[] var5 = Character.Classes;
-        this.NewGameMenu.a("New Game", "Select a Class:", var5, (Vector)null);
+        String[] ClassStrs = Character.Classes;
+        this.NewGameMenu.a("New Game", "Select a Class:", ClassStrs, (Vector)null);
         this.ay.m = 35;
         this.a("After newGameUI", true);
         this.CharacterMenu = new Menu(this, 6, 4);
-        String[] var6 = new String[]{"See Class Info", "Create Character"};
+        String[] CharMenuText = new String[]{"See Class Info", "Create Character"};
         Object var7 = null;
-        this.CharacterMenu.a("Character", "You selected:", "", var6, (Vector)var7);
-        this.h = new Menu(this, 4, 5);
-        this.h.a("Info", "");
+        this.CharacterMenu.a("Character", "You selected:", "", CharMenuText, (Vector)var7);
+        this.InfoMenu = new Menu(this, 4, 5);
+        this.InfoMenu.a("Info", "");
         this.NewCharMenu = new Menu(this, 4, 6);
         this.NewCharMenu.a("New Character", "Character Created!\n \nPress 'select' to enter a name");
-        this.NewCharMenu.b(Menu.I);
-        this.NewCharMenu.a(Menu.u);
-        this.NewCharMenu.a(Menu.P);
+        this.NewCharMenu.RemoveElement(Menu.OKComm);
+        this.NewCharMenu.AddElement(Menu.SelectComm);
+        this.NewCharMenu.AddElement(Menu.CancelComm);
         this.WelcomeMenu = new Menu(this, 4, 7);
         this.WelcomeMenu.a("Welcome", "Welcome to The Elder Scrolls Travels!");
         Log("After all the welcome screens");
@@ -435,10 +435,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.SaveErrMenu = new Menu(this, 4, 499);
         this.SaveErrMenu.a("Save Error", "There was an error in saving your character record. Your previous character record is still saved. Try turning your phone off then on again to clear the memory.");
         Log("Before NPCHelloUI");
-        this.aq = new Menu(this, 4, 8);
-        this.aq.a("NPC name here", "NPC text here", true);
-        this.m = new Menu(this, 4, 360);
-        this.m.a("Rumors", "Rumors text here", true);
+        this.NPCHelloMenu = new Menu(this, 4, 8);
+        this.NPCHelloMenu.a("NPC name here", "NPC text here", true);
+        this.RumorMenu = new Menu(this, 4, 360);
+        this.RumorMenu.a("Rumors", "Rumors text here", true);
         Log("After NPCHelloUI");
         this.a("After helloUI", true);
         this.NPCDlgMenus = new Menu[6];
@@ -448,24 +448,24 @@ public class ESGame extends a implements Runnable, CommandListener {
             this.NPCDlgMenus[i] = new Menu(this, 5, 9 + i);
             var9 = new String[]{"Train", "Give", "Befriend", "Threaten", "Kill"};
             this.NPCDlgMenus[i].a("Name", "Aid: <TAG>", var9, (Vector)null);
-            this.NPCDlgMenus[i].s = this.av;
+            this.NPCDlgMenus[i].prev = this.av;
         }
 
         this.NPCDlgMenus[4] = new Menu(this, 5, 13);
         var9 = new String[]{"Give Item", "Take Crystal"};
         this.NPCDlgMenus[4].a("Beneca", "Aid: <TAG>", var9, (Vector)null);
-        this.NPCDlgMenus[4].s = this.av;
+        this.NPCDlgMenus[4].prev = this.av;
         this.NPCDlgMenus[5] = new Menu(this, 5, 14);
         String[] var10 = new String[]{"Rumors", "Give Crystal", "Enchant", "Bless", "Cure", "Warp", "Recovery"};
         this.NPCDlgMenus[5].a("Helga", "Aid: <TAG>", var10, (Vector)null);
-        this.NPCDlgMenus[5].s = this.av;
+        this.NPCDlgMenus[5].prev = this.av;
         this.a("After choicesUI", true);
-        this.ap = new Menu(this, 4, 23);
-        this.ap.a("Oracle", "NPC text here", true);
-        this.t = new Menu(this, 3, 31);
+        this.OracleMenu = new Menu(this, 4, 23);
+        this.OracleMenu.a("Oracle", "NPC text here", true);
+        this.OptionsMenu = new Menu(this, 3, 31);
         String[] var11 = new String[]{"Stats", "Inventory", "Skills", "Spells", "Save Game", "Load Game", "Help", "Quit Game"};
-        this.t.a("Options", var11, (Vector)null, false);
-        this.t.a(Menu.z);
+        this.OptionsMenu.a("Options", var11, (Vector)null, false);
+        this.OptionsMenu.AddElement(Menu.BackComm);
         this.a("After OptionsUI", true);
         this.ay.m = 42;
         this.aD = new Form("Enter name");
@@ -473,21 +473,21 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.aD.append(var12);
         TextField var13 = new TextField((String)null, (String)null, 10, 0);
         this.aD.append(var13);
-        this.aD.addCommand(Menu.I);
-        this.aD.addCommand(Menu.P);
+        this.aD.addCommand(Menu.OKComm);
+        this.aD.addCommand(Menu.CancelComm);
         this.aD.setCommandListener(this);
-        this.ba = new Menu(this, 4, 305);
-        this.ba.a("Unavailable", "No game is available for loading. Press OK to return to main menu.");
-        this.ba.a(Menu.I);
-        this.ba.a(this);
-        this.ba.s = this.MainMenu;
+        this.NoSaveGameMenu = new Menu(this, 4, 305);
+        this.NoSaveGameMenu.a("Unavailable", "No game is available for loading. Press OK to return to main menu.");
+        this.NoSaveGameMenu.AddElement(Menu.OKComm);
+        this.NoSaveGameMenu.SetListener(this);
+        this.NoSaveGameMenu.prev = this.MainMenu;
         this.a("After NoSavedGameUI", true);
         this.ay.c = this.MainMenu;
-        this.NewGameMenu.s = this.MainMenu;
-        this.CharacterMenu.s = this.NewGameMenu;
-        this.h.s = this.CharacterMenu;
-        this.h.c = this.CharacterMenu;
-        this.NewCharMenu.s = this.CharacterMenu;
+        this.NewGameMenu.prev = this.MainMenu;
+        this.CharacterMenu.prev = this.NewGameMenu;
+        this.InfoMenu.prev = this.CharacterMenu;
+        this.InfoMenu.c = this.CharacterMenu;
+        this.NewCharMenu.prev = this.CharacterMenu;
         this.f = new Menu(this, 4, 399);
         this.f.n();
         this.ay.m = 55;
@@ -495,133 +495,133 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("End of allocateAllUIs", true);
     }
 
-    private Menu GiveMenu(int var1) {
+    private Menu GiveMenu(int npc) {
         System.gc();
         Menu menu = new Menu(this, 5, 22);
-        menu.N = var1;
-        String[] var3 = new String[this.k.p];
+        menu.npcID = npc;
+        String[] InvStrings = new String[this.k.InventoryCount];
 
-        for(int i = 0; i < this.k.p; ++i) {
-            int var5 = Math.abs(this.k.H[i]);
+        for(int i = 0; i < this.k.InventoryCount; ++i) {
+            int ItemID = Math.abs(this.k.Inventory[i]);
             if (this.k.C(i)) {
-                var3[i] = "E:" + Item.d(var5);
+                InvStrings[i] = "E:" + Item.GetItemName(ItemID);
             } else {
-                var3[i] = Item.d(var5);
+                InvStrings[i] = Item.GetItemName(ItemID);
             }
         }
 
-        menu.a(NPC.NPCNames[var1], "Give What?", var3, (Vector)null, true);
-        menu.s = this.av;
+        menu.a(NPC.NPCNames[npc], "Give What?", InvStrings, (Vector)null, true);
+        menu.prev = this.av;
         return menu;
     }
 
-    private Menu TrainMenu(int var1) {
+    private Menu TrainMenu(int npc) {
         System.gc();
         Log("Start of newTrainWhat");
-        Menu var2 = new Menu(this, 5, 20);
-        var2.N = var1;
+        Menu menu = new Menu(this, 5, 20);
+        menu.npcID = npc;
         String[] var3 = new String[3];
         int var4 = 0;
 
         for(int i = 0; i < 14; ++i) {
             int var6 = this.k.b(i, false);
             String var7 = Character.Skills[i] + " (<TAG>)";
-            if (k.c(var1, i)) {
+            if (k.c(npc, i)) {
                 var3[var4++] = func.StringInsert(var7, "<TAG>", var6);
             }
         }
 
-        var2.a(NPC.NPCNames[var1], "Train What?", var3, (Vector)null, true);
-        var2.s = this.av;
-        return var2;
+        menu.a(NPC.NPCNames[npc], "Train What?", var3, (Vector)null, true);
+        menu.prev = this.av;
+        return menu;
     }
 
     private Menu TakeItemMenu(int var1) {
         System.gc();
         Log("Start of newTakeWhat");
-        Menu var2 = new Menu(this, 5, 27);
-        var2.N = var1;
+        Menu menu = new Menu(this, 5, 27);
+        menu.npcID = var1;
         String[] var3 = Item.b();
-        var2.a(NPC.NPCNames[var1], "Take What?", var3, (Vector)null, true);
-        var2.s = null;
-        return var2;
+        menu.a(NPC.NPCNames[var1], "Take What?", var3, (Vector)null, true);
+        menu.prev = null;
+        return menu;
     }
 
     private Menu EnchantItemMenu(int var1) {
         System.gc();
         Log("Start of newEnchantWhat");
-        Menu var2 = new Menu(this, 5, 350);
-        var2.N = var1;
-        String[] var3 = new String[this.k.p];
+        Menu menu = new Menu(this, 5, 350);
+        menu.npcID = var1;
+        String[] var3 = new String[this.k.InventoryCount];
 
-        for(int i = 0; i < this.k.p; ++i) {
-            int var5 = Math.abs(this.k.H[i]);
-            var3[i] = Item.d(var5);
+        for(int i = 0; i < this.k.InventoryCount; ++i) {
+            int var5 = Math.abs(this.k.Inventory[i]);
+            var3[i] = Item.GetItemName(var5);
         }
 
-        var2.a(NPC.NPCNames[var1], "Enchant What?", var3, (Vector)null, true);
-        var2.s = this.av;
-        return var2;
+        menu.a(NPC.NPCNames[var1], "Enchant What?", var3, (Vector)null, true);
+        menu.prev = this.av;
+        return menu;
     }
 
     private Menu StatsMenu() {
-        Menu var1 = new Menu(this, 4, 32);
-        var1.a("Stats", this.av.ax.j());
-        return var1;
+        Menu menu = new Menu(this, 4, 32);
+        menu.a("Stats", this.av.ax.GetStatsString());
+        return menu;
     }
 
     private Menu InventoryMenu() {
         System.gc();
-        Menu var1 = new Menu(this, 5, 33);
-        String[] var2 = new String[this.k.p];
+        Menu menu = new Menu(this, 5, 33);
+        String[] var2 = new String[this.k.InventoryCount];
 
-        for(int i = 0; i < this.k.p; ++i) {
-            byte var4 = this.k.H[i];
+        for(int i = 0; i < this.k.InventoryCount; ++i) {
+            byte var4 = this.k.Inventory[i];
             System.out.println("itemid is " + var4);
             if (var4 < 0) {
-                var2[i] = "E: " + Item.d(Math.abs(var4));
+                var2[i] = "E: " + Item.GetItemName(Math.abs(var4));
                 System.out.println("item is " + var2[i]);
             } else {
-                var2[i] = Item.d(var4);
+                var2[i] = Item.GetItemName(var4);
                 System.out.println("item is " + var2[i]);
             }
         }
 
-        var1.a("Inventory", "Items:", var2, (Vector)null, true);
-        var1.s = this.t;
-        return var1;
+        menu.a("Inventory", "Items:", var2, (Vector)null, true);
+        menu.prev = this.OptionsMenu;
+        return menu;
     }
 
     private Menu QuitMenu(Menu var1) {
         System.gc();
-        Menu var2 = new Menu(this, 5, 202);
+        Menu menu = new Menu(this, 5, 202);
         String[] var3 = new String[]{"Yes", "No"};
-        var2.a("Quit?", "Are you sure?", var3, (Vector)null, true);
-        var2.s = var1;
-        return var2;
+        menu.a("Quit?", "Are you sure?", var3, (Vector)null, true);
+        menu.prev = var1;
+        return menu;
     }
 
     private Menu HelpMenu(Menu var1) {
         System.gc();
-        Menu var2 = new Menu(this, 3, 203);
-        var2.a("Help", as, (Vector)null);
-        var2.s = var1;
-        return var2;
+        Menu menu = new Menu(this, 3, 203);
+        menu.a("Help", helpCats, (Vector)null);
+        menu.prev = var1;
+        return menu;
     }
 
-    private Menu g(int var1) {
+    private Menu SpecHelpMenu(int var1) {
         System.gc();
-        Menu var2 = new Menu(this, 4, 206);
-        var2.a(as[var1], o[var1], true);
-        var2.s = this.D;
-        return var2;
+        Menu menu = new Menu(this, 4, 206);
+        menu.a(helpCats[var1], HelpStrings[var1], true);
+        menu.prev = this.HelpMenu;
+        return menu;
     }
 
     private Menu CreditsMenu(Menu var1) {
         System.gc();
         Menu menu = new Menu(this, 4, 204);
         menu.a("Credits", CreditString, true);
-        menu.s = var1;
+        menu.prev = var1;
         return menu;
     }
 
@@ -634,10 +634,10 @@ public class ESGame extends a implements Runnable, CommandListener {
         aT = 4;
     }
 
-    public void commandAction(Command var1, Displayable var2) {
+    public void commandAction(Command comm, Displayable disp) {
         if (ax != null) {
-            if (var1 == Menu.P && ax.s != null) {
-                this.a(ax.s);
+            if (comm == Menu.CancelComm && ax.prev != null) {
+                this.a(ax.prev);
                 return;
             }
 
@@ -646,7 +646,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             Thread var5;
             Thread var6;
             if (ax.B == 2) {
-                if (var1 == Menu.u) {
+                if (comm == Menu.SelectComm) {
                     var3 = ax.a();
                     var4 = ax.r();
                     switch (var3) {
@@ -670,20 +670,20 @@ public class ESGame extends a implements Runnable, CommandListener {
                             this.a((Object)aQ);
                             break;
                         case 2:
-                            this.D = this.HelpMenu(ax);
-                            this.a((Object)this.D);
+                            this.HelpMenu = this.HelpMenu(ax);
+                            this.a((Object)this.HelpMenu);
                             break;
                         case 3:
-                            this.aj = this.CreditsMenu(ax);
-                            this.a((Object)this.aj);
+                            this.CreditsMenu = this.CreditsMenu(ax);
+                            this.a((Object)this.CreditsMenu);
                             break;
                         case 4:
-                            this.C = this.QuitMenu(ax);
-                            this.a((Object)this.C);
+                            this.QuitMenu = this.QuitMenu(ax);
+                            this.a((Object)this.QuitMenu);
                     }
                 }
             } else if (ax.B == 3) {
-                if (var1 == Menu.u) {
+                if (comm == Menu.SelectComm) {
                     var3 = ax.a();
                     var4 = ax.r();
                     this.e = null;
@@ -695,41 +695,41 @@ public class ESGame extends a implements Runnable, CommandListener {
                     this.a((Object)this.CharacterMenu);
                 }
             } else if (ax.B == 4) {
-                if (var1 == Menu.u) {
+                if (comm == Menu.SelectComm) {
                     var3 = ax.a();
                     var4 = ax.r();
                     if (var3 == 0) {
                         String var9 = this.e.m();
-                        this.h.a(0, var9);
-                        this.h.w = 0;
-                        this.a((Object)this.h);
+                        this.InfoMenu.a(0, var9);
+                        this.InfoMenu.w = 0;
+                        this.a((Object)this.InfoMenu);
                     } else {
                         this.k = this.e;
                         this.a((Object)this.NewCharMenu);
                     }
                 }
             } else if (ax.B == 5) {
-                if (var1 == Menu.I) {
+                if (comm == Menu.OKComm) {
                     this.a(ax.c);
                 }
             } else if (ax.B == 6) {
-                if (var1 == Menu.u) {
+                if (comm == Menu.SelectComm) {
                     this.a((Object)this.aD);
                 }
             } else if (ax.B == 7) {
-                this.aR = new Menu(this, 4, 101);
-                this.aR.a("Introduction", NPC.NPCStrings[7][3], true);
-                this.a((Object)this.aR);
+                this.IntroMenu = new Menu(this, 4, 101);
+                this.IntroMenu.a("Introduction", NPC.NPCStrings[7][3], true);
+                this.a((Object)this.IntroMenu);
             } else if (ax.B == 101) {
-                if (var1 == Menu.I) {
+                if (comm == Menu.OKComm) {
                     this.av.ax = this.k;
                     this.av.StartGame();
                     this.a((Object)this.av);
                 }
             } else if (ax.B != 8 && ax.B != 360) {
                 if (ax.B >= 9 && ax.B <= 14) {
-                    if (var1 == Menu.P) {
-                        this.a(ax.s);
+                    if (comm == Menu.CancelComm) {
+                        this.a(ax.prev);
                     } else {
                         this.d(ax);
                     }
@@ -737,52 +737,52 @@ public class ESGame extends a implements Runnable, CommandListener {
                     int i;
                     int var10;
                     if (ax.B == 20) {
-                        if (var1 == Menu.u) {
-                            var3 = ax.N;
+                        if (comm == Menu.SelectComm) {
+                            var3 = ax.npcID;
                             i = ax.a();
                             var10 = k.b(var3, i);
                             this.ae = this.a(ax, var3, 21, 5, var10);
                             this.a((Object)this.ae);
-                        } else if (var1 == Menu.P) {
-                            var3 = ax.N;
+                        } else if (comm == Menu.CancelComm) {
+                            var3 = ax.npcID;
                             this.k(var3);
                             this.a((Object)this.NPCDlgMenus[var3]);
                         }
                     } else if (ax.B == 22) {
-                        if (var1 == Menu.u) {
+                        if (comm == Menu.SelectComm) {
                             System.out.println("Found give what select");
-                            var3 = ax.N;
+                            var3 = ax.npcID;
                             i = ax.a();
                             if (i >= 0) {
-                                this.ap = this.a(ax, var3, 23, 4, i);
-                                this.a((Object)this.ap);
+                                this.OracleMenu = this.a(ax, var3, 23, 4, i);
+                                this.a((Object)this.OracleMenu);
                             }
-                        } else if (var1 == Menu.P) {
-                            var3 = ax.N;
+                        } else if (comm == Menu.CancelComm) {
+                            var3 = ax.npcID;
                             this.k(var3);
                             this.a((Object)this.NPCDlgMenus[var3]);
                         }
                     } else if (ax.B == 27) {
-                        if (var1 == Menu.u) {
-                            var3 = ax.N;
+                        if (comm == Menu.SelectComm) {
+                            var3 = ax.npcID;
                             i = ax.a() + 87;
                             this.aJ = this.a(ax, var3, 28, 7, i);
                             this.a((Object)this.aJ);
-                        } else if (var1 == Menu.P) {
-                            var3 = ax.N;
+                        } else if (comm == Menu.CancelComm) {
+                            var3 = ax.npcID;
                             this.k(var3);
                             this.a((Object)this.NPCDlgMenus[var3]);
                         }
                     } else if (ax.B == 350) {
-                        if (var1 == Menu.u) {
-                            var3 = ax.N;
+                        if (comm == Menu.SelectComm) {
+                            var3 = ax.npcID;
                             i = ax.a();
                             if (i >= 0) {
                                 this.aI = this.a(ax, var3, 351, 8, i);
                                 this.a((Object)this.aI);
                             }
-                        } else if (var1 == Menu.P) {
-                            var3 = ax.N;
+                        } else if (comm == Menu.CancelComm) {
+                            var3 = ax.npcID;
                             this.k(var3);
                             this.a((Object)this.NPCDlgMenus[var3]);
                         }
@@ -791,34 +791,34 @@ public class ESGame extends a implements Runnable, CommandListener {
                             this.a((Object)this.av);
                         } else if (ax.B != 351 && ax.B != 352 && ax.B != 353 && ax.B != 355) {
                             if (ax.B == 30) {
-                                if (var1 == Menu.I) {
+                                if (comm == Menu.OKComm) {
                                     this.a((Object)this.av);
                                 }
                             } else if (ax.B == 41) {
-                                if (var1 == Menu.I) {
+                                if (comm == Menu.OKComm) {
                                     this.k.Q = false;
                                     this.a((Object)this.av);
                                 }
                             } else if (ax.B == 31) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
                                     var4 = ax.r();
                                     switch (var3) {
                                         case 0:
-                                            this.B = this.StatsMenu();
-                                            this.a((Object)this.B);
+                                            this.StatsMenu = this.StatsMenu();
+                                            this.a((Object)this.StatsMenu);
                                             break;
                                         case 1:
-                                            this.aY = this.InventoryMenu();
-                                            this.a((Object)this.aY);
+                                            this.InventoryMenu = this.InventoryMenu();
+                                            this.a((Object)this.InventoryMenu);
                                             break;
                                         case 2:
-                                            this.L = this.d();
-                                            this.a((Object)this.L);
+                                            this.SkillsListMenu = this.SkillsListMenu();
+                                            this.a((Object)this.SkillsListMenu);
                                             break;
                                         case 3:
-                                            this.v = this.r();
-                                            this.a((Object)this.v);
+                                            this.SpellsListMenu = this.SpellsListMenu();
+                                            this.a((Object)this.SpellsListMenu);
                                             break;
                                         case 4:
                                             al = new Menu(this, 10, 303);
@@ -840,42 +840,42 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             break;
                                         case 6:
                                             Log("Help");
-                                            this.D = this.HelpMenu(ax);
-                                            this.a((Object)this.D);
+                                            this.HelpMenu = this.HelpMenu(ax);
+                                            this.a((Object)this.HelpMenu);
                                             break;
                                         case 7:
-                                            this.C = this.QuitMenu(ax);
-                                            this.a((Object)this.C);
+                                            this.QuitMenu = this.QuitMenu(ax);
+                                            this.a((Object)this.QuitMenu);
                                             break;
                                         case 8:
                                             this.Debug();
                                             this.a((Object)this.ao);
                                     }
-                                } else if (var1 == Menu.z) {
+                                } else if (comm == Menu.BackComm) {
                                     this.a((Object)this.av);
                                 }
                             } else if (ax.B == 32) {
-                                if (var1 == Menu.I) {
-                                    this.a((Object)this.t);
+                                if (comm == Menu.OKComm) {
+                                    this.a((Object)this.OptionsMenu);
                                 }
                             } else if (ax.B == 33) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
                                     if (var3 >= 0) {
-                                        this.aB = this.l(var3);
+                                        this.aB = this.InventoryItemMenu(var3);
                                         this.Y = var3;
                                         this.a((Object)this.aB);
                                     }
                                 }
                             } else if (ax.B == 34) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
                                     Integer var11 = (Integer)ax.n.elementAt(var3);
                                     var10 = var11;
                                     if (var10 == 0) {
                                         this.k.i(this.Y);
-                                        this.aY = this.InventoryMenu();
-                                        this.a((Object)this.aY);
+                                        this.InventoryMenu = this.InventoryMenu();
+                                        this.a((Object)this.InventoryMenu);
                                     } else if (var10 == 1) {
                                         if (!this.k.C(this.Y)) {
                                             this.k.d(this.Y, true);
@@ -883,76 +883,76 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             this.k.A(this.Y);
                                         }
 
-                                        this.aY = this.InventoryMenu();
-                                        this.a((Object)this.aY);
+                                        this.InventoryMenu = this.InventoryMenu();
+                                        this.a((Object)this.InventoryMenu);
                                     } else if (var10 == 2) {
                                         this.k.r(this.Y);
-                                        this.aY = this.InventoryMenu();
-                                        this.a((Object)this.aY);
+                                        this.InventoryMenu = this.InventoryMenu();
+                                        this.a((Object)this.InventoryMenu);
                                     } else if (var10 == 3) {
                                         this.k.a(this.Y);
                                         if (this.k.Q) {
                                             this.k.Q = false;
                                             this.a((Object)this.av);
                                         } else {
-                                            this.aY = this.InventoryMenu();
-                                            this.a((Object)this.aY);
+                                            this.InventoryMenu = this.InventoryMenu();
+                                            this.a((Object)this.InventoryMenu);
                                         }
                                     }
 
                                     this.Y = -1;
                                 }
                             } else if (ax.B == 35) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
-                                    this.N = this.o(var3);
-                                    this.a((Object)this.N);
+                                    this.SkillInfoMenu = this.SkillInfoMenu(var3);
+                                    this.a((Object)this.SkillInfoMenu);
                                 }
                             } else if (ax.B == 36) {
-                                if (var1 == Menu.I) {
-                                    this.a((Object)this.L);
+                                if (comm == Menu.OKComm) {
+                                    this.a((Object)this.SkillsListMenu);
                                 }
                             } else if (ax.B == 37) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
                                     if (var3 >= 0) {
-                                        this.q = this.e(var3);
+                                        this.SpellInfoMenu = this.SpellInfoMenu(var3);
                                         this.g = var3;
-                                        this.a((Object)this.q);
+                                        this.a((Object)this.SpellInfoMenu);
                                     }
                                 }
                             } else if (ax.B == 38) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = this.k.B(this.g);
                                     this.k.b = (byte)(var3 + 1);
-                                    this.v = this.r();
-                                    this.a((Object)this.v);
+                                    this.SpellsListMenu = this.SpellsListMenu();
+                                    this.a((Object)this.SpellsListMenu);
                                     this.g = -1;
                                 }
                             } else if (ax.B == 39) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     String var14 = ax.p();
-                                    l[ax.N] = -1;
+                                    l[ax.npcID] = -1;
 
-                                    for(i = 0; i < Character.Stats.length; ++i) {
-                                        if (var14.equals(Character.Stats[i])) {
-                                            l[ax.N] = i;
+                                    for(i = 0; i < Character.Attributes.length; ++i) {
+                                        if (var14.equals(Character.Attributes[i])) {
+                                            l[ax.npcID] = i;
                                             break;
                                         }
                                     }
 
-                                    if (ax.N < 2) {
-                                        var10 = ax.N + 1;
-                                        this.ag = this.j(var10 + 1);
-                                        this.a((Object)this.ag);
+                                    if (ax.npcID < 2) {
+                                        var10 = ax.npcID + 1;
+                                        this.LevelUpMenu = this.LevelUpMenu(var10 + 1);
+                                        this.a((Object)this.LevelUpMenu);
                                     } else {
-                                        short[] var10000 = this.k.J;
+                                        short[] var10000 = this.k.AttLvl;
                                         int var10001 = l[0];
                                         var10000[var10001] = (short)(var10000[var10001] + 3);
-                                        var10000 = this.k.J;
+                                        var10000 = this.k.AttLvl;
                                         var10001 = l[1];
                                         var10000[var10001] = (short)(var10000[var10001] + 2);
-                                        ++this.k.J[l[2]];
+                                        ++this.k.AttLvl[l[2]];
                                         this.k.g();
                                         this.k.d();
                                         this.a((Object)this.av);
@@ -960,12 +960,12 @@ public class ESGame extends a implements Runnable, CommandListener {
                                     }
                                 }
                             } else if (ax.B == 202) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
                                     if (var3 == 0) {
                                         this.a((Object)this.f);
                                     } else {
-                                        this.a(ax.s);
+                                        this.a(ax.prev);
                                     }
                                 }
                             } else if (ax.B == 202) {
@@ -977,21 +977,21 @@ public class ESGame extends a implements Runnable, CommandListener {
                                 this.a((Object)this.av);
                                 this.av.b();
                             } else if (ax.B == 203) {
-                                if (var1 == Menu.u) {
+                                if (comm == Menu.SelectComm) {
                                     var3 = ax.a();
-                                    this.F = this.g(var3);
+                                    this.F = this.SpecHelpMenu(var3);
                                     this.a((Object)this.F);
                                 } else {
-                                    this.a(ax.s);
+                                    this.a(ax.prev);
                                 }
                             } else if (ax.B == 206) {
-                                this.a(ax.s);
+                                this.a(ax.prev);
                             } else if (ax.B == 204) {
-                                this.a(ax.s);
+                                this.a(ax.prev);
                             } else if (ax.B == 305) {
-                                this.a(ax.s);
+                                this.a(ax.prev);
                             } else if (ax.B == 205) {
-                                this.a(ax.s);
+                                this.a(ax.prev);
                             } else if (ax.B != 200 && ax.B != 201) {
                                 if (ax.B == 399) {
                                     this.b();
@@ -1001,18 +1001,18 @@ public class ESGame extends a implements Runnable, CommandListener {
                             } else {
                                 this.a(ax.c);
                             }
-                        } else if (var1 == Menu.I) {
-                            var3 = ax.N;
+                        } else if (comm == Menu.OKComm) {
+                            var3 = ax.npcID;
                             this.k(var3);
                             this.a((Object)this.NPCDlgMenus[var3]);
                         }
-                    } else if (var1 == Menu.I) {
-                        var3 = ax.N;
+                    } else if (comm == Menu.OKComm) {
+                        var3 = ax.npcID;
                         this.k(var3);
                         this.a((Object)this.NPCDlgMenus[var3]);
                     }
                 }
-            } else if (var1 == Menu.I) {
+            } else if (comm == Menu.OKComm) {
                 if (ax.c == null) {
                     System.out.println("ERROR: next is null!");
                 } else {
@@ -1024,27 +1024,27 @@ public class ESGame extends a implements Runnable, CommandListener {
 
                 this.a(ax.c);
             }
-        } else if (var2 == this.w) {
+        } else if (disp == this.w) {
             this.b();
-        } else if (var2 == this.ao) {
+        } else if (disp == this.ao) {
             this.a((Object)this.av);
-        } else if (var2 == this.W) {
-            if (var1 == aS) {
+        } else if (disp == this.W) {
+            if (comm == aS) {
                 this.b();
             }
-        } else if (var2 == this.aD) {
-            if (var1 == Menu.I) {
+        } else if (disp == this.aD) {
+            if (comm == Menu.OKComm) {
                 TextField var15 = (TextField)this.aD.get(1);
-                String var13 = var15.getString();
-                if (var13.length() < 3) {
+                String name = var15.getString();
+                if (name.length() < 3) {
                     Alert var12 = new Alert("Error", func.StringInsert("Your character name must be at least <TAG> letters", "<TAG>", 3), (Image)null, AlertType.ERROR);
                     var12.setTimeout(-2);
                     this.a((Object)var12);
                 } else {
-                    this.k.v = var13;
+                    this.k.CharName = name;
                     this.a((Object)this.WelcomeMenu);
                 }
-            } else if (var1 == Menu.P) {
+            } else if (comm == Menu.CancelComm) {
                 this.a((Object)this.NewCharMenu);
             }
         }
@@ -1060,16 +1060,16 @@ public class ESGame extends a implements Runnable, CommandListener {
             case 2:
             case 3:
                 if (var3 == 0) {
-                    this.z = this.TrainMenu(var4);
-                    this.a((Object)this.z);
+                    this.TrainMenu = this.TrainMenu(var4);
+                    this.a((Object)this.TrainMenu);
                 } else if (var3 == 1) {
-                    if (this.k.p <= 0) {
-                        this.ap.a(NPC.NPCNames[var4]);
-                        this.ap.e("You have nothing to give me!");
-                        this.a((Object)this.ap);
+                    if (this.k.InventoryCount <= 0) {
+                        this.OracleMenu.a(NPC.NPCNames[var4]);
+                        this.OracleMenu.e("You have nothing to give me!");
+                        this.a((Object)this.OracleMenu);
                     } else {
-                        this.Q = this.GiveMenu(var4);
-                        this.a((Object)this.Q);
+                        this.GiveMenu = this.GiveMenu(var4);
+                        this.a((Object)this.GiveMenu);
                     }
                 } else if (var3 == 2) {
                     this.X = this.a(var1, var4, 24, 2, 0);
@@ -1084,34 +1084,34 @@ public class ESGame extends a implements Runnable, CommandListener {
                 break;
             case 4:
                 if (var3 == 0) {
-                    if (this.k.p <= 0) {
-                        this.ap.a(NPC.NPCNames[var4]);
-                        this.ap.e("You have nothing to give me!");
-                        this.a((Object)this.ap);
+                    if (this.k.InventoryCount <= 0) {
+                        this.OracleMenu.a(NPC.NPCNames[var4]);
+                        this.OracleMenu.e("You have nothing to give me!");
+                        this.a((Object)this.OracleMenu);
                     } else {
-                        this.Q = this.GiveMenu(var4);
-                        this.a((Object)this.Q);
+                        this.GiveMenu = this.GiveMenu(var4);
+                        this.a((Object)this.GiveMenu);
                     }
                 } else if (var3 == 1) {
-                    this.I = this.TakeItemMenu(var4);
-                    this.a((Object)this.I);
+                    this.TakeItemMenu = this.TakeItemMenu(var4);
+                    this.a((Object)this.TakeItemMenu);
                 }
                 break;
             case 5:
                 if (var3 == 0) {
                     this.x();
                 } else if (var3 == 1) {
-                    if (this.k.p <= 0) {
-                        this.ap.a(NPC.NPCNames[var4]);
-                        this.ap.e("You have nothing to give me!");
-                        this.a((Object)this.ap);
+                    if (this.k.InventoryCount <= 0) {
+                        this.OracleMenu.a(NPC.NPCNames[var4]);
+                        this.OracleMenu.e("You have nothing to give me!");
+                        this.a((Object)this.OracleMenu);
                     } else {
-                        this.Q = this.GiveMenu(var4);
-                        this.a((Object)this.Q);
+                        this.GiveMenu = this.GiveMenu(var4);
+                        this.a((Object)this.GiveMenu);
                     }
                 } else if (var3 == 2) {
-                    this.aw = this.EnchantItemMenu(var4);
-                    this.a((Object)this.aw);
+                    this.EnchantItemMenu = this.EnchantItemMenu(var4);
+                    this.a((Object)this.EnchantItemMenu);
                 } else if (var3 == 3) {
                     this.aL = this.a(var1, var4, 352, 9, 0);
                     this.a((Object)this.aL);
@@ -1129,14 +1129,14 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     }
 
-    private Menu a(Menu var1, int var2, int var3, int var4, int var5) {
-        Menu var6 = new Menu(this, 4, var3);
-        var6.a("NPC name here", "NPC text here", true);
-        String var7 = NPC.a(this.k, var2, var4, var5);
-        var6.a(NPC.NPCNames[var2]);
-        var6.e(var7);
-        var6.N = var2;
-        return var6;
+    private Menu a(Menu var1, int NPCID, int var3, int var4, int var5) {
+        Menu menu = new Menu(this, 4, var3);
+        menu.a("NPC name here", "NPC text here", true);
+        String var7 = NPC.a(this.k, NPCID, var4, var5);
+        menu.a(NPC.NPCNames[NPCID]);
+        menu.e(var7);
+        menu.npcID = NPCID;
+        return menu;
     }
 
     private Image LoadImage(String var1) throws Exception {
@@ -1158,7 +1158,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             store = RecordStore.openRecordStore(RecordName, false);
             int var5 = store.getNumRecords();
             byte[] record = store.getRecord(1);
-            this.k = Character.a(record, true);
+            this.k = Character.LoadChar(record, true);
             this.k.Game = this;
             aQ.m = 20;
             aQ.c();
@@ -1421,7 +1421,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         for(int i = 0; i < 7; ++i) {
-            NPC.q[i] = data.readBoolean();
+            NPC.FirstMeet[i] = data.readBoolean();
         }
 
         for(int i = 0; i < 4; ++i) {
@@ -1470,7 +1470,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         for(int i = 0; i < 7; ++i) {
-            var1.writeBoolean(NPC.q[i]);
+            var1.writeBoolean(NPC.FirstMeet[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
@@ -1878,16 +1878,16 @@ public class ESGame extends a implements Runnable, CommandListener {
         System.out.println("End of killMonster, size of HT is " + G[dngnID - 1].size());
     }
 
-    private Menu l(int var1) {
-        Menu var2 = new Menu(this, 5, 34);
-        System.out.println("In newInventoryItemUI: getting item " + var1);
-        String var3 = this.k.b(var1);
+    private Menu InventoryItemMenu(int ItemIndx) {
+        Menu menu = new Menu(this, 5, 34);
+        System.out.println("In newInventoryItemUI: getting item " + ItemIndx);
+        String var3 = this.k.ItemString(ItemIndx);
         Vector var4 = new Vector();
         Vector var5 = new Vector();
         var4.addElement("Drop");
         var5.addElement(Integer.valueOf(0));
-        if (this.k.w(var1)) {
-            if (!this.k.C(var1)) {
+        if (this.k.w(ItemIndx)) {
+            if (!this.k.C(ItemIndx)) {
                 var4.addElement("Equip");
             } else {
                 var4.addElement("Unequip");
@@ -1896,12 +1896,12 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5.addElement(Integer.valueOf(1));
         }
 
-        if (this.k.e(var1)) {
+        if (this.k.e(ItemIndx)) {
             var4.addElement("Learn");
             var5.addElement(Integer.valueOf(2));
         }
 
-        if (this.k.v(var1)) {
+        if (this.k.v(ItemIndx)) {
             var4.addElement("Use");
             var5.addElement(Integer.valueOf(3));
         }
@@ -1912,17 +1912,17 @@ public class ESGame extends a implements Runnable, CommandListener {
             var6[i] = (String)var4.elementAt(i);
         }
 
-        var2.a("Item", var3, var6, var5);
-        var2.A = true;
-        var2.s = this.aY;
-        return var2;
+        menu.a("Item", var3, var6, var5);
+        menu.A = true;
+        menu.prev = this.InventoryMenu;
+        return menu;
     }
 
-    private Menu d() {
+    private Menu SkillsListMenu() {
         System.gc();
         Log("Start of newSkillsListUI");
         Menu var1 = new Menu(this, 5, 35);
-        Vector var2 = this.k.f();
+        Vector var2 = this.k.GetSkillList();
         int var3 = var2.size();
         String[] var4 = new String[var3];
 
@@ -1931,22 +1931,22 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         var1.a("Skills", "Your Skills:", var4, (Vector)null, true);
-        var1.s = this.t;
+        var1.prev = this.OptionsMenu;
         return var1;
     }
 
-    private Menu o(int var1) {
+    private Menu SkillInfoMenu(int var1) {
         System.gc();
         Log("Start of newSkillInfoUI");
         Menu var2 = new Menu(this, 4, 36);
         int var3 = this.k.l(var1);
-        String var4 = this.k.m(var3);
+        String var4 = this.k.GetSkillString(var3);
         var2.a("Skill Info", var4);
-        var2.s = this.L;
+        var2.prev = this.SkillsListMenu;
         return var2;
     }
 
-    private Menu r() {
+    private Menu SpellsListMenu() {
         System.gc();
         Log("Start of newSpellsListUI");
         Menu var1 = new Menu(this, 5, 37);
@@ -1959,11 +1959,11 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         var1.a("Spells", "Your Spells:", var4, (Vector)null, true);
-        var1.s = this.t;
+        var1.prev = this.OptionsMenu;
         return var1;
     }
 
-    private Menu e(int var1) {
+    private Menu SpellInfoMenu(int var1) {
         System.gc();
         Log("Start of newSpellInfoUI");
         Menu var2 = new Menu(this, 5, 38);
@@ -1972,60 +1972,60 @@ public class ESGame extends a implements Runnable, CommandListener {
         String[] var5 = new String[]{"Ready Spell"};
         var2.a("Spell Info", var4, var5, (Vector)null);
         var2.A = true;
-        var2.s = this.v;
+        var2.prev = this.SpellsListMenu;
         return var2;
     }
 
-    Menu j(int var1) {
+    Menu LevelUpMenu(int var1) {
         System.gc();
         Log("Start of newLevelUpUI: index= " + var1);
-        Menu var2 = new Menu(this, 5, 39);
+        Menu menu = new Menu(this, 5, 39);
         String[] var3 = this.k.q();
         String var4 = null;
         if (var1 == 1) {
-            var2.N = 0;
+            menu.npcID = 0;
             var4 = "Select an attribute to \nincrease 3 points:";
         } else if (var1 == 2) {
             var4 = "Select an attribute to \nincrease 2 points:";
-            var2.N = 1;
+            menu.npcID = 1;
         } else if (var1 == 3) {
-            var2.N = 2;
+            menu.npcID = 2;
             var4 = "Select an attribute to \nincrease 1 point:";
         }
 
-        var2.a("Level Up", var4, var3, (Vector)null);
-        var2.t.removeCommand(Menu.P);
-        var2.A = true;
-        var2.s = var2;
-        return var2;
+        menu.a("Level Up", var4, var3, (Vector)null);
+        menu.t.removeCommand(Menu.CancelComm);
+        menu.A = true;
+        menu.prev = menu;
+        return menu;
     }
 
-    Menu e(String var1) {
+    Menu WardenSpeaksMenu(String var1) {
         System.gc();
         Log("Start of newWardenSpeaksUI");
-        Menu var2 = new Menu(this, 4, 102);
-        var2.a("Varus", var1);
-        return var2;
+        Menu menu = new Menu(this, 4, 102);
+        menu.a("Varus", var1);
+        return menu;
     }
 
-    Menu F() {
+    Menu EndOfGameMenu() {
         System.gc();
         Log("Start of newEndOfGameUI");
         String var1 = NPC.NPCStrings[7][4];
-        Menu var2 = new Menu(this, 4, 200);
-        var2.a("Victory!", var1);
-        var2.c = this.v();
-        return var2;
+        Menu menu = new Menu(this, 4, 200);
+        menu.a("Victory!", var1);
+        menu.c = this.GameOverMenu();
+        return menu;
     }
 
-    private Menu v() {
+    private Menu GameOverMenu() {
         System.gc();
         Log("Start of newGameOverUI");
         String var1 = NPC.NPCStrings[7][5];
-        Menu var2 = new Menu(this, 4, 201);
-        var2.a("Game Over", var1);
-        var2.c = this.MainMenu;
-        return var2;
+        Menu menu = new Menu(this, 4, 201);
+        menu.a("Game Over", var1);
+        menu.c = this.MainMenu;
+        return menu;
     }
 
     static DataInputStream LoadDatRaw(String file) throws Exception {
@@ -2128,68 +2128,68 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void u() {
-        as[0] = NPC.NPCStrings[7][6];
-        as[1] = NPC.NPCStrings[7][8];
-        as[2] = NPC.NPCStrings[7][11];
-        as[3] = NPC.NPCStrings[7][13];
-        as[4] = NPC.NPCStrings[7][19];
-        as[5] = NPC.NPCStrings[7][21];
-        as[6] = NPC.NPCStrings[7][24];
-        as[7] = NPC.NPCStrings[7][29];
-        as[8] = NPC.NPCStrings[7][31];
-        as[9] = NPC.NPCStrings[7][34];
-        as[10] = NPC.NPCStrings[7][37];
-        as[11] = NPC.NPCStrings[7][39];
+        helpCats[0] = NPC.NPCStrings[7][6];
+        helpCats[1] = NPC.NPCStrings[7][8];
+        helpCats[2] = NPC.NPCStrings[7][11];
+        helpCats[3] = NPC.NPCStrings[7][13];
+        helpCats[4] = NPC.NPCStrings[7][19];
+        helpCats[5] = NPC.NPCStrings[7][21];
+        helpCats[6] = NPC.NPCStrings[7][24];
+        helpCats[7] = NPC.NPCStrings[7][29];
+        helpCats[8] = NPC.NPCStrings[7][31];
+        helpCats[9] = NPC.NPCStrings[7][34];
+        helpCats[10] = NPC.NPCStrings[7][37];
+        helpCats[11] = NPC.NPCStrings[7][39];
     }
 
     private void a() {
         StringBuffer var1 = new StringBuffer(1200);
         var1.append(NPC.NPCStrings[7][7]);
-        o[0] = var1.toString();
+        HelpStrings[0] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][9]);
         var1.append(NPC.NPCStrings[7][10]);
-        o[1] = var1.toString();
+        HelpStrings[1] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][12]);
-        o[2] = var1.toString();
+        HelpStrings[2] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][14]);
         var1.append(NPC.NPCStrings[7][15]);
         var1.append(NPC.NPCStrings[7][16]);
         var1.append(NPC.NPCStrings[7][17]);
         var1.append(NPC.NPCStrings[7][18]);
-        o[3] = var1.toString();
+        HelpStrings[3] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][20]);
-        o[4] = var1.toString();
+        HelpStrings[4] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][22]);
         var1.append(NPC.NPCStrings[7][23]);
-        o[5] = var1.toString();
+        HelpStrings[5] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][25]);
         var1.append(NPC.NPCStrings[7][26]);
         var1.append(NPC.NPCStrings[7][27]);
         var1.append(NPC.NPCStrings[7][28]);
-        o[6] = var1.toString();
+        HelpStrings[6] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][30]);
-        o[7] = var1.toString();
+        HelpStrings[7] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][32]);
         var1.append(NPC.NPCStrings[7][33]);
-        o[8] = var1.toString();
+        HelpStrings[8] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][35]);
         var1.append(NPC.NPCStrings[7][36]);
-        o[9] = var1.toString();
+        HelpStrings[9] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][38]);
-        o[10] = var1.toString();
+        HelpStrings[10] = var1.toString();
         var1.delete(0, 1200);
         var1.append(NPC.NPCStrings[7][40]);
-        o[11] = var1.toString();
+        HelpStrings[11] = var1.toString();
         var1.delete(0, 1200);
     }
 
@@ -2330,18 +2330,18 @@ public class ESGame extends a implements Runnable, CommandListener {
             var1 = "No rumors!";
         }
 
-        this.m.a(NPC.NPCNames[5]);
-        this.m.e(var1);
-        this.m.c = this.NPCDlgMenus[5];
-        this.m.N = 5;
-        Menu var2 = (Menu)this.m.c;
+        this.RumorMenu.a(NPC.NPCNames[5]);
+        this.RumorMenu.e(var1);
+        this.RumorMenu.c = this.NPCDlgMenus[5];
+        this.RumorMenu.npcID = 5;
+        Menu var2 = (Menu)this.RumorMenu.c;
         String var3 = var2.M;
         String var4 = var2.t();
         boolean var5 = false;
         short var6 = NPC.g;
         var4 = func.StringInsert(var3, "<TAG>", var6);
         var2.e(var4);
-        this.a((Object)this.m);
+        this.a((Object)this.RumorMenu);
     }
 
     private void j() {

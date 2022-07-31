@@ -787,13 +787,13 @@ public class EE extends FullCanvas implements Runnable {
         var1.fillRect(5, 138, 40, 7);
         var1.fillRect(5, 146, 40, 7);
         var1.setColor(16711680);
-        int var2 = this.ax.n(2) * 38 / this.ax.U[3];
+        int var2 = this.ax.n(2) * 38 / this.ax.CharCritAtt[3];
         var1.fillRect(6, 131, var2, 5);
         var1.setColor(65280);
-        var2 = this.ax.n(4) * 38 / this.ax.U[5];
+        var2 = this.ax.n(4) * 38 / this.ax.CharCritAtt[5];
         var1.fillRect(6, 139, var2, 5);
         var1.setColor(255);
-        var2 = this.ax.n(6) * 38 / this.ax.U[7];
+        var2 = this.ax.n(6) * 38 / this.ax.CharCritAtt[7];
         if (var2 > 40) {
             var2 = 40;
         }
@@ -1114,15 +1114,15 @@ public class EE extends FullCanvas implements Runnable {
                         var10 = false;
                         if (time - this.s > 5000L) {
                             System.out.println("Restart after dead");
-                            this.ax.a(this.ax.U);
+                            this.ax.a(this.ax.CharCritAtt);
 
-                            for(int i = this.ax.p - 1; i >= 0; --i) {
+                            for(int i = this.ax.InventoryCount - 1; i >= 0; --i) {
                                 if (!this.ax.C(i)) {
                                     this.ax.y(i);
                                 }
                             }
 
-                            this.ax.c(this.ax.ar, true);
+                            this.ax.c(this.ax.CharClass, true);
                             this.s = 0L;
                             this.aD = 1;
                             NPC.l = true;
@@ -1150,13 +1150,13 @@ public class EE extends FullCanvas implements Runnable {
                     }
 
                     if (var10) {
-                        if (k.a(this.ax.W)) {
+                        if (k.a(this.ax.GiftPoints)) {
                             k.c();
                         }
 
                         if (this.d() && k.f > this.ax.m) {
                             String var20 = NPC.a(this.ax, 6, -1, -1);
-                            this.Game.aV = this.Game.e(var20);
+                            this.Game.aV = this.Game.WardenSpeaksMenu(var20);
                             var9 = true;
                         }
 
@@ -1165,8 +1165,8 @@ public class EE extends FullCanvas implements Runnable {
                         this.a(time, var5);
                         if (this.ax.o()) {
                             this.e();
-                            this.Game.ag = this.Game.j(1);
-                            this.Game.a(this.Game.ag);
+                            this.Game.LevelUpMenu = this.Game.LevelUpMenu(1);
+                            this.Game.a(this.Game.LevelUpMenu);
                             al = false;
                         }
 
@@ -1247,7 +1247,7 @@ public class EE extends FullCanvas implements Runnable {
     }
 
     private void b(long var1) {
-        Hashtable var3 = ESGame.G[this.ax.j - 1];
+        Hashtable var3 = ESGame.G[this.ax.CurDung - 1];
         if (var3 != null) {
             Enumeration var4 = var3.elements();
 
@@ -1333,11 +1333,11 @@ public class EE extends FullCanvas implements Runnable {
                 j.a(false);
             }
 
-            ESGame.KillMonster(this.ax.j, j.a);
+            ESGame.KillMonster(this.ax.CurDung, j.a);
             if (this.ax.k(4)) {
-                short[] var10000 = this.ax.U;
-                var10000[2] = (short)(var10000[2] + 3 * this.ax.U[3] / 10);
-                this.ax.U[2] = (short)Math.min(this.ax.U[2], this.ax.U[3]);
+                short[] var10000 = this.ax.CharCritAtt;
+                var10000[2] = (short)(var10000[2] + 3 * this.ax.CharCritAtt[3] / 10);
+                this.ax.CharCritAtt[2] = (short)Math.min(this.ax.CharCritAtt[2], this.ax.CharCritAtt[3]);
             }
 
             if (this.a((String[])P, 1)) {
@@ -1398,12 +1398,12 @@ public class EE extends FullCanvas implements Runnable {
 
     private void n() {
         if (this.p != 0) {
-            byte var1 = this.ax.p;
+            byte var1 = this.ax.InventoryCount;
             at = true;
             this.ax.a(this.p, this.aw);
             if (Character.g) {
-                this.Game.aP = this.Game.F();
-                this.Game.a(this.Game.aP);
+                this.Game.EndOfGameMenu = this.Game.EndOfGameMenu();
+                this.Game.a(this.Game.EndOfGameMenu);
                 al = false;
             } else {
                 if (this.ax.i || this.ax.u || this.ax.O) {
@@ -1433,7 +1433,7 @@ public class EE extends FullCanvas implements Runnable {
             }
 
             this.p = 0;
-            int var3 = this.ax.p - var1;
+            int var3 = this.ax.InventoryCount - var1;
             if (var3 == 1) {
                 if (this.a((String[])this.k(), -1)) {
                     as = System.currentTimeMillis();
@@ -1548,9 +1548,9 @@ public class EE extends FullCanvas implements Runnable {
     }
 
     private String[] k() {
-        int var1 = this.ax.p - 1;
-        int var2 = Math.abs(this.ax.H[var1]);
-        String[] var3 = func.c(Item.d(var2));
+        int var1 = this.ax.InventoryCount - 1;
+        int var2 = Math.abs(this.ax.Inventory[var1]);
+        String[] var3 = func.c(Item.GetItemName(var2));
         String[] var4 = new String[]{"", ""};
         if (var3.length >= 3) {
             var4[0] = var3[0] + " " + var3[1];
@@ -1565,7 +1565,7 @@ public class EE extends FullCanvas implements Runnable {
     }
 
     private void f() {
-        this.Game.a(this.Game.t);
+        this.Game.a(this.Game.OptionsMenu);
         al = false;
         Z = false;
     }
@@ -1576,7 +1576,7 @@ public class EE extends FullCanvas implements Runnable {
             this.c = 2;
         }
 
-        if (this.ax.j == 1) {
+        if (this.ax.CurDung == 1) {
             this.c = 2;
         }
 
@@ -1592,11 +1592,11 @@ public class EE extends FullCanvas implements Runnable {
         String var5;
         short var6;
         if (var2 != null) {
-            this.Game.aq.a(NPC.NPCNames[var1]);
-            this.Game.aq.e(var2);
-            this.Game.aq.c = this.Game.NPCDlgMenus[var1];
-            this.Game.aq.N = var1;
-            var3 = (Menu)this.Game.aq.c;
+            this.Game.NPCHelloMenu.a(NPC.NPCNames[var1]);
+            this.Game.NPCHelloMenu.e(var2);
+            this.Game.NPCHelloMenu.c = this.Game.NPCDlgMenus[var1];
+            this.Game.NPCHelloMenu.npcID = var1;
+            var3 = (Menu)this.Game.NPCHelloMenu.c;
             var4 = var3.M;
             var5 = var3.t();
             var6 = 0;
@@ -1610,7 +1610,7 @@ public class EE extends FullCanvas implements Runnable {
 
             var5 = func.StringInsert(var4, "<TAG>", var6);
             var3.e(var5);
-            this.Game.a(this.Game.aq);
+            this.Game.a(this.Game.NPCHelloMenu);
             al = false;
         } else {
             boolean var7;
@@ -1738,21 +1738,21 @@ public class EE extends FullCanvas implements Runnable {
         short[] var10000;
         int var1;
         if (this.ax.k(4)) {
-            var1 = 2 * this.ax.U[3] / 100;
+            var1 = 2 * this.ax.CharCritAtt[3] / 100;
             var1 = Math.max(var1, 0);
-            var10000 = this.ax.U;
+            var10000 = this.ax.CharCritAtt;
             var10000[2] = (short)(var10000[2] - var1);
         }
 
         int var2;
         if (this.ax.k(5)) {
-            var1 = this.ax.U[5] / 10;
-            var10000 = this.ax.U;
+            var1 = this.ax.CharCritAtt[5] / 10;
+            var10000 = this.ax.CharCritAtt;
             var10000[4] = (short)(var10000[4] + var1);
-            if (this.ax.U[4] >= this.ax.U[5]) {
-                this.ax.U[4] = 0;
-                var2 = this.ax.U[5] / 10;
-                var10000 = this.ax.U;
+            if (this.ax.CharCritAtt[4] >= this.ax.CharCritAtt[5]) {
+                this.ax.CharCritAtt[4] = 0;
+                var2 = this.ax.CharCritAtt[5] / 10;
+                var10000 = this.ax.CharCritAtt;
                 var10000[2] = (short)(var10000[2] - var2);
             }
         }
@@ -1772,7 +1772,7 @@ public class EE extends FullCanvas implements Runnable {
             }
         }
 
-        Hashtable var6 = ESGame.G[this.ax.j - 1];
+        Hashtable var6 = ESGame.G[this.ax.CurDung - 1];
         if (var6 != null) {
             Enumeration var3 = var6.elements();
 
@@ -1796,7 +1796,7 @@ public class EE extends FullCanvas implements Runnable {
             return true;
         } else if (j == null) {
             return false;
-        } else if (this.ax.j == 37 && j.l == 41) {
+        } else if (this.ax.CurDung == 37 && j.l == 41) {
             int var1 = Math.abs(this.ax.l - j.o);
             int var2 = Math.abs(this.ax.Ka - j.m);
             return var1 + var2 == 1;
