@@ -387,40 +387,40 @@ public class Monster { // d
 
     }
 
-    static Monster a(DataInputStream stream) throws Exception {
+    static Monster a(DataInputStream data) throws Exception {
         Monster var1 = new Monster();
-        var1.a = stream.readShort();
-        var1.l = stream.readByte();
-        var1.g = stream.readByte();
-        var1.o = stream.readByte();
-        var1.m = stream.readByte();
-        var1.ia = stream.readBoolean();
-        var1.n = stream.readByte();
-        var1.b = stream.readByte();
-        var1.f = stream.readByte();
-        var1.k = stream.readLong();
+        var1.a = data.readShort();
+        var1.l = data.readByte();
+        var1.g = data.readByte();
+        var1.o = data.readByte();
+        var1.m = data.readByte();
+        var1.ia = data.readBoolean();
+        var1.n = data.readByte();
+        var1.b = data.readByte();
+        var1.f = data.readByte();
+        var1.k = data.readLong();
 
         for(int i = 0; i < 10; ++i) {
-            var1.c[i] = stream.readByte();
+            var1.c[i] = data.readByte();
         }
 
         return var1;
     }
 
-    void a(DataOutputStream var1) throws Exception {
-        var1.writeShort(this.a);
-        var1.writeByte(this.l);
-        var1.writeByte(this.g);
-        var1.writeByte(this.o);
-        var1.writeByte(this.m);
-        var1.writeBoolean(this.ia);
-        var1.writeByte(this.n);
-        var1.writeByte(this.b);
-        var1.writeByte(this.f);
-        var1.writeLong(this.k);
+    void a(DataOutputStream data) throws Exception {
+        data.writeShort(this.a);
+        data.writeByte(this.l);
+        data.writeByte(this.g);
+        data.writeByte(this.o);
+        data.writeByte(this.m);
+        data.writeBoolean(this.ia);
+        data.writeByte(this.n);
+        data.writeByte(this.b);
+        data.writeByte(this.f);
+        data.writeLong(this.k);
 
         for(int i = 0; i < 10; ++i) {
-            var1.writeByte(this.c[i]);
+            data.writeByte(this.c[i]);
         }
 
     }

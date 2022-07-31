@@ -14,30 +14,30 @@ public class CC extends FullCanvas {
     public CC() {
     }
 
-    public void paint(Graphics var1) {
+    public void paint(Graphics graphics) {
         if (this.menu != null) {
-            this.menu.e(var1);
+            this.menu.e(graphics);
         }
 
     }
 
-    public void addCommand(Command var1) {
+    public void addCommand(Command comm) {
         if (this.menu != null) {
-            this.menu.AddElement(var1);
+            this.menu.AddElement(comm);
         }
 
     }
 
-    public void removeCommand(Command var1) {
+    public void removeCommand(Command comm) {
         if (this.menu != null) {
-            this.menu.RemoveElement(var1);
+            this.menu.RemoveElement(comm);
         }
 
     }
 
-    public void setCommandListener(CommandListener var1) {
+    public void setCommandListener(CommandListener listener) {
         if (this.menu != null) {
-            this.menu.SetListener(var1);
+            this.menu.SetListener(listener);
         }
 
     }

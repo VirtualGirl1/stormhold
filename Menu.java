@@ -205,25 +205,25 @@ public class Menu implements Runnable {
     }
 
     public void e(Graphics var1) {
-        Graphics var2 = r.getGraphics();
+        Graphics graphics = r.getGraphics();
         switch (this.Q) {
             case 1:
                 System.out.println("        IN CANVAS DOWNLOAD PAINT!");
                 break;
             case 2:
-                this.f(var2);
+                this.f(graphics);
                 break;
             case 3:
-                this.c(var2);
+                this.c(graphics);
                 break;
             case 4:
-                this.d(var2);
+                this.d(graphics);
                 break;
             case 5:
-                this.a(var2, 1);
+                this.a(graphics, 1);
                 break;
             case 6:
-                this.a(var2, 2);
+                this.a(graphics, 2);
             case 7:
             default:
                 break;
@@ -231,44 +231,44 @@ public class Menu implements Runnable {
             case 9:
             case 10:
             case 11:
-                this.b(var2);
+                this.b(graphics);
         }
 
-        this.a(var2);
+        this.a(graphics);
         var1.drawImage(r, 0, 0, 20);
     }
 
-    private void f(Graphics var1) {
-        var1.setColor(0);
-        var1.fillRect(0, 0, this.b(), 20 + this.k());
+    private void f(Graphics graphics) {
+        graphics.setColor(0);
+        graphics.fillRect(0, 0, this.b(), 20 + this.k());
         if (ESGame.aG) {
-            var1.setColor(16777215);
-            var1.fillRect(0, 0, this.b(), 20 + this.k());
-            var1.drawImage(ESGame.Vir2lLogo, this.b() / 2, 10, 17);
+            graphics.setColor(16777215);
+            graphics.fillRect(0, 0, this.b(), 20 + this.k());
+            graphics.drawImage(ESGame.Vir2lLogo, this.b() / 2, 10, 17);
             int var2 = 10 + ESGame.Vir2lLogo.getHeight() + 3;
-            var1.setColor(0);
+            graphics.setColor(0);
 
             for(int i = 0; i < CRStrings.length; ++i) {
-                var1.drawString(CRStrings[i], this.b() / 2, var2, 17);
+                graphics.drawString(CRStrings[i], this.b() / 2, var2, 17);
                 var2 += 14;
             }
 
-            var1.drawString("Distributed by:", this.b() / 2, 143, 17);
-            var1.drawImage(ESGame.MformLogo, this.b() / 2, 158, 17);
+            graphics.drawString("Distributed by:", this.b() / 2, 143, 17);
+            graphics.drawImage(ESGame.MformLogo, this.b() / 2, 158, 17);
         } else if (this.Game.ac) {
-            var1.setColor(0);
-            var1.fillRect(0, 0, this.b(), 20 + this.k());
-            var1.drawImage(ESGame.SplashTop, this.b() / 2, 20, 17);
-            var1.drawImage(ESGame.SplashBot, this.b() / 2, 100, 17);
+            graphics.setColor(0);
+            graphics.fillRect(0, 0, this.b(), 20 + this.k());
+            graphics.drawImage(ESGame.SplashTop, this.b() / 2, 20, 17);
+            graphics.drawImage(ESGame.SplashBot, this.b() / 2, 100, 17);
         } else {
-            var1.setColor(0);
-            var1.fillRect(0, 0, this.b(), 20 + this.k());
-            var1.drawImage(ESGame.SplashTop, this.b() / 2, 20, 17);
-            var1.drawImage(ESGame.SplashBot, this.b() / 2, 100, 17);
-            var1.setColor(16777215);
-            var1.fillRect(12, 165, 152, 22);
-            var1.setColor(10485760);
-            var1.fillRect(13, 166, 3 * this.m / 2, 20);
+            graphics.setColor(0);
+            graphics.fillRect(0, 0, this.b(), 20 + this.k());
+            graphics.drawImage(ESGame.SplashTop, this.b() / 2, 20, 17);
+            graphics.drawImage(ESGame.SplashBot, this.b() / 2, 100, 17);
+            graphics.setColor(16777215);
+            graphics.fillRect(12, 165, 152, 22);
+            graphics.setColor(10485760);
+            graphics.fillRect(13, 166, 3 * this.m / 2, 20);
         }
 
     }
@@ -338,13 +338,13 @@ public class Menu implements Runnable {
 
     }
 
-    private void a(Graphics var1, int var2) {
+    private void a(Graphics graphics, int var2) {
         Form var3 = (Form)this.Scrn;
-        var1.setColor(11429934);
-        var1.fillRect(0, 0, this.b(), 20 + this.k());
-        this.a(var1, var3.getTitle());
+        graphics.setColor(11429934);
+        graphics.fillRect(0, 0, this.b(), 20 + this.k());
+        this.a(graphics, var3.getTitle());
         this.b = SmallBold2;
-        var1.setFont(this.b);
+        graphics.setFont(this.b);
         this.o = this.b.getHeight();
         this.e = 20;
         this.G = 15;
@@ -357,18 +357,18 @@ public class Menu implements Runnable {
                 String[] var7 = this.c(var6);
 
                 for(var8 = 0; var8 < var7.length; ++var8) {
-                    var1.setColor(16776960);
-                    var1.drawString(var7[var8], this.G, this.e, 20);
+                    graphics.setColor(16776960);
+                    graphics.drawString(var7[var8], this.G, this.e, 20);
                     this.e += this.o;
                 }
             } else {
                 if (i == 0) {
-                    var1.setColor(16776960);
+                    graphics.setColor(16776960);
                 } else {
-                    var1.setColor(16777215);
+                    graphics.setColor(16777215);
                 }
 
-                var1.drawString(var6, this.G, this.e, 20);
+                graphics.drawString(var6, this.G, this.e, 20);
                 this.e += this.o;
             }
         }
@@ -381,15 +381,15 @@ public class Menu implements Runnable {
         this.v = this.w + var8 - 1;
 
         for(int i = this.w; i <= this.v; ++i) {
-            this.a(var1, var10[i], i == this.a());
+            this.a(graphics, var10[i], i == this.a());
         }
 
         if (this.w > 0) {
-            this.a(var1, 155, 180, 1);
+            this.a(graphics, 155, 180, 1);
         }
 
         if (this.v + 1 < var11) {
-            this.a(var1, 165, 180, 2);
+            this.a(graphics, 165, 180, 2);
         }
 
     }
@@ -714,7 +714,7 @@ public class Menu implements Runnable {
     protected void h() {
         switch (this.Q) {
             case 2:
-                this.g();
+                this.StartHelper();
             default:
         }
     }
@@ -728,7 +728,7 @@ public class Menu implements Runnable {
         }
     }
 
-    private void g() {
+    private void StartHelper() {
         System.out.println("IN START HELPER THREAD IN UICANVAS");
         this.thread = new Thread(this);
         System.out.println("Helper thread in UICanvas: " + this.thread);
@@ -981,11 +981,11 @@ public class Menu implements Runnable {
         SmallPlain = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
         SmallBold2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
         MedBold2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
-        OKComm = new Command("Ok", 3, 0);
-        SelectComm = new Command("Select", 3, 0);
-        CancelComm = new Command("Cancel", 4, 0);
-        BackComm = new Command("Back", 4, 0);
-        ExitComm = new Command("Exit", 7, 0);
+        OKComm = new Command("Ok", Command.CANCEL, 0);
+        SelectComm = new Command("Select", Command.CANCEL, 0);
+        CancelComm = new Command("Cancel", Command.OK, 0);
+        BackComm = new Command("Back", Command.OK, 0);
+        ExitComm = new Command("Exit", Command.EXIT, 0);
         CRStrings = new String[]{"(c) 2003 Vir2L Studios, ", "a ZeniMax Media company. ", "The Elder Scrolls and Vir2L ", "are registered trademarks ", "of ZeniMax Media Inc. ", "All rights reserved."};
     }
 }

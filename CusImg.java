@@ -6,103 +6,103 @@
 import java.io.InputStream;
 
 public class CusImg { // g
-    int e;
-    int a;
-    int h;
+    int Width;
+    int Height;
+    int ScanLen;
     boolean c;
     short d;
     short f;
-    short[] g;
+    short[] ImgBuf;
     static short[] b = new short[256];
 
     private CusImg() {
-        this.e = this.a = 0;
-        this.g = null;
+        this.Width = this.Height = 0;
+        this.ImgBuf = null;
         this.f = -1;
     }
 
-    static CusImg LoadCus(String var0) throws Exception {
-        InputStream var1 = (new Object()).getClass().getResourceAsStream(FormatString(var0));
-        if (var1 == null) {
-            throw new Exception("Image " + var0 + " is null!");
+    static CusImg LoadCus(String file) throws Exception {
+        InputStream stream = (new Object()).getClass().getResourceAsStream(FormatString(file));
+        if (stream == null) {
+            throw new Exception("Image " + file + " is null!");
         } else {
-            CusImg var2 = new CusImg();
-            var2.e = b(var1);
-            var2.a = b(var1);
-            var2.h = var2.e;
-            int var3 = var1.read() & 255;
+            CusImg img = new CusImg();
+            img.Width = ReadInt(stream);
+            img.Height = ReadInt(stream);
+            img.ScanLen = img.Width;
+            int var3 = stream.read() & 255;
             if (var3 != 0) {
-                var2.c = true;
+                img.c = true;
             } else {
-                var2.c = false;
+                img.c = false;
             }
 
-            var2.d = a(var1);
-            int var4 = var1.read() & 255;
+            img.d = ReadPixel(stream);
+            int var4 = stream.read() & 255;
             if (var4 > 255) {
-                throw new Exception("Too many colors in image " + var0);
+                throw new Exception("Too many colors in image " + file);
             } else {
                 int var6;
                 for(int i = 0; i < var4; ++i) {
-                    var6 = a(var1);
+                    var6 = ReadPixel(stream);
                     b[i] = (short)var6;
-                    if (var2.c && var2.f < 0 && var2.d == var6) {
-                        var2.f = (short)i;
+                    if (img.c && img.f < 0 && img.d == var6) {
+                        img.f = (short)i;
                     }
                 }
 
-                var6 = var2.e * var2.a;
-                var2.g = new short[var6];
+                var6 = img.Width * img.Height;
+                img.ImgBuf = new short[var6];
 
                 for(int i = 0; i < var6; ++i) {
-                    int var8 = var1.read() & 255;
+                    int var8 = stream.read() & 255;
                     short var9 = b[var8];
-                    if (var2.c && var8 == var2.f) {
+                    if (img.c && var8 == img.f) {
                         var9 = (short)(var9 & -61441);
                     } else {
                         var9 = (short)(var9 | '\uf000');
                     }
 
-                    var2.g[i] = var9;
+                    img.ImgBuf[i] = var9;
                 }
 
-                return var2;
+                return img;
             }
         }
     }
 
-    int a() {
-        return this.e;
+    int GetWidth() {
+        return this.Width;
     }
 
-    int b() {
-        return this.a;
+    int GetHeight() {
+        return this.Height;
     }
 
-    private static String FormatString(String var0) {
-        return var0.startsWith("/") ? var0 : "/" + var0;
+    private static String FormatString(String FileName) {
+        return FileName.startsWith("/") ? FileName : "/" + FileName;
     }
 
-    private static int b(InputStream var0) throws Exception {
-        int var5 = 0;
-        int var1 = var0.read();
-        var5 |= var1 << 24;
-        int var2 = var0.read();
-        var5 |= var2 << 16;
-        int var3 = var0.read();
-        var5 |= var3 << 8;
-        int var4 = var0.read();
-        var5 |= var4;
-        return var5;
+    private static int ReadInt(InputStream stream) throws Exception {
+        int EndVal = 0;
+        int b1 = stream.read();
+        EndVal |= b1 << 24;
+        int b2 = stream.read();
+        EndVal |= b2 << 16;
+        int b3 = stream.read();
+        EndVal |= b3 << 8;
+        int b4 = stream.read();
+        EndVal |= b4;
+        return EndVal;
     }
 
-    private static short a(InputStream var0) throws Exception {
-        int var5 = 0;
-        int var1 = var0.read();
-        var5 |= var1 << 8;
-        int var2 = var0.read();
-        var5 |= var2;
-        var5 &= 65535;
-        return (short)var5;
+    private static short ReadPixel(InputStream stream) throws Exception {
+        int EndVal = 0;
+        int b1 = stream.read();
+        EndVal |= b1 << 8;
+        int b2 = stream.read();
+        EndVal |= b2;
+        EndVal &= 65535;
+        return (short)EndVal;
     }
 }

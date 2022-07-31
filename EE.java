@@ -97,8 +97,8 @@ public class EE extends FullCanvas implements Runnable {
     private static boolean az = false;
     private static String G = null;
 
-    public EE(ESGame var1) {
-        this.Game = var1;
+    public EE(ESGame game) {
+        this.Game = game;
         this.T = 0;
         this.ac = 0;
         this.z = false;
@@ -123,109 +123,109 @@ public class EE extends FullCanvas implements Runnable {
         this.V = 0L;
     }
 
-    public void paint(Graphics var1) {
+    public void paint(Graphics graphics) {
         if (this.aD == 3) {
-            this.DeathScreen(var1);
+            this.DeathScreen(graphics);
         } else if (this.c != 1 && this.c != 2) {
-            this.m(var1);
+            this.m(graphics);
         } else {
-            this.CampingScreen(var1);
+            this.CampingScreen(graphics);
         }
 
     }
 
-    private void DeathScreen(Graphics var1) {
-        var1.setColor(0);
-        var1.fillRect(0, 0, this.getWidth(), this.getHeight());
-        var1.setColor(16777215);
-        var1.setFont(w);
-        var1.drawString("You're Dead!", this.getWidth() / 2, this.getHeight() / 2, 33);
+    private void DeathScreen(Graphics graphics) {
+        graphics.setColor(0);
+        graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+        graphics.setColor(16777215);
+        graphics.setFont(w);
+        graphics.drawString("You're Dead!", this.getWidth() / 2, this.getHeight() / 2, 33);
     }
 
-    private void CampingScreen(Graphics var1) {
-        var1.setColor(0);
-        var1.fillRect(0, 0, this.getWidth(), this.getHeight());
-        var1.setColor(16777215);
-        var1.setFont(w);
-        var1.drawString("CAMPING", this.getWidth() / 2, this.getHeight() / 2, 33);
+    private void CampingScreen(Graphics graphics) {
+        graphics.setColor(0);
+        graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+        graphics.setColor(16777215);
+        graphics.setFont(w);
+        graphics.drawString("CAMPING", this.getWidth() / 2, this.getHeight() / 2, 33);
     }
 
-    private void m(Graphics var1) {
-        var1.setColor(0);
-        var1.fillRect(0, 0, this.getWidth(), this.getHeight());
-        this.j(var1);
-        this.b(var1);
+    private void m(Graphics graphics) {
+        graphics.setColor(0);
+        graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+        this.j(graphics);
+        this.b(graphics);
         if (W) {
             int var2 = this.ax.r();
-            this.b(var1, var2);
+            this.b(graphics, var2);
         }
 
         try {
-            this.g(var1);
+            this.g(graphics);
         } catch (Throwable var3) {
             System.out.println("Error in paintMonsters: " + var3);
         }
 
-        this.a(var1);
-        this.d(var1);
-        this.l(var1);
-        this.e(var1);
+        this.a(graphics);
+        this.d(graphics);
+        this.l(graphics);
+        this.e(graphics);
         if (az) {
-            this.i(var1);
+            this.i(graphics);
         }
 
         if (f == 1 && !this.ax.k(3)) {
-            this.k(var1);
+            this.k(graphics);
         }
 
         if (f == 2 && !this.ax.k(3)) {
-            this.h(var1);
+            this.h(graphics);
         }
 
     }
 
-    private void i(Graphics var1) {
-        var1.setColor(16777215);
-        var1.drawString(G, 60, 10, 17);
+    private void i(Graphics graphics) {
+        graphics.setColor(16777215);
+        graphics.drawString(G, 60, 10, 17);
     }
 
-    private void e(Graphics var1) {
+    private void e(Graphics graphics) {
         int var2;
         int var3;
         if (S) {
             var2 = 40 + func.a(30);
             var3 = 50 + func.a(20);
-            var1.drawImage(AttackImgs[0], var2, var3, 20);
+            graphics.drawImage(AttackImgs[0], var2, var3, 20);
             S = false;
         }
 
         if (ao) {
             var2 = 40 + func.a(30);
             var3 = 50 + func.a(22);
-            var1.drawImage(AttackImgs[1], var2, var3, 20);
+            graphics.drawImage(AttackImgs[1], var2, var3, 20);
             ao = false;
         }
 
         if (am) {
             var2 = 50 + func.a(2);
             var3 = 80 + func.a(2);
-            var1.drawImage(AttackImgs[2], var2, var3, 20);
+            graphics.drawImage(AttackImgs[2], var2, var3, 20);
             am = false;
         }
 
     }
 
-    private void j(Graphics var1) {
+    private void j(Graphics graphics) {
         Dungeon var2 = this.ax.b();
         byte[][] var3 = this.ax.ae;
         int var6;
         if (!this.ax.k(3)) {
             if (this.ax.k(4)) {
-                var1.setColor(10485760);
-                var1.fillRect(0, 0, this.getWidth(), floor3.getHeight());
+                graphics.setColor(10485760);
+                graphics.fillRect(0, 0, this.getWidth(), floor3.getHeight());
             } else {
                 for(var6 = 0; var6 < 5; ++var6) {
-                    var1.drawImage(floor3, var6 * 36, 0, 20);
+                    graphics.drawImage(floor3, var6 * 36, 0, 20);
                 }
             }
         }
@@ -247,7 +247,7 @@ public class EE extends FullCanvas implements Runnable {
                 var11 = n[var6][var7][3];
                 if (func.a((byte)1, var2.a(var10, var11, var3))) {
                     var4 = this.a(var8, var9, -1);
-                    this.a(var1, var4, var5);
+                    this.a(graphics, var4, var5);
                     break;
                 }
             }
@@ -263,7 +263,7 @@ public class EE extends FullCanvas implements Runnable {
                 int var12 = n[9 - var7][var8][3];
                 if (func.a((byte)1, var2.a(var11, var12, var3))) {
                     var4 = this.a(var9, var10, 1);
-                    this.a(var1, var4, var5);
+                    this.a(graphics, var4, var5);
                     break;
                 }
             }
@@ -271,13 +271,13 @@ public class EE extends FullCanvas implements Runnable {
 
     }
 
-    private void b(Graphics var1) {
+    private void b(Graphics graphics) {
         for(int i = 8; i <= 12; ++i) {
             Object var3 = Character.ad.elementAt(i);
             if (var3 instanceof byte[]) {
                 byte[] var4 = (byte[])var3;
                 if (var4.length == 8 || var4.length == 7) {
-                    this.a(var1, var4, i);
+                    this.a(graphics, var4, i);
                 }
             }
         }
@@ -289,7 +289,7 @@ public class EE extends FullCanvas implements Runnable {
             if (var7 instanceof byte[]) {
                 var5 = (byte[])var7;
                 if (var5.length == 8 || var5.length == 7) {
-                    this.a(var1, var5, i);
+                    this.a(graphics, var5, i);
                 }
             }
         }
@@ -298,23 +298,23 @@ public class EE extends FullCanvas implements Runnable {
         if (var7 instanceof byte[]) {
             var5 = (byte[])var7;
             if (var5.length == 8 || var5.length == 7) {
-                this.a(var1, var5, 1);
+                this.a(graphics, var5, 1);
             }
         }
 
     }
 
-    private void a(Graphics var1, int var2, int var3) {
-        var1.setClip(var3, 0, 18, this.getHeight());
+    private void a(Graphics graphics, int var2, int var3) {
+        graphics.setClip(var3, 0, 18, this.getHeight());
         if (var2 > 7) {
             int var4 = var2 - 8;
-            DirectGraphics var5 = DirectUtils.getDirectGraphics(var1);
+            DirectGraphics var5 = DirectUtils.getDirectGraphics(graphics);
             var5.drawImage(newwallsnok, var3 - var4 * 18, 0, 20, 8192);
         } else {
-            var1.drawImage(newwallsnok, var3 - var2 * 18, 0, 20);
+            graphics.drawImage(newwallsnok, var3 - var2 * 18, 0, 20);
         }
 
-        var1.setClip(0, 0, this.getWidth(), this.getHeight());
+        graphics.setClip(0, 0, this.getWidth(), this.getHeight());
     }
 
     private boolean a(String[] var1, int var2) {
@@ -361,48 +361,48 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void b(Graphics var1, int var2) {
+    private void b(Graphics graphics, int var2) {
         boolean var5 = false;
         boolean var6 = false;
         boolean var7 = false;
         boolean var8 = false;
         switch (var2) {
             case 0:
-                this.e(var1, 1, 1);
+                this.e(graphics, 1, 1);
                 break;
             case 1:
-                this.e(var1, 6, 1);
+                this.e(graphics, 6, 1);
                 break;
             case 2:
-                this.e(var1, 7, 1);
+                this.e(graphics, 7, 1);
                 break;
             case 3:
-                this.e(var1, 2, 1);
+                this.e(graphics, 2, 1);
                 break;
             case 4:
-                this.e(var1, 3, 2);
+                this.e(graphics, 3, 2);
                 break;
             case 5:
-                this.e(var1, 8, 0);
+                this.e(graphics, 8, 0);
                 break;
             case 6:
                 int var9 = Math.min(k.f, 3) - 1;
-                this.a(var1, var9);
+                this.a(graphics, var9);
         }
 
-        var1.setClip(0, 0, this.getWidth(), this.getHeight());
+        graphics.setClip(0, 0, this.getWidth(), this.getHeight());
     }
 
-    private void a(Graphics var1, int var2) {
+    private void a(Graphics graphics, int var2) {
         byte var3 = 15;
         byte var4 = 32;
-        this.a(var1, MonImgs[28], o[var2][0], 1, var3, var4);
-        int var5 = MonImgs[28].a();
-        this.a(var1, MonImgs[28], o[var2][0], 1, var3 + var5, var4, 8192);
-        this.a(var1, MonImgs[29], o[var2][1], 3, var3 + 45, var4 + -22);
+        this.a(graphics, MonImgs[28], o[var2][0], 1, var3, var4);
+        int var5 = MonImgs[28].GetWidth();
+        this.a(graphics, MonImgs[28], o[var2][0], 1, var3 + var5, var4, 8192);
+        this.a(graphics, MonImgs[29], o[var2][1], 3, var3 + 45, var4 + -22);
     }
 
-    private void g(Graphics var1) {
+    private void g(Graphics graphics) {
         A = false;
 
         for(int i = 8; i <= 12; ++i) {
@@ -411,12 +411,12 @@ public class EE extends FullCanvas implements Runnable {
                 byte[] var4 = (byte[])var3;
                 if (var4.length == 28 && var4[6] != 0) {
                     A = true;
-                    this.c(var1, var4[2], i);
+                    this.c(graphics, var4[2], i);
                 }
             } else if (var3 instanceof String) {
                 String var7 = (String)var3;
                 if (var7.equals("W")) {
-                    this.b(var1, 32, i);
+                    this.b(graphics, 32, i);
                 }
             }
         }
@@ -429,12 +429,12 @@ public class EE extends FullCanvas implements Runnable {
                 var5 = (byte[])var8;
                 if (var5.length == 28 && var5[6] != 0) {
                     A = true;
-                    this.c(var1, var5[2], i);
+                    this.c(graphics, var5[2], i);
                 }
             } else if (var8 instanceof String) {
                 String var9 = (String)var8;
                 if (var9.equals("W")) {
-                    this.d(var1, 31, i);
+                    this.d(graphics, 31, i);
                 }
             }
         }
@@ -444,20 +444,20 @@ public class EE extends FullCanvas implements Runnable {
             var5 = (byte[])var8;
             if (var5.length == 28 && var5[6] != 0) {
                 A = true;
-                this.c(var1, var5[2], 1);
+                this.c(graphics, var5[2], 1);
             }
         } else if (var8 instanceof String) {
         }
 
     }
 
-    private void a(Graphics var1, byte[] var2, int var3) {
+    private void a(Graphics graphics, byte[] var2, int var3) {
         if (var3 == 1) {
-            this.a(var1, var2, false);
+            this.a(graphics, var2, false);
         } else if (var3 >= 4 && var3 <= 6) {
-            this.b(var1, var2, false, var3);
+            this.b(graphics, var2, false, var3);
         } else if (var3 >= 8 && var3 <= 12) {
-            this.a(var1, var2, false, var3);
+            this.a(graphics, var2, false, var3);
         }
 
     }
@@ -470,28 +470,28 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void a(Graphics var1, byte[] var2, boolean var3) {
+    private void a(Graphics graphics, byte[] var2, boolean var3) {
         byte var4;
         int var5;
         if (a(var2)) {
             var4 = 45;
             var5 = 65;
-            this.a(var1, ImgCrystal[0], var4, var5);
+            this.a(graphics, ImgCrystal[0], var4, var5);
         } else {
             var4 = 60;
             var5 = 94;
             byte var6 = 0;
             if (var2.length == 8) {
-                this.a(var1, ImgChest[var6], var4, var5);
+                this.a(graphics, ImgChest[var6], var4, var5);
             } else if (var2.length == 7) {
                 var5 += 14;
-                this.a(var1, ImgBag[var6], var4, var5);
+                this.a(graphics, ImgBag[var6], var4, var5);
             }
         }
 
     }
 
-    private void b(Graphics var1, byte[] var2, boolean var3, int var4) {
+    private void b(Graphics graphics, byte[] var2, boolean var3, int var4) {
         byte var5 = 1;
         short var6 = 0;
         int var7 = 0;
@@ -530,18 +530,18 @@ public class EE extends FullCanvas implements Runnable {
 
         if (var8) {
             var7 += 13;
-            this.a(var1, ImgCrystal[var5], var6, var7);
+            this.a(graphics, ImgCrystal[var5], var6, var7);
         } else if (var2.length == 8) {
             var7 += 17;
-            this.a(var1, ImgChest[var5], var6, var7);
+            this.a(graphics, ImgChest[var5], var6, var7);
         } else if (var2.length == 7) {
             var7 += 20;
-            this.a(var1, ImgBag[var5], var6, var7);
+            this.a(graphics, ImgBag[var5], var6, var7);
         }
 
     }
 
-    private void a(Graphics var1, byte[] var2, boolean var3, int var4) {
+    private void a(Graphics graphics, byte[] var2, boolean var3, int var4) {
         byte var5 = 2;
         short var6 = 0;
         int var7 = 0;
@@ -590,13 +590,13 @@ public class EE extends FullCanvas implements Runnable {
 
         if (var8) {
             var7 += 20;
-            this.a(var1, ImgCrystal[var5], var6, var7);
+            this.a(graphics, ImgCrystal[var5], var6, var7);
         } else if (var2.length == 8) {
             var7 += 28;
-            this.a(var1, ImgChest[var5], var6, var7);
+            this.a(graphics, ImgChest[var5], var6, var7);
         } else if (var2.length == 7) {
             var7 += 28;
-            this.a(var1, ImgBag[var5], var6, var7);
+            this.a(graphics, ImgBag[var5], var6, var7);
         }
 
     }
@@ -629,16 +629,16 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void c(Graphics var1, int var2, int var3) {
+    private void c(Graphics graphics, int var2, int var3) {
         if (var3 == 1) {
-            this.c(var1, var2);
+            this.c(graphics, var2);
         } else if (var3 >= 4 && var3 <= 6) {
-            this.d(var1, this.c(var2), var3);
+            this.d(graphics, this.c(var2), var3);
         } else if (var3 >= 8 && var3 <= 12) {
-            this.b(var1, this.a(var2), var3);
+            this.b(graphics, this.a(var2), var3);
         }
 
-        var1.setClip(0, 0, this.getWidth(), this.getHeight());
+        graphics.setClip(0, 0, this.getWidth(), this.getHeight());
     }
 
     private int b(int var1) {
@@ -653,13 +653,13 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void c(Graphics var1, int var2) {
-        this.e(var1, var2, -1);
+    private void c(Graphics graphics, int var2) {
+        this.e(graphics, var2, -1);
     }
 
-    private void e(Graphics var1, int var2, int var3) {
+    private void e(Graphics graphics, int var2, int var3) {
         if (var2 == 41) {
-            this.a((Graphics)var1, 2);
+            this.a((Graphics)graphics, 2);
         } else {
             int var4 = this.b(var2);
             if (var4 >= 0) {
@@ -688,9 +688,9 @@ public class EE extends FullCanvas implements Runnable {
                 boolean var17 = J[var2 - 1][1];
                 boolean var18 = J[var2 - 1][2];
                 boolean var19 = J[var2 - 1][3];
-                this.a(var1, MonImgs[var8], var14, var9, var6, var7);
+                this.a(graphics, MonImgs[var8], var14, var9, var6, var7);
                 if (var5) {
-                    this.a(var1, MonImgs[var12], var15, var13, var10, var11);
+                    this.a(graphics, MonImgs[var12], var15, var13, var10, var11);
                 }
 
                 int var20;
@@ -700,39 +700,39 @@ public class EE extends FullCanvas implements Runnable {
                     var20 = var6 + ae[var4][10];
                     var21 = var7 + ae[var4][11];
                     var22 = ae[var4][12];
-                    this.a(var1, MonImgs[var22], 0, 1, var20, var21);
+                    this.a(graphics, MonImgs[var22], 0, 1, var20, var21);
                 }
 
                 if (var17) {
                     var20 = var6 + ae[var4][13];
                     var21 = var7 + ae[var4][14];
                     var22 = ae[var4][15];
-                    this.a(var1, MonImgs[var22], 0, 1, var20, var21);
+                    this.a(graphics, MonImgs[var22], 0, 1, var20, var21);
                 }
 
                 if (var18) {
                     var20 = var6 + ae[var4][16];
                     var21 = var7 + ae[var4][17];
                     var22 = ae[var4][18];
-                    this.a(var1, MonImgs[var22], 0, 1, var20, var21);
+                    this.a(graphics, MonImgs[var22], 0, 1, var20, var21);
                 }
 
                 if (var19) {
                     var20 = var6 + ae[var4][19];
                     var21 = var7 + ae[var4][20];
                     var22 = ae[var4][21];
-                    this.a(var1, MonImgs[var22], 0, 1, var20, var21);
+                    this.a(graphics, MonImgs[var22], 0, 1, var20, var21);
                 }
             }
 
         }
     }
 
-    private void d(Graphics var1, int var2, int var3) {
-        this.a(var1, var2, var3, 0, 1);
+    private void d(Graphics graphics, int var2, int var3) {
+        this.a(graphics, var2, var3, 0, 1);
     }
 
-    private void a(Graphics var1, int var2, int var3, int var4, int var5) {
+    private void a(Graphics graphics, int var2, int var3, int var4, int var5) {
         byte var6 = 0;
         byte var7 = 0;
         switch (var3) {
@@ -749,10 +749,10 @@ public class EE extends FullCanvas implements Runnable {
                 var7 = 38;
         }
 
-        this.a(var1, MonImgs[var2], var4, var5, var6, var7);
+        this.a(graphics, MonImgs[var2], var4, var5, var6, var7);
     }
 
-    private void b(Graphics var1, int var2, int var3) {
+    private void b(Graphics graphics, int var2, int var3) {
         short var4 = 0;
         byte var5 = 0;
         switch (var3) {
@@ -777,81 +777,81 @@ public class EE extends FullCanvas implements Runnable {
                 var5 = 44;
         }
 
-        DirectGraphics var6 = DirectUtils.getDirectGraphics(var1);
-        var6.drawPixels(MonImgs[var2].g, true, 0, MonImgs[var2].h, var4, var5, MonImgs[var2].e, MonImgs[var2].a, 0, 4444);
+        DirectGraphics var6 = DirectUtils.getDirectGraphics(graphics);
+        var6.drawPixels(MonImgs[var2].ImgBuf, true, 0, MonImgs[var2].ScanLen, var4, var5, MonImgs[var2].Width, MonImgs[var2].Height, 0, DirectGraphics.TYPE_USHORT_4444_ARGB);
     }
 
-    private void a(Graphics var1) {
-        var1.setColor(16776960);
-        var1.fillRect(5, 130, 40, 7);
-        var1.fillRect(5, 138, 40, 7);
-        var1.fillRect(5, 146, 40, 7);
-        var1.setColor(16711680);
+    private void a(Graphics graphics) {
+        graphics.setColor(16776960);
+        graphics.fillRect(5, 130, 40, 7);
+        graphics.fillRect(5, 138, 40, 7);
+        graphics.fillRect(5, 146, 40, 7);
+        graphics.setColor(16711680);
         int var2 = this.ax.n(2) * 38 / this.ax.CharCritAtt[3];
-        var1.fillRect(6, 131, var2, 5);
-        var1.setColor(65280);
+        graphics.fillRect(6, 131, var2, 5);
+        graphics.setColor(65280);
         var2 = this.ax.n(4) * 38 / this.ax.CharCritAtt[5];
-        var1.fillRect(6, 139, var2, 5);
-        var1.setColor(255);
+        graphics.fillRect(6, 139, var2, 5);
+        graphics.setColor(255);
         var2 = this.ax.n(6) * 38 / this.ax.CharCritAtt[7];
         if (var2 > 40) {
             var2 = 40;
         }
 
-        var1.fillRect(6, 147, var2, 5);
+        graphics.fillRect(6, 147, var2, 5);
     }
 
-    private void l(Graphics var1) {
+    private void l(Graphics graphics) {
         if (ad) {
-            var1.setColor(13080935);
-            var1.fillRoundRect(96, 118, 75, 35, 5, 5);
-            var1.setFont(aj);
-            var1.setColor(0);
-            var1.drawString(d[0], 100, 122, 20);
+            graphics.setColor(13080935);
+            graphics.fillRoundRect(96, 118, 75, 35, 5, 5);
+            graphics.setFont(aj);
+            graphics.setColor(0);
+            graphics.drawString(d[0], 100, 122, 20);
             if (d.length > 1) {
-                var1.drawString(d[1], 100, 134, 20);
+                graphics.drawString(d[1], 100, 134, 20);
             }
 
         }
     }
 
-    private void d(Graphics var1) {
-        var1.setFont(aj);
-        var1.setClip(0, 0, this.getWidth(), this.getHeight());
-        var1.setColor(0);
-        var1.fillRect(0, 156, this.getWidth(), 52);
-        var1.setColor(13080935);
-        var1.fillRoundRect(2, 158, this.getWidth() - 4, 48, 5, 5);
-        var1.setColor(0);
+    private void d(Graphics graphics) {
+        graphics.setFont(aj);
+        graphics.setClip(0, 0, this.getWidth(), this.getHeight());
+        graphics.setColor(0);
+        graphics.fillRect(0, 156, this.getWidth(), 52);
+        graphics.setColor(13080935);
+        graphics.fillRoundRect(2, 158, this.getWidth() - 4, 48, 5, 5);
+        graphics.setColor(0);
         int var2 = this.j();
         aq = var2;
         if (var2 == 0) {
-            var1.drawImage(MenuIcons[1], 14, 174, 20);
-            var1.drawImage(MenuIcons[2], 62, 174, 20);
-            var1.drawImage(MenuIcons[3], 104, 174, 20);
-            var1.drawImage(MenuIcons[5], 144, 174, 20);
-            var1.drawChar(e[1], 5, 180, 20);
-            var1.drawChar(e[2], 53, 180, 20);
-            var1.drawChar(e[3], 96, 180, 20);
-            var1.drawChar(e[5], 135, 180, 20);
+            graphics.drawImage(MenuIcons[1], 14, 174, 20);
+            graphics.drawImage(MenuIcons[2], 62, 174, 20);
+            graphics.drawImage(MenuIcons[3], 104, 174, 20);
+            graphics.drawImage(MenuIcons[5], 144, 174, 20);
+            graphics.drawChar(e[1], 5, 180, 20);
+            graphics.drawChar(e[2], 53, 180, 20);
+            graphics.drawChar(e[3], 96, 180, 20);
+            graphics.drawChar(e[5], 135, 180, 20);
         } else if (var2 == 1) {
-            var1.drawImage(MenuIcons[0], 14, 174, 20);
-            var1.drawImage(MenuIcons[1], 62, 174, 20);
-            var1.drawImage(MenuIcons[2], 104, 174, 20);
-            var1.drawImage(MenuIcons[3], 144, 174, 20);
-            var1.drawChar(e[0], 5, 180, 20);
-            var1.drawChar(e[1], 53, 180, 20);
-            var1.drawChar(e[2], 96, 180, 20);
-            var1.drawChar(e[3], 135, 180, 20);
+            graphics.drawImage(MenuIcons[0], 14, 174, 20);
+            graphics.drawImage(MenuIcons[1], 62, 174, 20);
+            graphics.drawImage(MenuIcons[2], 104, 174, 20);
+            graphics.drawImage(MenuIcons[3], 144, 174, 20);
+            graphics.drawChar(e[0], 5, 180, 20);
+            graphics.drawChar(e[1], 53, 180, 20);
+            graphics.drawChar(e[2], 96, 180, 20);
+            graphics.drawChar(e[3], 135, 180, 20);
         } else if (var2 == 2) {
-            var1.drawImage(MenuIcons[1], 14, 174, 20);
-            var1.drawImage(MenuIcons[2], 62, 174, 20);
-            var1.drawImage(MenuIcons[3], 104, 174, 20);
-            var1.drawImage(MenuIcons[4], 144, 174, 20);
-            var1.drawChar(e[1], 5, 180, 20);
-            var1.drawChar(e[2], 53, 180, 20);
-            var1.drawChar(e[3], 96, 180, 20);
-            var1.drawChar(e[4], 135, 180, 20);
+            graphics.drawImage(MenuIcons[1], 14, 174, 20);
+            graphics.drawImage(MenuIcons[2], 62, 174, 20);
+            graphics.drawImage(MenuIcons[3], 104, 174, 20);
+            graphics.drawImage(MenuIcons[4], 144, 174, 20);
+            graphics.drawChar(e[1], 5, 180, 20);
+            graphics.drawChar(e[2], 53, 180, 20);
+            graphics.drawChar(e[3], 96, 180, 20);
+            graphics.drawChar(e[4], 135, 180, 20);
         }
 
     }
@@ -866,37 +866,37 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void a(Graphics var1, CusImg var2, int var3, int var4, int var5, int var6) {
-        this.a(var1, var2, var3, var4, var5, var6, 0);
+    private void a(Graphics graphics, CusImg var2, int var3, int var4, int var5, int var6) {
+        this.a(graphics, var2, var3, var4, var5, var6, 0);
     }
 
-    private void a(Graphics var1, CusImg var2, int var3, int var4, int var5, int var6, int var7) {
-        int var8 = var2.a() / var4;
-        int var9 = var2.b();
-        var1.setClip(var5, var6, var8, var9);
-        DirectGraphics var10 = DirectUtils.getDirectGraphics(var1);
-        var10.drawPixels(var2.g, true, 0, var2.h, var5 - var3 * var8, var6, var2.e, var2.a, var7, 4444);
+    private void a(Graphics graphics, CusImg var2, int var3, int var4, int var5, int var6, int var7) {
+        int var8 = var2.GetWidth() / var4;
+        int var9 = var2.GetHeight();
+        graphics.setClip(var5, var6, var8, var9);
+        DirectGraphics var10 = DirectUtils.getDirectGraphics(graphics);
+        var10.drawPixels(var2.ImgBuf, true, 0, var2.ScanLen, var5 - var3 * var8, var6, var2.Width, var2.Height, var7, 4444);
     }
 
-    private void k(Graphics var1) {
-        var1.setFont(aj);
-        var1.setColor(16777215);
-        var1.drawChar(O[this.ax.ak], 16, 10, 20);
-        var1.setColor(0);
-        var1.fillRect(10, 20, 23, 23);
-        this.a(var1, 10, 20, 7, 3, 1, l);
+    private void k(Graphics graphics) {
+        graphics.setFont(aj);
+        graphics.setColor(16777215);
+        graphics.drawChar(O[this.ax.ak], 16, 10, 20);
+        graphics.setColor(0);
+        graphics.fillRect(10, 20, 23, 23);
+        this.a(graphics, 10, 20, 7, 3, 1, l);
     }
 
-    private void h(Graphics var1) {
-        var1.setFont(K);
-        var1.setColor(16777215);
-        var1.drawChar(O[this.ax.ak], 58, 10, 20);
+    private void h(Graphics graphics) {
+        graphics.setFont(K);
+        graphics.setColor(16777215);
+        graphics.drawChar(O[this.ax.ak], 58, 10, 20);
         byte var2 = 89;
-        var1.fillRect(15, 25, var2, var2);
-        this.a(var1, 15, 25, 17, 5, 2, F);
+        graphics.fillRect(15, 25, var2, var2);
+        this.a(graphics, 15, 25, 17, 5, 2, F);
     }
 
-    private void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, byte[][] var7) {
+    private void a(Graphics graphics, int var2, int var3, int var4, int var5, int var6, byte[][] var7) {
         int var8 = var4 / 2;
 
         for(int i = 0; i < var4; ++i) {
@@ -905,25 +905,25 @@ public class EE extends FullCanvas implements Runnable {
             for(int j = 0; j < var4; ++j) {
                 int var12 = var2 + var6 + j * var5;
                 if (var7[j][i] == 1) {
-                    var1.setColor(0);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(0);
+                    graphics.fillRect(var12, var10, var5, var5);
                 } else if (var7[j][i] == 0) {
-                    var1.setColor(16777215);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(16777215);
+                    graphics.fillRect(var12, var10, var5, var5);
                 } else if ((var7[j][i] & 2) != 0) {
-                    var1.setColor(16711680);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(16711680);
+                    graphics.fillRect(var12, var10, var5, var5);
                 } else if ((var7[j][i] & 4) != 0) {
-                    var1.setColor(255);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(255);
+                    graphics.fillRect(var12, var10, var5, var5);
                 } else if ((var7[j][i] & 8) != 0) {
-                    var1.setColor(13369599);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(13369599);
+                    graphics.fillRect(var12, var10, var5, var5);
                 }
 
                 if (i == var8 && j == var8) {
-                    var1.setColor(65280);
-                    var1.fillRect(var12, var10, var5, var5);
+                    graphics.setColor(65280);
+                    graphics.fillRect(var12, var10, var5, var5);
                 }
             }
         }
@@ -1805,8 +1805,8 @@ public class EE extends FullCanvas implements Runnable {
         }
     }
 
-    private void a(Graphics var1, CusImg var2, int var3, int var4) {
-        DirectGraphics var5 = DirectUtils.getDirectGraphics(var1);
-        var5.drawPixels(var2.g, true, 0, var2.h, var3, var4, var2.e, var2.a, 0, 4444);
+    private void a(Graphics graphics, CusImg var2, int var3, int var4) {
+        DirectGraphics var5 = DirectUtils.getDirectGraphics(graphics);
+        var5.drawPixels(var2.ImgBuf, true, 0, var2.ScanLen, var3, var4, var2.Width, var2.Height, 0, 4444);
     }
 }

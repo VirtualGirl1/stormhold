@@ -237,7 +237,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
             try {
                 Thread.sleep(1000L);
-            } catch (Exception var4) {
+            } catch (Exception err) {
             }
 
             this.ac = false;
@@ -254,7 +254,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
             try {
                 Thread.sleep(15000L);
-            } catch (Exception var3) {
+            } catch (Exception err) {
             }
         }
 
@@ -536,22 +536,22 @@ public class ESGame extends a implements Runnable, CommandListener {
         return menu;
     }
 
-    private Menu TakeItemMenu(int var1) {
+    private Menu TakeItemMenu(int npc) {
         System.gc();
         Log("Start of newTakeWhat");
         Menu menu = new Menu(this, 5, 27);
-        menu.npcID = var1;
+        menu.npcID = npc;
         String[] var3 = Item.b();
-        menu.a(NPC.NPCNames[var1], "Take What?", var3, (Vector)null, true);
+        menu.a(NPC.NPCNames[npc], "Take What?", var3, (Vector)null, true);
         menu.prev = null;
         return menu;
     }
 
-    private Menu EnchantItemMenu(int var1) {
+    private Menu EnchantItemMenu(int npc) {
         System.gc();
         Log("Start of newEnchantWhat");
         Menu menu = new Menu(this, 5, 350);
-        menu.npcID = var1;
+        menu.npcID = npc;
         String[] var3 = new String[this.k.InventoryCount];
 
         for(int i = 0; i < this.k.InventoryCount; ++i) {
@@ -559,7 +559,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             var3[i] = Item.GetItemName(var5);
         }
 
-        menu.a(NPC.NPCNames[var1], "Enchant What?", var3, (Vector)null, true);
+        menu.a(NPC.NPCNames[npc], "Enchant What?", var3, (Vector)null, true);
         menu.prev = this.av;
         return menu;
     }
@@ -1187,25 +1187,25 @@ public class ESGame extends a implements Runnable, CommandListener {
     private boolean SaveGame() {
         boolean var1 = true;
         boolean var2 = false;
-        RecordStore var3 = null;
+        RecordStore store = null;
         al.m = 0;
         String var4 = this.f();
 
         try {
-            var3 = RecordStore.openRecordStore(var4, true);
+            store = RecordStore.openRecordStore(var4, true);
             byte[] var5 = this.k.g(true);
             al.m = 20;
             al.c();
             al.f();
-            var3.addRecord(var5, 0, var5.length);
+            store.addRecord(var5, 0, var5.length);
             System.gc();
-            a(var3);
+            a(store);
             var5 = k();
-            var3.addRecord(var5, 0, var5.length);
+            store.addRecord(var5, 0, var5.length);
             Object var20 = null;
             System.gc();
-            var3.closeRecordStore();
-            var3 = null;
+            store.closeRecordStore();
+            store = null;
             this.L();
             al.m = 100;
             al.c();
@@ -1221,9 +1221,9 @@ public class ESGame extends a implements Runnable, CommandListener {
 
             var1 = false;
         } finally {
-            if (var3 != null) {
+            if (store != null) {
                 try {
-                    var3.closeRecordStore();
+                    store.closeRecordStore();
                 } catch (Exception var16) {
                 }
             }
@@ -1856,7 +1856,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         for(int i = 0; i < var1; ++i) {
             if (EE.MonImgs[i] != null) {
-                EE.MonImgs[i].g = null;
+                EE.MonImgs[i].ImgBuf = null;
                 EE.MonImgs[i] = null;
             }
         }
