@@ -8,10 +8,10 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Graphics;
 
-public class CC extends FullCanvas {
+public class MenuCanvas extends FullCanvas {
     Menu menu = null;
 
-    public CC() {
+    public MenuCanvas() {
     }
 
     public void paint(Graphics graphics) {

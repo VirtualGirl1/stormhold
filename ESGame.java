@@ -2072,7 +2072,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         if (obj instanceof Menu) {
             ax = (Menu)obj;
-            CC var3 = Menu.j();
+            MenuCanvas var3 = Menu.j();
             var3.menu = ax;
             ax.t = var3;
             this.dspl.setCurrent(ax.t);

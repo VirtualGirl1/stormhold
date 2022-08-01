@@ -17,7 +17,7 @@ import javax.microedition.lcdui.Screen;
 import javax.microedition.lcdui.StringItem;
 
 public class Menu implements Runnable {
-    static CC[] K = new CC[2];
+    static MenuCanvas[] K = new MenuCanvas[2];
     static int x;
     static Image r;
     Vector q;
@@ -939,7 +939,7 @@ public class Menu implements Runnable {
         return var2;
     }
 
-    static CC j() {
+    static MenuCanvas j() {
         return K[x];
     }
 
@@ -966,8 +966,8 @@ public class Menu implements Runnable {
     }
 
     static {
-        K[0] = new CC();
-        K[1] = new CC();
+        K[0] = new MenuCanvas();
+        K[1] = new MenuCanvas();
         x = 0;
 
         try {
