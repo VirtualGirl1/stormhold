@@ -60,7 +60,7 @@ public class Character {
     byte CurDung;
     byte l;
     byte Ka;
-    byte ak;
+    byte DirFacing;
     byte C;
     byte ao;
     byte an;
@@ -255,12 +255,12 @@ public class Character {
             this.CurDung = this.ab = 1;
             this.l = this.XPos = 9;
             this.Ka = this.YPos = 10;
-            this.ak = this.e = 1;
+            this.DirFacing = this.e = 1;
         } else {
             this.CurDung = this.ab = 1;
             this.l = this.XPos = 12;
             this.Ka = this.YPos = 14;
-            this.ak = this.e = 1;
+            this.DirFacing = this.e = 1;
         }
 
     }
@@ -279,15 +279,15 @@ public class Character {
         var1.append('\n');
         var1.append(CritAtt[2]);
         var1.append(var3);
-        var1.append(this.n(2));
+        var1.append(this.GetCritAtt(2));
         var1.append('\n');
         var1.append(CritAtt[4]);
         var1.append(var3);
-        var1.append(this.n(4));
+        var1.append(this.GetCritAtt(4));
         var1.append('\n');
         var1.append(CritAtt[6]);
         var1.append(var3);
-        var1.append(this.n(6));
+        var1.append(this.GetCritAtt(6));
         var1.append('\n');
 
         int var5;
@@ -439,7 +439,7 @@ public class Character {
             NewChar.CurDung = data.readByte();
             NewChar.l = data.readByte();
             NewChar.Ka = data.readByte();
-            NewChar.ak = data.readByte();
+            NewChar.DirFacing = data.readByte();
             NewChar.C = data.readByte();
             NewChar.ao = data.readByte();
             NewChar.an = data.readByte();
@@ -539,7 +539,7 @@ public class Character {
             var4.writeByte(this.CurDung);
             var4.writeByte(this.l);
             var4.writeByte(this.Ka);
-            var4.writeByte(this.ak);
+            var4.writeByte(this.DirFacing);
             var4.writeByte(this.C);
             var4.writeByte(this.ao);
             var4.writeByte(this.an);
@@ -566,17 +566,17 @@ public class Character {
             case 1:
                 var2 = 1;
             case 2:
-                this.e = this.ak;
-                if (this.ak == 1) {
+                this.e = this.DirFacing;
+                if (this.DirFacing == 1) {
                     this.XPos = this.l;
                     this.YPos = (byte)(this.Ka - var2);
-                } else if (this.ak == 3) {
+                } else if (this.DirFacing == 3) {
                     this.XPos = this.l;
                     this.YPos = (byte)(this.Ka + var2);
-                } else if (this.ak == 2) {
+                } else if (this.DirFacing == 2) {
                     this.XPos = (byte)(this.l + var2);
                     this.YPos = this.Ka;
-                } else if (this.ak == 4) {
+                } else if (this.DirFacing == 4) {
                     this.XPos = (byte)(this.l - var2);
                     this.YPos = this.Ka;
                 }
@@ -631,7 +631,7 @@ public class Character {
             case 3:
                 this.ab = this.CurDung;
                 this.i = false;
-                this.e = (byte)(this.ak + 1);
+                this.e = (byte)(this.DirFacing + 1);
                 if (this.e > 4) {
                     this.e = 1;
                 }
@@ -642,7 +642,7 @@ public class Character {
             case 4:
                 this.ab = this.CurDung;
                 this.i = false;
-                this.e = (byte)(this.ak - 1);
+                this.e = (byte)(this.DirFacing - 1);
                 if (this.e < 1) {
                     this.e = 4;
                 }
@@ -736,7 +736,7 @@ public class Character {
                         this.a = this.Ka;
                         this.l = this.XPos;
                         this.Ka = this.YPos;
-                        this.ak = this.e;
+                        this.DirFacing = this.e;
                         var3.h = true;
                         if (var1 == 1 || var1 == 2) {
                             if (NPC.l) {
@@ -919,11 +919,11 @@ public class Character {
             var8 = var9[1];
         }
 
-        if (this.ak == 1) {
+        if (this.DirFacing == 1) {
             var5 = this.Ka - var8;
-        } else if (this.ak == 3) {
+        } else if (this.DirFacing == 3) {
             var5 = var8 - this.Ka;
-        } else if (this.ak == 2) {
+        } else if (this.DirFacing == 2) {
             var5 = var7 - this.l;
         } else {
             var5 = this.l - var7;
@@ -1174,7 +1174,7 @@ public class Character {
             var16 = var13[1];
         }
 
-        int[] var10 = var3.a(this.l, this.Ka, this.ak, var15, var16);
+        int[] var10 = var3.a(this.l, this.Ka, this.DirFacing, var15, var16);
         boolean var11 = false;
         if (a(var10[0], var10[1], 3, 2)) {
             var11 = true;
@@ -2095,7 +2095,7 @@ public class Character {
     }
 
     void a(int var1) {
-        this.a(var1, EE.j);
+        this.a(var1, GameCanvas.j);
     }
 
     boolean w(int var1) {
@@ -2154,20 +2154,20 @@ public class Character {
         }
     }
 
-    int n(int var1) {
-        int var2 = this.CharCritAtt[var1];
+    int GetCritAtt(int attr) {
+        int var2 = this.CharCritAtt[attr];
         if (this.t(23)) {
-            if (var1 == 2) {
+            if (attr == 2) {
                 var2 += this.b(10, false);
                 if (var2 > this.CharCritAtt[3]) {
                     var2 = this.CharCritAtt[3];
                 }
-            } else if (var1 == 6) {
+            } else if (attr == 6) {
                 var2 += this.b(10, false);
                 if (var2 > this.CharCritAtt[7]) {
                     var2 = this.CharCritAtt[7];
                 }
-            } else if (var1 == 4) {
+            } else if (attr == 4) {
                 var2 += this.b(10, false);
                 if (var2 > this.CharCritAtt[5]) {
                     var2 = this.CharCritAtt[5];
@@ -2186,7 +2186,7 @@ public class Character {
         this.C = this.CurDung;
         this.ao = this.l;
         this.an = this.Ka;
-        this.Z = this.ak;
+        this.Z = this.DirFacing;
         this.c(true);
         this.w();
         this.Q = true;
@@ -2249,7 +2249,7 @@ public class Character {
     }
 
     void w() {
-        this.b().b(this.l, this.Ka, this.ak, this.ae);
+        this.b().b(this.l, this.Ka, this.DirFacing, this.ae);
     }
 
     String GetStatsString() {
@@ -2267,17 +2267,17 @@ public class Character {
         StatsString.append("/10)");
         StatsString.append('\n');
         StatsString.append("Health: ");
-        StatsString.append(this.n(2));
+        StatsString.append(this.GetCritAtt(2));
         StatsString.append('/');
         StatsString.append(this.CharCritAtt[3]);
         StatsString.append('\n');
         StatsString.append("Magic: ");
-        StatsString.append(this.n(4));
+        StatsString.append(this.GetCritAtt(4));
         StatsString.append('/');
         StatsString.append(this.CharCritAtt[5]);
         StatsString.append('\n');
         StatsString.append("Fatigue: ");
-        StatsString.append(this.n(6));
+        StatsString.append(this.GetCritAtt(6));
         StatsString.append('/');
         StatsString.append(this.CharCritAtt[7]);
         StatsString.append('\n');
@@ -2693,23 +2693,23 @@ public class Character {
     }
 
     private void B() {
-        --this.ak;
-        if (this.ak <= 0) {
-            this.ak = 4;
+        --this.DirFacing;
+        if (this.DirFacing <= 0) {
+            this.DirFacing = 4;
         }
 
     }
 
     private void a() {
-        ++this.ak;
-        if (this.ak >= 5) {
-            this.ak = 1;
+        ++this.DirFacing;
+        if (this.DirFacing >= 5) {
+            this.DirFacing = 1;
         }
 
     }
 
     String K() {
-        byte var1 = this.ak;
+        byte var1 = this.DirFacing;
         StringBuffer var2 = new StringBuffer(1000);
         System.out.println("here 1");
         String[] var3 = this.b().a();
@@ -2782,7 +2782,7 @@ public class Character {
                 }
             }
 
-            this.ak = var1;
+            this.DirFacing = var1;
         }
 
         if (NPC.WardenPresent) {

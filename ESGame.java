@@ -101,7 +101,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu F;
     Menu CreditsMenu;
     Menu SaveErrMenu;
-    private EE av;
+    private GameCanvas av;
     private Form aD;
     private static String[] HelpStrings = new String[12];
     private static String[] helpCats = new String[12];
@@ -216,7 +216,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                 aQ.c();
                 aQ.f();
                 this.k.w();
-                this.av.ax = this.k;
+                this.av.Char = this.k;
                 this.av.v = true;
                 this.av.StartGame();
                 this.a((Object)this.av);
@@ -334,17 +334,17 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.h();
         this.ay.m = 20;
         this.j();
-        this.av = new EE(this);
+        this.av = new GameCanvas(this);
         Log("Before floors and walls");
-        EE.floor3 = this.LoadImage("floor3.png");
+        GameCanvas.floor3 = this.LoadImage("floor3.png");
         Log("after floors");
-        EE.newwallsnok = this.LoadImage("newwallsnok.png");
+        GameCanvas.newwallsnok = this.LoadImage("newwallsnok.png");
         Log("After walls");
         this.a("After floor and wall images", true);
-        EE.MonImgs = new CusImg[33];
+        GameCanvas.MonImgs = new CusImg[33];
 
         for(int i = 0; i < 33; ++i) {
-            EE.MonImgs[i] = null;
+            GameCanvas.MonImgs[i] = null;
         }
 
         this.a("After alloc monster images", true);
@@ -358,47 +358,47 @@ public class ESGame extends a implements Runnable, CommandListener {
         this.a("After monster images", true);
         Log("After monster images ");
         this.j();
-        EE.ImgBag = new CusImg[3];
-        EE.ImgBag[0] = CusImg.LoadCus("baglarge.cus");
-        EE.ImgBag[1] = CusImg.LoadCus("bagmid.cus");
-        EE.ImgBag[2] = CusImg.LoadCus("bagsmall.cus");
+        GameCanvas.ImgBag = new CusImg[3];
+        GameCanvas.ImgBag[0] = CusImg.LoadCus("baglarge.cus");
+        GameCanvas.ImgBag[1] = CusImg.LoadCus("bagmid.cus");
+        GameCanvas.ImgBag[2] = CusImg.LoadCus("bagsmall.cus");
         Log("After bag images ");
         System.gc();
         this.a("After bag images ", true);
-        EE.ImgCrystal = new CusImg[3];
-        EE.ImgCrystal[0] = CusImg.LoadCus("crystalnear.cus");
-        EE.ImgCrystal[1] = CusImg.LoadCus("crystalmid.cus");
-        EE.ImgCrystal[2] = CusImg.LoadCus("crystalfar.cus");
+        GameCanvas.ImgCrystal = new CusImg[3];
+        GameCanvas.ImgCrystal[0] = CusImg.LoadCus("crystalnear.cus");
+        GameCanvas.ImgCrystal[1] = CusImg.LoadCus("crystalmid.cus");
+        GameCanvas.ImgCrystal[2] = CusImg.LoadCus("crystalfar.cus");
         Log("After crystal images ");
         this.a("After crystal images ", true);
         this.j();
         Log("After oracle images ");
         this.a("After oracle images ", true);
-        EE.AttackImgs = new Image[3];
+        GameCanvas.AttackImgs = new Image[3];
 
         for(int i = 0; i < 3; ++i) {
-            EE.AttackImgs[i] = null;
+            GameCanvas.AttackImgs[i] = null;
         }
 
-        EE.AttackImgs[0] = this.LoadImage("blood1.png");
-        EE.AttackImgs[1] = this.LoadImage("monsterspell.png");
-        EE.AttackImgs[2] = this.LoadImage("selfspell.png");
+        GameCanvas.AttackImgs[0] = this.LoadImage("blood1.png");
+        GameCanvas.AttackImgs[1] = this.LoadImage("monsterspell.png");
+        GameCanvas.AttackImgs[2] = this.LoadImage("selfspell.png");
         System.gc();
         Log("After spell images ");
         this.a("After effects images ", true);
-        EE.ImgChest = new CusImg[3];
-        EE.ImgChest[0] = CusImg.LoadCus("chestnearclosed.cus");
-        EE.ImgChest[1] = CusImg.LoadCus("chestmidclosed.cus");
-        EE.ImgChest[2] = CusImg.LoadCus("chestfarclosed.cus");
+        GameCanvas.ImgChest = new CusImg[3];
+        GameCanvas.ImgChest[0] = CusImg.LoadCus("chestnearclosed.cus");
+        GameCanvas.ImgChest[1] = CusImg.LoadCus("chestmidclosed.cus");
+        GameCanvas.ImgChest[2] = CusImg.LoadCus("chestfarclosed.cus");
         this.a("After chest images ", true);
         this.j();
-        EE.MenuIcons = new Image[6];
-        EE.MenuIcons[0] = this.LoadImage("icon_attack.png");
-        EE.MenuIcons[1] = this.LoadImage("icon_cast.png");
-        EE.MenuIcons[2] = this.LoadImage("icon_change.png");
-        EE.MenuIcons[3] = this.LoadImage("icon_option.png");
-        EE.MenuIcons[4] = this.LoadImage("icon_action.png");
-        EE.MenuIcons[5] = this.LoadImage("icon_camp.png");
+        GameCanvas.MenuIcons = new Image[6];
+        GameCanvas.MenuIcons[0] = this.LoadImage("icon_attack.png");
+        GameCanvas.MenuIcons[1] = this.LoadImage("icon_cast.png");
+        GameCanvas.MenuIcons[2] = this.LoadImage("icon_change.png");
+        GameCanvas.MenuIcons[3] = this.LoadImage("icon_option.png");
+        GameCanvas.MenuIcons[4] = this.LoadImage("icon_action.png");
+        GameCanvas.MenuIcons[5] = this.LoadImage("icon_camp.png");
         this.a("After monster and icon images", true);
         System.gc();
         this.j();
@@ -566,7 +566,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     private Menu StatsMenu() {
         Menu menu = new Menu(this, 4, 32);
-        menu.a("Stats", this.av.ax.GetStatsString());
+        menu.a("Stats", this.av.Char.GetStatsString());
         return menu;
     }
 
@@ -661,7 +661,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                             break;
                         case 1:
                             System.gc();
-                            this.av.g();
+                            this.av.ClearGameThread();
                             aQ = new Menu(this, 9, 302);
                             aQ.o();
                             var6 = new Thread(this);
@@ -722,7 +722,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                 this.a((Object)this.IntroMenu);
             } else if (ax.B == 101) {
                 if (comm == Menu.OKComm) {
-                    this.av.ax = this.k;
+                    this.av.Char = this.k;
                     this.av.StartGame();
                     this.a((Object)this.av);
                 }
@@ -830,7 +830,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                                             break;
                                         case 5:
                                             System.gc();
-                                            this.av.g();
+                                            this.av.ClearGameThread();
                                             aQ = new Menu(this, 9, 302);
                                             aQ.o();
                                             var6 = new Thread(this);
@@ -1786,7 +1786,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
         }
 
-        EE.E = true;
+        GameCanvas.E = true;
     }
 
     private boolean m(int var1) {
@@ -1816,7 +1816,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                     for(int j = 0; j < var4; ++j) {
                         int var6 = var3 + j;
                         if (!this.m(var6)) {
-                            EE.MonImgs[var6] = CusImg.LoadCus(MonFNames[i][j]);
+                            GameCanvas.MonImgs[var6] = CusImg.LoadCus(MonFNames[i][j]);
                         }
 
                         if (!this.ak) {
@@ -1852,12 +1852,12 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     void UnloadMonImg() {
-        int var1 = EE.MonImgs.length;
+        int var1 = GameCanvas.MonImgs.length;
 
         for(int i = 0; i < var1; ++i) {
-            if (EE.MonImgs[i] != null) {
-                EE.MonImgs[i].ImgBuf = null;
-                EE.MonImgs[i] = null;
+            if (GameCanvas.MonImgs[i] != null) {
+                GameCanvas.MonImgs[i].ImgBuf = null;
+                GameCanvas.MonImgs[i] = null;
             }
         }
 
@@ -2115,7 +2115,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     private void Debug() {
         this.ao = new Form("Debug");
-        String var1 = this.av.ax.K();
+        String var1 = this.av.Char.K();
         this.ar = new StringItem("Debug: ", var1);
         this.ao.append(this.ar);
         Command var2 = new Command("Ok", 4, 1);
