@@ -34,15 +34,15 @@ public class Item {
         return indx - 1;
     }
 
-    static boolean c(int var0) {
-        int var1 = FormatIndex(var0);
-        return Slot[var1] != -1;
+    static boolean IsEquipable(int indx0) {
+        int indx = FormatIndex(indx0);
+        return Slot[indx] != -1;
     }
 
-    static boolean b(int var0) {
-        int var1 = FormatIndex(var0);
-        byte var2 = Type[var1];
-        switch (var2) {
+    static boolean IsEquipment(int indx0) {
+        int indx = FormatIndex(indx0);
+        byte type = Type[indx];
+        switch (type) {
             case 1:
             case 2:
             case 3:
@@ -59,10 +59,10 @@ public class Item {
         }
     }
 
-    static int a(int var0) {
-        int var1 = FormatIndex(var0);
-        byte var2 = Slot[var1];
-        return var2;
+    static int GetItemSlot(int indx0) {
+        int indx = FormatIndex(indx0);
+        byte slot = Slot[indx];
+        return slot;
     }
 
     static String GetItemName(int indx0) {
@@ -70,27 +70,27 @@ public class Item {
         return ItemName[indx];
     }
 
-    static int a(int var0, int var1) {
-        int var2 = FormatIndex(var1);
+    static int GetItemProperty(int prop, int indx0) {
+        int indx = FormatIndex(indx0);
         short var3;
-        switch (var0) {
+        switch (prop) {
             case 1:
-                var3 = Type[var2];
+                var3 = Type[indx];
                 break;
             case 2:
-                var3 = Level[var2];
+                var3 = Level[indx];
                 break;
             case 3:
-                var3 = Rating[var2];
+                var3 = Rating[indx];
                 break;
             case 4:
-                var3 = f[var2];
+                var3 = f[indx];
                 break;
             case 5:
-                var3 = a[var2];
+                var3 = a[indx];
                 break;
             case 6:
-                var3 = Slot[var2];
+                var3 = Slot[indx];
                 break;
             default:
                 var3 = -1;
@@ -171,7 +171,7 @@ public class Item {
         data.close();
     }
 
-    static int a(Random var0, int var1) {
+    static int a(Random rand, int var1) {
         int var2 = -1;
         int var3 = -1;
 
@@ -186,16 +186,16 @@ public class Item {
         }
 
         int var5 = var3 - var2 + 1;
-        int var6 = var2 + Math.abs(var0.nextInt() % var5);
+        int var6 = var2 + Math.abs(rand.nextInt() % var5);
         return 1 + var6;
     }
 
-    static int a(Random var0, int var1, int var2) {
-        int var3 = func.a(var0, 100);
+    static int GetRandItem(Random rand, int var1, int var2) {
+        int var3 = func.a(rand, 100);
         int var4 = var3;
 
         for(int i = 1; i < var2; ++i) {
-            var3 = func.a(var0, 100);
+            var3 = func.a(rand, 100);
             if (var3 > var4) {
                 var4 = var3;
             }
@@ -212,7 +212,7 @@ public class Item {
             var6 = 4;
         }
 
-        int var7 = func.a(var0, 10);
+        int var7 = func.a(rand, 10);
         var7 += var1 - 2;
         if (var7 > TableRows - 1) {
             var7 = TableRows - 1;
@@ -233,13 +233,13 @@ public class Item {
         return var9;
     }
 
-    static String[] b() {
-        String[] var0 = new String[13];
+    static String[] GetCrystals() {
+        String[] CrystalList = new String[13];
 
         for(int i = 0; i < 13; ++i) {
-            var0[i] = ItemName[86 + i];
+            CrystalList[i] = ItemName[86 + i];
         }
 
-        return var0;
+        return CrystalList;
     }
 }

@@ -26,20 +26,20 @@ import javax.microedition.rms.RecordStore;
 import ngame.midlet.a;
 
 public class ESGame extends a implements Runnable, CommandListener {
-    private static int aT;
+    private static int GameState;
     static byte[] at = new byte[2000];
     static String PlutoUrl = null;
-    Form w;
-    StringItem ad;
-    Form ao;
-    StringItem ar;
-    private static final Command aC = new Command("Menu", 7, 0);
-    private static final Command aS = new Command("Exit", 7, 0);
+    Form ErrorForm;
+    StringItem ErrorString;
+    Form DebugMenu;
+    StringItem DebugString;
+    private static final Command MenuComm = new Command("Menu", Command.EXIT, 0);
+    private static final Command ExitComm = new Command("Exit", Command.EXIT, 0);
     static int CampWidth;
     static int CampHeight;
     static byte[][] Camp;
-    static int J = 1;
-    static String log = "";
+    static int GameAction = 1;
+    static String Log = "";
     private static Thread b = null;
     private static int E = 0;
     private static byte[][] Geomin;
@@ -50,14 +50,14 @@ public class ESGame extends a implements Runnable, CommandListener {
     private static int[] l = new int[3];
     private static final String[] aM = new String[]{"Your fingers look gnarled to you.", "The scales on your arms and back itch.", "Your ears dissolve back into your skull.", "Your jaw hurts as it elongates, and your teeth seem to completely fill your mouth.", "Walking hurts, and the camp denizens are sure looking tasty. \n\nYour dreams are filled with the screams of overseers and others as you follow the delicious scent of blood throughout the camp. You awake cold, curled up, with Vander's head tucked under your arm."};
     Display dspl;
-    private Form W;
+    private Form ExitForm;
     static Image SplashTop = null;
     static Image SplashBot = null;
     private Menu IntroMenu;
-    private Menu aZ;
+    private Menu NewGameLoadMenu;
     private static Menu al;
-    private static Menu aQ;
-    private Menu ay;
+    private static Menu HelperMenu;
+    private Menu SplashMenu;
     private Menu MainMenu;
     private Menu NewGameMenu;
     private Menu CharacterMenu;
@@ -65,7 +65,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu NewCharMenu;
     private Menu WelcomeMenu;
     private Menu NoSaveGameMenu;
-    private Menu f;
+    private Menu EndCreditsMenu;
     Menu ab;
     Menu NPCHelloMenu;
     Menu RumorMenu;
@@ -101,23 +101,23 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu F;
     Menu CreditsMenu;
     Menu SaveErrMenu;
-    private GameCanvas av;
-    private Form aD;
+    private GameCanvas GCanvas;
+    private Form NameEntry;
     private static String[] HelpStrings = new String[12];
     private static String[] helpCats = new String[12];
     private static String CreditString = null;
-    public Character k;
-    public Character e;
+    public Character Player;
+    public Character DefaultPlayer;
     static Dungeon[] dungeons;
     Thread thread;
     boolean ak;
     boolean aW;
-    byte a;
+    byte CurrentDung;
     boolean am;
-    static Hashtable[] G;
-    static Hashtable[] S;
-    static Vector[] au;
-    static Menu ax = null;
+    static Hashtable[] MonsterTable;
+    static Hashtable[] ChestTable;
+    static Vector[] DroppedItemsTable;
+    static Menu CurrentMenu = null;
     int Y;
     int g;
     static boolean aG;
@@ -146,7 +146,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             System.out.println("User ID is NULL!");
         }
 
-        aT = 1;
+        GameState = 1;
     }
 
     public void Begin() {
@@ -158,13 +158,13 @@ public class ESGame extends a implements Runnable, CommandListener {
             this.thread = new Thread(this);
             this.ak = false;
             this.aW = false;
-            this.a = 0;
+            this.CurrentDung = 0;
             this.am = false;
             Log("Before error form");
             this.y();
             Log("After error form");
             this.InitSplash();
-            aT = 2;
+            GameState = 2;
         }
 
     }
@@ -173,59 +173,59 @@ public class ESGame extends a implements Runnable, CommandListener {
         try {
             MformLogo = Image.createImage("/mformaLogo.png");
             Vir2lLogo = Image.createImage("/vir2lLogo.png");
-            Thread var1 = new Thread(this);
+            Thread thrd = new Thread(this);
             SplashTop = this.LoadImage("/splashtop.png");
             SplashBot = this.LoadImage("/splashbot.png");
-            this.ay = new Menu(this, 2, 1);
-            this.ay.e();
-            this.ay.c = this.w;
-            J = 2;
+            this.SplashMenu = new Menu(this, 2, 1);
+            this.SplashMenu.SetDisplayableE();
+            this.SplashMenu.Next = this.ErrorForm;
+            GameAction = 2;
             this.ac = true;
             aG = false;
-            this.a((Object)this.ay);
-            var1.start();
-        } catch (Exception var2) {
+            this.SetDisplayContent((Object)this.SplashMenu);
+            thrd.start();
+        } catch (Exception err) {
             System.out.println("Barfed in initSplash");
-            this.dspl.setCurrent(this.w);
+            this.dspl.setCurrent(this.ErrorForm);
         }
 
     }
 
     public void run() {
-        if (J == 1) {
+        if (GameAction == 1) {
             System.out.println("run() Initial download, no longer implemented");
-        } else if (J == 2) {
+        } else if (GameAction == 2) {
             this.LoadApp();
-        } else if (J == 4) {
+        } else if (GameAction == 4) {
             this.NewGame();
-        } else if (J == 5) {
+        } else if (GameAction == 5) {
             if (this.SaveGame()) {
-                this.a((Object)this.av);
+                this.SetDisplayContent((Object)this.GCanvas);
             } else {
-                this.a((Object)this.SaveErrMenu);
+                this.SetDisplayContent((Object)this.SaveErrMenu);
             }
-        } else if (J == 6) {
+        } else if (GameAction == 6) {
             if (this.LoadGame()) {
                 this.J();
-                this.a = this.k.CurDung;
+                this.CurrentDung = this.Player.CurDung;
                 this.ak = true;
                 jj = true;
                 jj = false;
                 this.ak = false;
-                aQ.m = 100;
-                aQ.c();
-                aQ.f();
-                this.k.w();
-                this.av.Char = this.k;
-                this.av.v = true;
-                this.av.StartGame();
-                this.a((Object)this.av);
+                HelperMenu.LoadPct = 100;
+                HelperMenu.Paint();
+                HelperMenu.ServiceRepaint();
+                this.Player.w();
+                this.GCanvas.Char = this.Player;
+                this.GCanvas.v = true;
+                this.GCanvas.StartGame();
+                this.SetDisplayContent((Object)this.GCanvas);
             } else {
-                this.a((Object)this.NoSaveGameMenu);
+                this.SetDisplayContent((Object)this.NoSaveGameMenu);
             }
         } else {
             this.LoadDngImgs();
-            this.a((Object)this.av);
+            this.SetDisplayContent((Object)this.GCanvas);
         }
 
     }
@@ -241,16 +241,16 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             this.ac = false;
-            this.ay.m = 0;
+            this.SplashMenu.LoadPct = 0;
             this.AllocGame();
             this.AllocUIs();
             this.LoadDungns();
-            this.ay.m = 100;
-        } catch (Throwable var5) {
+            this.SplashMenu.LoadPct = 100;
+        } catch (Throwable thr) {
             System.out.println("ERROR: CANNOT LOAD APP!!");
-            System.out.println(var5);
-            this.a("" + var5, true);
-            this.a((Object)this.w);
+            System.out.println(thr);
+            this.DebugMsg("" + thr, true);
+            this.SetDisplayContent((Object)this.ErrorForm);
 
             try {
                 Thread.sleep(15000L);
@@ -261,23 +261,23 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void AllocGame() throws Exception {
-        this.a("Start of allocateESGame", true);
-        this.a("Start of allocateESGame", true);
+        this.DebugMsg("Start of allocateESGame", true);
+        this.DebugMsg("Start of allocateESGame", true);
         LoadGeomin();
         Dungeon.LoadDungNames();
-        this.a("Right before character load", true);
+        this.DebugMsg("Right before character load", true);
         Character.LoadCharData();
-        this.a("ESPersonality load", true);
-        k.e();
-        this.ay.m = 5;
-        this.a("Item load", true);
+        this.DebugMsg("ESPersonality load", true);
+        Player.e();
+        this.SplashMenu.LoadPct = 5;
+        this.DebugMsg("Item load", true);
         Item.LoadAllItems();
-        this.a("Spell load", true);
+        this.DebugMsg("Spell load", true);
         Spell.LoadSpells();
-        this.a("Monster load", true);
+        this.DebugMsg("Monster load", true);
         Monster.LoadMonsters();
-        this.ay.m = 10;
-        this.a("End of allocESGame", true);
+        this.SplashMenu.LoadPct = 10;
+        this.DebugMsg("End of allocESGame", true);
     }
 
     private void LoadDungns() {
@@ -287,7 +287,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("    Before dungeon vector");
         dungeons = new Dungeon[37];
         Log("    After dungeon vector");
-        this.ay.m = 62;
+        this.SplashMenu.LoadPct = 62;
         dungeons[0] = new Dungeon((byte)1, Geomin[0], CampWidth, CampHeight, Camp);
         Log("    After camp dungeon before GC");
         System.gc();
@@ -300,7 +300,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             Log("    After dungeon " + i + " before GC");
             System.gc();
             Log("    After dungeon " + i);
-            ++this.ay.m;
+            ++this.SplashMenu.LoadPct;
         }
 
         System.out.println(" After creating dungeons");
@@ -311,51 +311,51 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     private void NewGame() {
         System.out.println("Start of createNewGame");
-        this.aZ.m = 0;
-        int var1 = d(0);
+        this.NewGameLoadMenu.LoadPct = 0;
+        int advLevel = GetGameAdvLevel(0);
 
-        for(int i = 0; i <= var1; ++i) {
+        for(int i = 0; i <= advLevel; ++i) {
             this.PopulateDungeons(i);
         }
 
-        this.a((Object)this.NewGameMenu);
+        this.SetDisplayContent((Object)this.NewGameMenu);
     }
 
     private void J() {
-        int var1 = d(this.k.GiftPoints);
-        i(var1);
+        int advLevel = GetGameAdvLevel(this.Player.GiftPoints);
+        i(advLevel);
     }
 
     private void AllocUIs() throws Exception {
         System.out.println("Starting allocateAllUIs");
-        this.a("Start of allocateAllUIs", true);
+        this.DebugMsg("Start of allocateAllUIs", true);
         System.gc();
         Log("Start of allocateAllUIs");
         this.h();
-        this.ay.m = 20;
+        this.SplashMenu.LoadPct = 20;
         this.j();
-        this.av = new GameCanvas(this);
+        this.GCanvas = new GameCanvas(this);
         Log("Before floors and walls");
         GameCanvas.floor3 = this.LoadImage("floor3.png");
         Log("after floors");
         GameCanvas.newwallsnok = this.LoadImage("newwallsnok.png");
         Log("After walls");
-        this.a("After floor and wall images", true);
+        this.DebugMsg("After floor and wall images", true);
         GameCanvas.MonImgs = new CusImg[33];
 
         for(int i = 0; i < 33; ++i) {
             GameCanvas.MonImgs[i] = null;
         }
 
-        this.a("After alloc monster images", true);
-        this.a = 1;
+        this.DebugMsg("After alloc monster images", true);
+        this.CurrentDung = 1;
         this.ak = true;
-        this.a("before runImageLoader", true);
+        this.DebugMsg("before runImageLoader", true);
         this.ab = new Menu(this, 11, 304);
-        this.ab.o();
+        this.ab.SetDisplayableO();
         Log("Before load camp monster images ");
         this.LoadWardenImg();
-        this.a("After monster images", true);
+        this.DebugMsg("After monster images", true);
         Log("After monster images ");
         this.j();
         GameCanvas.ImgBag = new CusImg[3];
@@ -364,16 +364,16 @@ public class ESGame extends a implements Runnable, CommandListener {
         GameCanvas.ImgBag[2] = CusImg.LoadCus("bagsmall.cus");
         Log("After bag images ");
         System.gc();
-        this.a("After bag images ", true);
+        this.DebugMsg("After bag images ", true);
         GameCanvas.ImgCrystal = new CusImg[3];
         GameCanvas.ImgCrystal[0] = CusImg.LoadCus("crystalnear.cus");
         GameCanvas.ImgCrystal[1] = CusImg.LoadCus("crystalmid.cus");
         GameCanvas.ImgCrystal[2] = CusImg.LoadCus("crystalfar.cus");
         Log("After crystal images ");
-        this.a("After crystal images ", true);
+        this.DebugMsg("After crystal images ", true);
         this.j();
         Log("After oracle images ");
-        this.a("After oracle images ", true);
+        this.DebugMsg("After oracle images ", true);
         GameCanvas.AttackImgs = new Image[3];
 
         for(int i = 0; i < 3; ++i) {
@@ -385,12 +385,12 @@ public class ESGame extends a implements Runnable, CommandListener {
         GameCanvas.AttackImgs[2] = this.LoadImage("selfspell.png");
         System.gc();
         Log("After spell images ");
-        this.a("After effects images ", true);
+        this.DebugMsg("After effects images ", true);
         GameCanvas.ImgChest = new CusImg[3];
         GameCanvas.ImgChest[0] = CusImg.LoadCus("chestnearclosed.cus");
         GameCanvas.ImgChest[1] = CusImg.LoadCus("chestmidclosed.cus");
         GameCanvas.ImgChest[2] = CusImg.LoadCus("chestfarclosed.cus");
-        this.a("After chest images ", true);
+        this.DebugMsg("After chest images ", true);
         this.j();
         GameCanvas.MenuIcons = new Image[6];
         GameCanvas.MenuIcons[0] = this.LoadImage("icon_attack.png");
@@ -399,119 +399,119 @@ public class ESGame extends a implements Runnable, CommandListener {
         GameCanvas.MenuIcons[3] = this.LoadImage("icon_option.png");
         GameCanvas.MenuIcons[4] = this.LoadImage("icon_action.png");
         GameCanvas.MenuIcons[5] = this.LoadImage("icon_camp.png");
-        this.a("After monster and icon images", true);
+        this.DebugMsg("After monster and icon images", true);
         System.gc();
         this.j();
-        this.a();
-        this.a("After HELP STRINGS", true);
-        this.u();
-        this.a("After HELP TITLES", true);
+        this.GetHelpStrings();
+        this.DebugMsg("After HELP STRINGS", true);
+        this.GetHelpCats();
+        this.DebugMsg("After HELP TITLES", true);
         CreditString = this.CreditsStr();
-        this.a("After CREDITS", true);
+        this.DebugMsg("After CREDITS", true);
         this.MainMenu = new Menu(this, 3, 2);
         String[] MainMenuText = new String[]{"New Game", "Continue Game", "Help", "Credits", "Exit"};
         Object var4 = null;
-        this.MainMenu.a("Main Menu", MainMenuText, (Vector)var4, false);
+        this.MainMenu.BuildMenu("Main Menu", MainMenuText, (Vector)var4, false);
         this.NewGameMenu = new Menu(this, 5, 3);
         String[] ClassStrs = Character.Classes;
-        this.NewGameMenu.a("New Game", "Select a Class:", ClassStrs, (Vector)null);
-        this.ay.m = 35;
-        this.a("After newGameUI", true);
+        this.NewGameMenu.BuildMenu("New Game", "Select a Class:", ClassStrs, (Vector)null);
+        this.SplashMenu.LoadPct = 35;
+        this.DebugMsg("After newGameUI", true);
         this.CharacterMenu = new Menu(this, 6, 4);
         String[] CharMenuText = new String[]{"See Class Info", "Create Character"};
         Object var7 = null;
-        this.CharacterMenu.a("Character", "You selected:", "", CharMenuText, (Vector)var7);
+        this.CharacterMenu.BuildMenu("Character", "You selected:", "", CharMenuText, (Vector)var7);
         this.InfoMenu = new Menu(this, 4, 5);
-        this.InfoMenu.a("Info", "");
+        this.InfoMenu.BuildMenu("Info", "");
         this.NewCharMenu = new Menu(this, 4, 6);
-        this.NewCharMenu.a("New Character", "Character Created!\n \nPress 'select' to enter a name");
+        this.NewCharMenu.BuildMenu("New Character", "Character Created!\n \nPress 'select' to enter a name");
         this.NewCharMenu.RemoveElement(Menu.OKComm);
         this.NewCharMenu.AddElement(Menu.SelectComm);
         this.NewCharMenu.AddElement(Menu.CancelComm);
         this.WelcomeMenu = new Menu(this, 4, 7);
-        this.WelcomeMenu.a("Welcome", "Welcome to The Elder Scrolls Travels!");
+        this.WelcomeMenu.BuildMenu("Welcome", "Welcome to The Elder Scrolls Travels!");
         Log("After all the welcome screens");
-        this.a("After all the welcome screens", true);
+        this.DebugMsg("After all the welcome screens", true);
         this.SaveErrMenu = new Menu(this, 4, 499);
-        this.SaveErrMenu.a("Save Error", "There was an error in saving your character record. Your previous character record is still saved. Try turning your phone off then on again to clear the memory.");
+        this.SaveErrMenu.BuildMenu("Save Error", "There was an error in saving your character record. Your previous character record is still saved. Try turning your phone off then on again to clear the memory.");
         Log("Before NPCHelloUI");
         this.NPCHelloMenu = new Menu(this, 4, 8);
-        this.NPCHelloMenu.a("NPC name here", "NPC text here", true);
+        this.NPCHelloMenu.BuildMenu("NPC name here", "NPC text here", true);
         this.RumorMenu = new Menu(this, 4, 360);
-        this.RumorMenu.a("Rumors", "Rumors text here", true);
+        this.RumorMenu.BuildMenu("Rumors", "Rumors text here", true);
         Log("After NPCHelloUI");
-        this.a("After helloUI", true);
+        this.DebugMsg("After helloUI", true);
         this.NPCDlgMenus = new Menu[6];
 
         String[] var9;
         for(int i = 0; i < 4; ++i) {
             this.NPCDlgMenus[i] = new Menu(this, 5, 9 + i);
             var9 = new String[]{"Train", "Give", "Befriend", "Threaten", "Kill"};
-            this.NPCDlgMenus[i].a("Name", "Aid: <TAG>", var9, (Vector)null);
-            this.NPCDlgMenus[i].prev = this.av;
+            this.NPCDlgMenus[i].BuildMenu("Name", "Aid: <TAG>", var9, (Vector)null);
+            this.NPCDlgMenus[i].Prev = this.GCanvas;
         }
 
         this.NPCDlgMenus[4] = new Menu(this, 5, 13);
         var9 = new String[]{"Give Item", "Take Crystal"};
-        this.NPCDlgMenus[4].a("Beneca", "Aid: <TAG>", var9, (Vector)null);
-        this.NPCDlgMenus[4].prev = this.av;
+        this.NPCDlgMenus[4].BuildMenu("Beneca", "Aid: <TAG>", var9, (Vector)null);
+        this.NPCDlgMenus[4].Prev = this.GCanvas;
         this.NPCDlgMenus[5] = new Menu(this, 5, 14);
         String[] var10 = new String[]{"Rumors", "Give Crystal", "Enchant", "Bless", "Cure", "Warp", "Recovery"};
-        this.NPCDlgMenus[5].a("Helga", "Aid: <TAG>", var10, (Vector)null);
-        this.NPCDlgMenus[5].prev = this.av;
-        this.a("After choicesUI", true);
+        this.NPCDlgMenus[5].BuildMenu("Helga", "Aid: <TAG>", var10, (Vector)null);
+        this.NPCDlgMenus[5].Prev = this.GCanvas;
+        this.DebugMsg("After choicesUI", true);
         this.OracleMenu = new Menu(this, 4, 23);
-        this.OracleMenu.a("Oracle", "NPC text here", true);
+        this.OracleMenu.BuildMenu("Oracle", "NPC text here", true);
         this.OptionsMenu = new Menu(this, 3, 31);
         String[] var11 = new String[]{"Stats", "Inventory", "Skills", "Spells", "Save Game", "Load Game", "Help", "Quit Game"};
-        this.OptionsMenu.a("Options", var11, (Vector)null, false);
+        this.OptionsMenu.BuildMenu("Options", var11, (Vector)null, false);
         this.OptionsMenu.AddElement(Menu.BackComm);
-        this.a("After OptionsUI", true);
-        this.ay.m = 42;
-        this.aD = new Form("Enter name");
+        this.DebugMsg("After OptionsUI", true);
+        this.SplashMenu.LoadPct = 42;
+        this.NameEntry = new Form("Enter name");
         StringItem var12 = new StringItem((String)null, "Enter a name for your character");
-        this.aD.append(var12);
+        this.NameEntry.append(var12);
         TextField var13 = new TextField((String)null, (String)null, 10, 0);
-        this.aD.append(var13);
-        this.aD.addCommand(Menu.OKComm);
-        this.aD.addCommand(Menu.CancelComm);
-        this.aD.setCommandListener(this);
+        this.NameEntry.append(var13);
+        this.NameEntry.addCommand(Menu.OKComm);
+        this.NameEntry.addCommand(Menu.CancelComm);
+        this.NameEntry.setCommandListener(this);
         this.NoSaveGameMenu = new Menu(this, 4, 305);
-        this.NoSaveGameMenu.a("Unavailable", "No game is available for loading. Press OK to return to main menu.");
+        this.NoSaveGameMenu.BuildMenu("Unavailable", "No game is available for loading. Press OK to return to main menu.");
         this.NoSaveGameMenu.AddElement(Menu.OKComm);
         this.NoSaveGameMenu.SetListener(this);
-        this.NoSaveGameMenu.prev = this.MainMenu;
-        this.a("After NoSavedGameUI", true);
-        this.ay.c = this.MainMenu;
-        this.NewGameMenu.prev = this.MainMenu;
-        this.CharacterMenu.prev = this.NewGameMenu;
-        this.InfoMenu.prev = this.CharacterMenu;
-        this.InfoMenu.c = this.CharacterMenu;
-        this.NewCharMenu.prev = this.CharacterMenu;
-        this.f = new Menu(this, 4, 399);
-        this.f.n();
-        this.ay.m = 55;
+        this.NoSaveGameMenu.Prev = this.MainMenu;
+        this.DebugMsg("After NoSavedGameUI", true);
+        this.SplashMenu.Next = this.MainMenu;
+        this.NewGameMenu.Prev = this.MainMenu;
+        this.CharacterMenu.Prev = this.NewGameMenu;
+        this.InfoMenu.Prev = this.CharacterMenu;
+        this.InfoMenu.Next = this.CharacterMenu;
+        this.NewCharMenu.Prev = this.CharacterMenu;
+        this.EndCreditsMenu = new Menu(this, 4, 399);
+        this.EndCreditsMenu.BuildEndCreditMenu();
+        this.SplashMenu.LoadPct = 55;
         Log("End of loading UI and images");
-        this.a("End of allocateAllUIs", true);
+        this.DebugMsg("End of allocateAllUIs", true);
     }
 
     private Menu GiveMenu(int npc) {
         System.gc();
         Menu menu = new Menu(this, 5, 22);
         menu.npcID = npc;
-        String[] InvStrings = new String[this.k.InventoryCount];
+        String[] InvStrings = new String[this.Player.InventoryCount];
 
-        for(int i = 0; i < this.k.InventoryCount; ++i) {
-            int ItemID = Math.abs(this.k.Inventory[i]);
-            if (this.k.C(i)) {
+        for(int i = 0; i < this.Player.InventoryCount; ++i) {
+            int ItemID = Math.abs(this.Player.Inventory[i]);
+            if (this.Player.IsEquiped(i)) {
                 InvStrings[i] = "E:" + Item.GetItemName(ItemID);
             } else {
                 InvStrings[i] = Item.GetItemName(ItemID);
             }
         }
 
-        menu.a(NPC.NPCNames[npc], "Give What?", InvStrings, (Vector)null, true);
-        menu.prev = this.av;
+        menu.BuildMenu(NPC.NPCNames[npc], "Give What?", InvStrings, (Vector)null, true);
+        menu.Prev = this.GCanvas;
         return menu;
     }
 
@@ -520,19 +520,19 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("Start of newTrainWhat");
         Menu menu = new Menu(this, 5, 20);
         menu.npcID = npc;
-        String[] var3 = new String[3];
+        String[] skillstrs = new String[3];
         int var4 = 0;
 
         for(int i = 0; i < 14; ++i) {
-            int var6 = this.k.b(i, false);
-            String var7 = Character.Skills[i] + " (<TAG>)";
-            if (k.c(npc, i)) {
-                var3[var4++] = func.StringInsert(var7, "<TAG>", var6);
+            int var6 = this.Player.GetSkillVal(i, false);
+            String skillstr = Character.Skills[i] + " (<TAG>)";
+            if (Player.c(npc, i)) {
+                skillstrs[var4++] = func.StringInsert(skillstr, "<TAG>", var6);
             }
         }
 
-        menu.a(NPC.NPCNames[npc], "Train What?", var3, (Vector)null, true);
-        menu.prev = this.av;
+        menu.BuildMenu(NPC.NPCNames[npc], "Train What?", skillstrs, (Vector)null, true);
+        menu.Prev = this.GCanvas;
         return menu;
     }
 
@@ -541,9 +541,9 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("Start of newTakeWhat");
         Menu menu = new Menu(this, 5, 27);
         menu.npcID = npc;
-        String[] var3 = Item.b();
-        menu.a(NPC.NPCNames[npc], "Take What?", var3, (Vector)null, true);
-        menu.prev = null;
+        String[] crystalStrs = Item.GetCrystals();
+        menu.BuildMenu(NPC.NPCNames[npc], "Take What?", crystalStrs, (Vector)null, true);
+        menu.Prev = null;
         return menu;
     }
 
@@ -552,508 +552,508 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("Start of newEnchantWhat");
         Menu menu = new Menu(this, 5, 350);
         menu.npcID = npc;
-        String[] var3 = new String[this.k.InventoryCount];
+        String[] ItemStrs = new String[this.Player.InventoryCount];
 
-        for(int i = 0; i < this.k.InventoryCount; ++i) {
-            int var5 = Math.abs(this.k.Inventory[i]);
-            var3[i] = Item.GetItemName(var5);
+        for(int i = 0; i < this.Player.InventoryCount; ++i) {
+            int itemID = Math.abs(this.Player.Inventory[i]);
+            ItemStrs[i] = Item.GetItemName(itemID);
         }
 
-        menu.a(NPC.NPCNames[npc], "Enchant What?", var3, (Vector)null, true);
-        menu.prev = this.av;
+        menu.BuildMenu(NPC.NPCNames[npc], "Enchant What?", ItemStrs, (Vector)null, true);
+        menu.Prev = this.GCanvas;
         return menu;
     }
 
     private Menu StatsMenu() {
         Menu menu = new Menu(this, 4, 32);
-        menu.a("Stats", this.av.Char.GetStatsString());
+        menu.BuildMenu("Stats", this.GCanvas.Char.GetStatsString());
         return menu;
     }
 
     private Menu InventoryMenu() {
         System.gc();
         Menu menu = new Menu(this, 5, 33);
-        String[] var2 = new String[this.k.InventoryCount];
+        String[] InvStr = new String[this.Player.InventoryCount];
 
-        for(int i = 0; i < this.k.InventoryCount; ++i) {
-            byte var4 = this.k.Inventory[i];
-            System.out.println("itemid is " + var4);
-            if (var4 < 0) {
-                var2[i] = "E: " + Item.GetItemName(Math.abs(var4));
-                System.out.println("item is " + var2[i]);
+        for(int i = 0; i < this.Player.InventoryCount; ++i) {
+            byte itemID = this.Player.Inventory[i];
+            System.out.println("itemid is " + itemID);
+            if (itemID < 0) {
+                InvStr[i] = "E: " + Item.GetItemName(Math.abs(itemID));
+                System.out.println("item is " + InvStr[i]);
             } else {
-                var2[i] = Item.GetItemName(var4);
-                System.out.println("item is " + var2[i]);
+                InvStr[i] = Item.GetItemName(itemID);
+                System.out.println("item is " + InvStr[i]);
             }
         }
 
-        menu.a("Inventory", "Items:", var2, (Vector)null, true);
-        menu.prev = this.OptionsMenu;
+        menu.BuildMenu("Inventory", "Items:", InvStr, (Vector)null, true);
+        menu.Prev = this.OptionsMenu;
         return menu;
     }
 
-    private Menu QuitMenu(Menu var1) {
+    private Menu QuitMenu(Menu prevmenu) {
         System.gc();
         Menu menu = new Menu(this, 5, 202);
-        String[] var3 = new String[]{"Yes", "No"};
-        menu.a("Quit?", "Are you sure?", var3, (Vector)null, true);
-        menu.prev = var1;
+        String[] options = new String[]{"Yes", "No"};
+        menu.BuildMenu("Quit?", "Are you sure?", options, (Vector)null, true);
+        menu.Prev = prevmenu;
         return menu;
     }
 
-    private Menu HelpMenu(Menu var1) {
+    private Menu HelpMenu(Menu prevmenu) {
         System.gc();
         Menu menu = new Menu(this, 3, 203);
-        menu.a("Help", helpCats, (Vector)null);
-        menu.prev = var1;
+        menu.BuildMenu("Help", helpCats, (Vector)null);
+        menu.Prev = prevmenu;
         return menu;
     }
 
-    private Menu SpecHelpMenu(int var1) {
+    private Menu SpecHelpMenu(int helpindx) {
         System.gc();
         Menu menu = new Menu(this, 4, 206);
-        menu.a(helpCats[var1], HelpStrings[var1], true);
-        menu.prev = this.HelpMenu;
+        menu.BuildMenu(helpCats[helpindx], HelpStrings[helpindx], true);
+        menu.Prev = this.HelpMenu;
         return menu;
     }
 
-    private Menu CreditsMenu(Menu var1) {
+    private Menu CreditsMenu(Menu prevmenu) {
         System.gc();
         Menu menu = new Menu(this, 4, 204);
-        menu.a("Credits", CreditString, true);
-        menu.prev = var1;
+        menu.BuildMenu("Credits", CreditString, true);
+        menu.Prev = prevmenu;
         return menu;
     }
 
     public void pauseApp() {
-        this.av.e();
-        aT = 3;
+        this.GCanvas.PauseGame();
+        GameState = 3;
     }
 
     public void destroyApp(boolean var1) {
-        aT = 4;
+        GameState = 4;
     }
 
     public void commandAction(Command comm, Displayable disp) {
-        if (ax != null) {
-            if (comm == Menu.CancelComm && ax.prev != null) {
-                this.a(ax.prev);
+        if (CurrentMenu != null) {
+            if (comm == Menu.CancelComm && CurrentMenu.Prev != null) {
+                this.SetDisplayContent(CurrentMenu.Prev);
                 return;
             }
 
-            int var3;
-            String[] var4;
-            Thread var5;
-            Thread var6;
-            if (ax.B == 2) {
+            int indx;
+            String[] optStrs;
+            Thread thread1;
+            Thread thread2;
+            if (CurrentMenu.MenuID == 2) {
                 if (comm == Menu.SelectComm) {
-                    var3 = ax.a();
-                    var4 = ax.r();
-                    switch (var3) {
+                    indx = CurrentMenu.GetSelectedIndex();
+                    optStrs = CurrentMenu.GetOptStrings();
+                    switch (indx) {
                         case 0:
                             System.gc();
-                            this.aZ = new Menu(this, 8, 301);
-                            this.aZ.o();
-                            var5 = new Thread(this);
-                            J = 4;
-                            var5.start();
-                            this.a((Object)this.aZ);
+                            this.NewGameLoadMenu = new Menu(this, 8, 301);
+                            this.NewGameLoadMenu.SetDisplayableO();
+                            thread1 = new Thread(this);
+                            GameAction = 4;
+                            thread1.start();
+                            this.SetDisplayContent((Object)this.NewGameLoadMenu);
                             break;
                         case 1:
                             System.gc();
-                            this.av.ClearGameThread();
-                            aQ = new Menu(this, 9, 302);
-                            aQ.o();
-                            var6 = new Thread(this);
-                            J = 6;
-                            var6.start();
-                            this.a((Object)aQ);
+                            this.GCanvas.ClearGameThread();
+                            HelperMenu = new Menu(this, 9, 302);
+                            HelperMenu.SetDisplayableO();
+                            thread2 = new Thread(this);
+                            GameAction = 6;
+                            thread2.start();
+                            this.SetDisplayContent((Object) HelperMenu);
                             break;
                         case 2:
-                            this.HelpMenu = this.HelpMenu(ax);
-                            this.a((Object)this.HelpMenu);
+                            this.HelpMenu = this.HelpMenu(CurrentMenu);
+                            this.SetDisplayContent((Object)this.HelpMenu);
                             break;
                         case 3:
-                            this.CreditsMenu = this.CreditsMenu(ax);
-                            this.a((Object)this.CreditsMenu);
+                            this.CreditsMenu = this.CreditsMenu(CurrentMenu);
+                            this.SetDisplayContent((Object)this.CreditsMenu);
                             break;
                         case 4:
-                            this.QuitMenu = this.QuitMenu(ax);
-                            this.a((Object)this.QuitMenu);
+                            this.QuitMenu = this.QuitMenu(CurrentMenu);
+                            this.SetDisplayContent((Object)this.QuitMenu);
                     }
                 }
-            } else if (ax.B == 3) {
+            } else if (CurrentMenu.MenuID == 3) {
                 if (comm == Menu.SelectComm) {
-                    var3 = ax.a();
-                    var4 = ax.r();
-                    this.e = null;
+                    indx = CurrentMenu.GetSelectedIndex();
+                    optStrs = CurrentMenu.GetOptStrings();
+                    this.DefaultPlayer = null;
                     System.gc();
-                    this.e = new Character(this);
-                    this.e.c(var3);
-                    this.e.d(var3);
-                    this.CharacterMenu.a(1, var4[var3]);
-                    this.a((Object)this.CharacterMenu);
+                    this.DefaultPlayer = new Character(this);
+                    this.DefaultPlayer.LoadClassDefaults(indx);
+                    this.DefaultPlayer.d(indx);
+                    this.CharacterMenu.a(1, optStrs[indx]);
+                    this.SetDisplayContent((Object)this.CharacterMenu);
                 }
-            } else if (ax.B == 4) {
+            } else if (CurrentMenu.MenuID == 4) {
                 if (comm == Menu.SelectComm) {
-                    var3 = ax.a();
-                    var4 = ax.r();
-                    if (var3 == 0) {
-                        String var9 = this.e.m();
-                        this.InfoMenu.a(0, var9);
+                    indx = CurrentMenu.GetSelectedIndex();
+                    optStrs = CurrentMenu.GetOptStrings();
+                    if (indx == 0) {
+                        String infoStr = this.DefaultPlayer.GetClassInfoStr();
+                        this.InfoMenu.a(0, infoStr);
                         this.InfoMenu.w = 0;
-                        this.a((Object)this.InfoMenu);
+                        this.SetDisplayContent((Object)this.InfoMenu);
                     } else {
-                        this.k = this.e;
-                        this.a((Object)this.NewCharMenu);
+                        this.Player = this.DefaultPlayer;
+                        this.SetDisplayContent((Object)this.NewCharMenu);
                     }
                 }
-            } else if (ax.B == 5) {
+            } else if (CurrentMenu.MenuID == 5) {
                 if (comm == Menu.OKComm) {
-                    this.a(ax.c);
+                    this.SetDisplayContent(CurrentMenu.Next);
                 }
-            } else if (ax.B == 6) {
+            } else if (CurrentMenu.MenuID == 6) {
                 if (comm == Menu.SelectComm) {
-                    this.a((Object)this.aD);
+                    this.SetDisplayContent((Object)this.NameEntry);
                 }
-            } else if (ax.B == 7) {
+            } else if (CurrentMenu.MenuID == 7) {
                 this.IntroMenu = new Menu(this, 4, 101);
-                this.IntroMenu.a("Introduction", NPC.NPCStrings[7][3], true);
-                this.a((Object)this.IntroMenu);
-            } else if (ax.B == 101) {
+                this.IntroMenu.BuildMenu("Introduction", NPC.NPCStrings[7][3], true);
+                this.SetDisplayContent((Object)this.IntroMenu);
+            } else if (CurrentMenu.MenuID == 101) {
                 if (comm == Menu.OKComm) {
-                    this.av.Char = this.k;
-                    this.av.StartGame();
-                    this.a((Object)this.av);
+                    this.GCanvas.Char = this.Player;
+                    this.GCanvas.StartGame();
+                    this.SetDisplayContent((Object)this.GCanvas);
                 }
-            } else if (ax.B != 8 && ax.B != 360) {
-                if (ax.B >= 9 && ax.B <= 14) {
+            } else if (CurrentMenu.MenuID != 8 && CurrentMenu.MenuID != 360) {
+                if (CurrentMenu.MenuID >= 9 && CurrentMenu.MenuID <= 14) {
                     if (comm == Menu.CancelComm) {
-                        this.a(ax.prev);
+                        this.SetDisplayContent(CurrentMenu.Prev);
                     } else {
-                        this.d(ax);
+                        this.d(CurrentMenu);
                     }
                 } else {
                     int i;
                     int var10;
-                    if (ax.B == 20) {
+                    if (CurrentMenu.MenuID == 20) {
                         if (comm == Menu.SelectComm) {
-                            var3 = ax.npcID;
-                            i = ax.a();
-                            var10 = k.b(var3, i);
-                            this.ae = this.a(ax, var3, 21, 5, var10);
-                            this.a((Object)this.ae);
+                            indx = CurrentMenu.npcID;
+                            i = CurrentMenu.GetSelectedIndex();
+                            var10 = Player.b(indx, i);
+                            this.ae = this.a(CurrentMenu, indx, 21, 5, var10);
+                            this.SetDisplayContent((Object)this.ae);
                         } else if (comm == Menu.CancelComm) {
-                            var3 = ax.npcID;
-                            this.k(var3);
-                            this.a((Object)this.NPCDlgMenus[var3]);
+                            indx = CurrentMenu.npcID;
+                            this.k(indx);
+                            this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                         }
-                    } else if (ax.B == 22) {
+                    } else if (CurrentMenu.MenuID == 22) {
                         if (comm == Menu.SelectComm) {
                             System.out.println("Found give what select");
-                            var3 = ax.npcID;
-                            i = ax.a();
+                            indx = CurrentMenu.npcID;
+                            i = CurrentMenu.GetSelectedIndex();
                             if (i >= 0) {
-                                this.OracleMenu = this.a(ax, var3, 23, 4, i);
-                                this.a((Object)this.OracleMenu);
+                                this.OracleMenu = this.a(CurrentMenu, indx, 23, 4, i);
+                                this.SetDisplayContent((Object)this.OracleMenu);
                             }
                         } else if (comm == Menu.CancelComm) {
-                            var3 = ax.npcID;
-                            this.k(var3);
-                            this.a((Object)this.NPCDlgMenus[var3]);
+                            indx = CurrentMenu.npcID;
+                            this.k(indx);
+                            this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                         }
-                    } else if (ax.B == 27) {
+                    } else if (CurrentMenu.MenuID == 27) {
                         if (comm == Menu.SelectComm) {
-                            var3 = ax.npcID;
-                            i = ax.a() + 87;
-                            this.aJ = this.a(ax, var3, 28, 7, i);
-                            this.a((Object)this.aJ);
+                            indx = CurrentMenu.npcID;
+                            i = CurrentMenu.GetSelectedIndex() + 87;
+                            this.aJ = this.a(CurrentMenu, indx, 28, 7, i);
+                            this.SetDisplayContent((Object)this.aJ);
                         } else if (comm == Menu.CancelComm) {
-                            var3 = ax.npcID;
-                            this.k(var3);
-                            this.a((Object)this.NPCDlgMenus[var3]);
+                            indx = CurrentMenu.npcID;
+                            this.k(indx);
+                            this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                         }
-                    } else if (ax.B == 350) {
+                    } else if (CurrentMenu.MenuID == 350) {
                         if (comm == Menu.SelectComm) {
-                            var3 = ax.npcID;
-                            i = ax.a();
+                            indx = CurrentMenu.npcID;
+                            i = CurrentMenu.GetSelectedIndex();
                             if (i >= 0) {
-                                this.aI = this.a(ax, var3, 351, 8, i);
-                                this.a((Object)this.aI);
+                                this.aI = this.a(CurrentMenu, indx, 351, 8, i);
+                                this.SetDisplayContent((Object)this.aI);
                             }
                         } else if (comm == Menu.CancelComm) {
-                            var3 = ax.npcID;
-                            this.k(var3);
-                            this.a((Object)this.NPCDlgMenus[var3]);
+                            indx = CurrentMenu.npcID;
+                            this.k(indx);
+                            this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                         }
-                    } else if (ax.B != 23 && ax.B != 21 && ax.B != 24 && ax.B != 25 && ax.B != 28) {
-                        if (ax.B == 26) {
-                            this.a((Object)this.av);
-                        } else if (ax.B != 351 && ax.B != 352 && ax.B != 353 && ax.B != 355) {
-                            if (ax.B == 30) {
+                    } else if (CurrentMenu.MenuID != 23 && CurrentMenu.MenuID != 21 && CurrentMenu.MenuID != 24 && CurrentMenu.MenuID != 25 && CurrentMenu.MenuID != 28) {
+                        if (CurrentMenu.MenuID == 26) {
+                            this.SetDisplayContent((Object)this.GCanvas);
+                        } else if (CurrentMenu.MenuID != 351 && CurrentMenu.MenuID != 352 && CurrentMenu.MenuID != 353 && CurrentMenu.MenuID != 355) {
+                            if (CurrentMenu.MenuID == 30) {
                                 if (comm == Menu.OKComm) {
-                                    this.a((Object)this.av);
+                                    this.SetDisplayContent((Object)this.GCanvas);
                                 }
-                            } else if (ax.B == 41) {
+                            } else if (CurrentMenu.MenuID == 41) {
                                 if (comm == Menu.OKComm) {
-                                    this.k.Q = false;
-                                    this.a((Object)this.av);
+                                    this.Player.Q = false;
+                                    this.SetDisplayContent((Object)this.GCanvas);
                                 }
-                            } else if (ax.B == 31) {
+                            } else if (CurrentMenu.MenuID == 31) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    var4 = ax.r();
-                                    switch (var3) {
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    optStrs = CurrentMenu.GetOptStrings();
+                                    switch (indx) {
                                         case 0:
                                             this.StatsMenu = this.StatsMenu();
-                                            this.a((Object)this.StatsMenu);
+                                            this.SetDisplayContent((Object)this.StatsMenu);
                                             break;
                                         case 1:
                                             this.InventoryMenu = this.InventoryMenu();
-                                            this.a((Object)this.InventoryMenu);
+                                            this.SetDisplayContent((Object)this.InventoryMenu);
                                             break;
                                         case 2:
                                             this.SkillsListMenu = this.SkillsListMenu();
-                                            this.a((Object)this.SkillsListMenu);
+                                            this.SetDisplayContent((Object)this.SkillsListMenu);
                                             break;
                                         case 3:
                                             this.SpellsListMenu = this.SpellsListMenu();
-                                            this.a((Object)this.SpellsListMenu);
+                                            this.SetDisplayContent((Object)this.SpellsListMenu);
                                             break;
                                         case 4:
                                             al = new Menu(this, 10, 303);
-                                            al.o();
-                                            var5 = new Thread(this);
-                                            J = 5;
-                                            var5.start();
-                                            this.a((Object)al);
+                                            al.SetDisplayableO();
+                                            thread1 = new Thread(this);
+                                            GameAction = 5;
+                                            thread1.start();
+                                            this.SetDisplayContent((Object)al);
                                             break;
                                         case 5:
                                             System.gc();
-                                            this.av.ClearGameThread();
-                                            aQ = new Menu(this, 9, 302);
-                                            aQ.o();
-                                            var6 = new Thread(this);
-                                            J = 6;
-                                            var6.start();
-                                            this.a((Object)aQ);
+                                            this.GCanvas.ClearGameThread();
+                                            HelperMenu = new Menu(this, 9, 302);
+                                            HelperMenu.SetDisplayableO();
+                                            thread2 = new Thread(this);
+                                            GameAction = 6;
+                                            thread2.start();
+                                            this.SetDisplayContent((Object) HelperMenu);
                                             break;
                                         case 6:
                                             Log("Help");
-                                            this.HelpMenu = this.HelpMenu(ax);
-                                            this.a((Object)this.HelpMenu);
+                                            this.HelpMenu = this.HelpMenu(CurrentMenu);
+                                            this.SetDisplayContent((Object)this.HelpMenu);
                                             break;
                                         case 7:
-                                            this.QuitMenu = this.QuitMenu(ax);
-                                            this.a((Object)this.QuitMenu);
+                                            this.QuitMenu = this.QuitMenu(CurrentMenu);
+                                            this.SetDisplayContent((Object)this.QuitMenu);
                                             break;
                                         case 8:
-                                            this.Debug();
-                                            this.a((Object)this.ao);
+                                            this.DebugMenu();
+                                            this.SetDisplayContent((Object)this.DebugMenu);
                                     }
                                 } else if (comm == Menu.BackComm) {
-                                    this.a((Object)this.av);
+                                    this.SetDisplayContent((Object)this.GCanvas);
                                 }
-                            } else if (ax.B == 32) {
+                            } else if (CurrentMenu.MenuID == 32) {
                                 if (comm == Menu.OKComm) {
-                                    this.a((Object)this.OptionsMenu);
+                                    this.SetDisplayContent((Object)this.OptionsMenu);
                                 }
-                            } else if (ax.B == 33) {
+                            } else if (CurrentMenu.MenuID == 33) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    if (var3 >= 0) {
-                                        this.aB = this.InventoryItemMenu(var3);
-                                        this.Y = var3;
-                                        this.a((Object)this.aB);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    if (indx >= 0) {
+                                        this.aB = this.InventoryItemMenu(indx);
+                                        this.Y = indx;
+                                        this.SetDisplayContent((Object)this.aB);
                                     }
                                 }
-                            } else if (ax.B == 34) {
+                            } else if (CurrentMenu.MenuID == 34) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    Integer var11 = (Integer)ax.n.elementAt(var3);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    Integer var11 = (Integer) CurrentMenu.n.elementAt(indx);
                                     var10 = var11;
                                     if (var10 == 0) {
-                                        this.k.i(this.Y);
+                                        this.Player.i(this.Y);
                                         this.InventoryMenu = this.InventoryMenu();
-                                        this.a((Object)this.InventoryMenu);
+                                        this.SetDisplayContent((Object)this.InventoryMenu);
                                     } else if (var10 == 1) {
-                                        if (!this.k.C(this.Y)) {
-                                            this.k.d(this.Y, true);
+                                        if (!this.Player.IsEquiped(this.Y)) {
+                                            this.Player.d(this.Y, true);
                                         } else {
-                                            this.k.A(this.Y);
+                                            this.Player.A(this.Y);
                                         }
 
                                         this.InventoryMenu = this.InventoryMenu();
-                                        this.a((Object)this.InventoryMenu);
+                                        this.SetDisplayContent((Object)this.InventoryMenu);
                                     } else if (var10 == 2) {
-                                        this.k.r(this.Y);
+                                        this.Player.r(this.Y);
                                         this.InventoryMenu = this.InventoryMenu();
-                                        this.a((Object)this.InventoryMenu);
+                                        this.SetDisplayContent((Object)this.InventoryMenu);
                                     } else if (var10 == 3) {
-                                        this.k.a(this.Y);
-                                        if (this.k.Q) {
-                                            this.k.Q = false;
-                                            this.a((Object)this.av);
+                                        this.Player.a(this.Y);
+                                        if (this.Player.Q) {
+                                            this.Player.Q = false;
+                                            this.SetDisplayContent((Object)this.GCanvas);
                                         } else {
                                             this.InventoryMenu = this.InventoryMenu();
-                                            this.a((Object)this.InventoryMenu);
+                                            this.SetDisplayContent((Object)this.InventoryMenu);
                                         }
                                     }
 
                                     this.Y = -1;
                                 }
-                            } else if (ax.B == 35) {
+                            } else if (CurrentMenu.MenuID == 35) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    this.SkillInfoMenu = this.SkillInfoMenu(var3);
-                                    this.a((Object)this.SkillInfoMenu);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    this.SkillInfoMenu = this.SkillInfoMenu(indx);
+                                    this.SetDisplayContent((Object)this.SkillInfoMenu);
                                 }
-                            } else if (ax.B == 36) {
+                            } else if (CurrentMenu.MenuID == 36) {
                                 if (comm == Menu.OKComm) {
-                                    this.a((Object)this.SkillsListMenu);
+                                    this.SetDisplayContent((Object)this.SkillsListMenu);
                                 }
-                            } else if (ax.B == 37) {
+                            } else if (CurrentMenu.MenuID == 37) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    if (var3 >= 0) {
-                                        this.SpellInfoMenu = this.SpellInfoMenu(var3);
-                                        this.g = var3;
-                                        this.a((Object)this.SpellInfoMenu);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    if (indx >= 0) {
+                                        this.SpellInfoMenu = this.SpellInfoMenu(indx);
+                                        this.g = indx;
+                                        this.SetDisplayContent((Object)this.SpellInfoMenu);
                                     }
                                 }
-                            } else if (ax.B == 38) {
+                            } else if (CurrentMenu.MenuID == 38) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = this.k.B(this.g);
-                                    this.k.b = (byte)(var3 + 1);
+                                    indx = this.Player.IsSpellKnown(this.g);
+                                    this.Player.CurSpell = (byte)(indx + 1);
                                     this.SpellsListMenu = this.SpellsListMenu();
-                                    this.a((Object)this.SpellsListMenu);
+                                    this.SetDisplayContent((Object)this.SpellsListMenu);
                                     this.g = -1;
                                 }
-                            } else if (ax.B == 39) {
+                            } else if (CurrentMenu.MenuID == 39) {
                                 if (comm == Menu.SelectComm) {
-                                    String var14 = ax.p();
-                                    l[ax.npcID] = -1;
+                                    String var14 = CurrentMenu.p();
+                                    l[CurrentMenu.npcID] = -1;
 
                                     for(i = 0; i < Character.Attributes.length; ++i) {
                                         if (var14.equals(Character.Attributes[i])) {
-                                            l[ax.npcID] = i;
+                                            l[CurrentMenu.npcID] = i;
                                             break;
                                         }
                                     }
 
-                                    if (ax.npcID < 2) {
-                                        var10 = ax.npcID + 1;
+                                    if (CurrentMenu.npcID < 2) {
+                                        var10 = CurrentMenu.npcID + 1;
                                         this.LevelUpMenu = this.LevelUpMenu(var10 + 1);
-                                        this.a((Object)this.LevelUpMenu);
+                                        this.SetDisplayContent((Object)this.LevelUpMenu);
                                     } else {
-                                        short[] var10000 = this.k.AttLvl;
+                                        short[] var10000 = this.Player.AttLvl;
                                         int var10001 = l[0];
                                         var10000[var10001] = (short)(var10000[var10001] + 3);
-                                        var10000 = this.k.AttLvl;
+                                        var10000 = this.Player.AttLvl;
                                         var10001 = l[1];
                                         var10000[var10001] = (short)(var10000[var10001] + 2);
-                                        ++this.k.AttLvl[l[2]];
-                                        this.k.g();
-                                        this.k.d();
-                                        this.a((Object)this.av);
-                                        this.av.b();
+                                        ++this.Player.AttLvl[l[2]];
+                                        this.Player.CalcAttributesMax();
+                                        this.Player.ResetLvlProg();
+                                        this.SetDisplayContent((Object)this.GCanvas);
+                                        this.GCanvas.UnpauseGame();
                                     }
                                 }
-                            } else if (ax.B == 202) {
+                            } else if (CurrentMenu.MenuID == 202) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    if (var3 == 0) {
-                                        this.a((Object)this.f);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    if (indx == 0) {
+                                        this.SetDisplayContent((Object)this.EndCreditsMenu);
                                     } else {
-                                        this.a(ax.prev);
+                                        this.SetDisplayContent(CurrentMenu.Prev);
                                     }
                                 }
-                            } else if (ax.B == 202) {
+                            } else if (CurrentMenu.MenuID == 202) {
                                 this.b();
-                            } else if (ax.B == 40) {
-                                this.a((Object)this.av);
-                                this.av.b();
-                            } else if (ax.B == 102) {
-                                this.a((Object)this.av);
-                                this.av.b();
-                            } else if (ax.B == 203) {
+                            } else if (CurrentMenu.MenuID == 40) {
+                                this.SetDisplayContent((Object)this.GCanvas);
+                                this.GCanvas.UnpauseGame();
+                            } else if (CurrentMenu.MenuID == 102) {
+                                this.SetDisplayContent((Object)this.GCanvas);
+                                this.GCanvas.UnpauseGame();
+                            } else if (CurrentMenu.MenuID == 203) {
                                 if (comm == Menu.SelectComm) {
-                                    var3 = ax.a();
-                                    this.F = this.SpecHelpMenu(var3);
-                                    this.a((Object)this.F);
+                                    indx = CurrentMenu.GetSelectedIndex();
+                                    this.F = this.SpecHelpMenu(indx);
+                                    this.SetDisplayContent((Object)this.F);
                                 } else {
-                                    this.a(ax.prev);
+                                    this.SetDisplayContent(CurrentMenu.Prev);
                                 }
-                            } else if (ax.B == 206) {
-                                this.a(ax.prev);
-                            } else if (ax.B == 204) {
-                                this.a(ax.prev);
-                            } else if (ax.B == 305) {
-                                this.a(ax.prev);
-                            } else if (ax.B == 205) {
-                                this.a(ax.prev);
-                            } else if (ax.B != 200 && ax.B != 201) {
-                                if (ax.B == 399) {
+                            } else if (CurrentMenu.MenuID == 206) {
+                                this.SetDisplayContent(CurrentMenu.Prev);
+                            } else if (CurrentMenu.MenuID == 204) {
+                                this.SetDisplayContent(CurrentMenu.Prev);
+                            } else if (CurrentMenu.MenuID == 305) {
+                                this.SetDisplayContent(CurrentMenu.Prev);
+                            } else if (CurrentMenu.MenuID == 205) {
+                                this.SetDisplayContent(CurrentMenu.Prev);
+                            } else if (CurrentMenu.MenuID != 200 && CurrentMenu.MenuID != 201) {
+                                if (CurrentMenu.MenuID == 399) {
                                     this.b();
-                                } else if (ax.B == 499) {
+                                } else if (CurrentMenu.MenuID == 499) {
                                     this.b();
                                 }
                             } else {
-                                this.a(ax.c);
+                                this.SetDisplayContent(CurrentMenu.Next);
                             }
                         } else if (comm == Menu.OKComm) {
-                            var3 = ax.npcID;
-                            this.k(var3);
-                            this.a((Object)this.NPCDlgMenus[var3]);
+                            indx = CurrentMenu.npcID;
+                            this.k(indx);
+                            this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                         }
                     } else if (comm == Menu.OKComm) {
-                        var3 = ax.npcID;
-                        this.k(var3);
-                        this.a((Object)this.NPCDlgMenus[var3]);
+                        indx = CurrentMenu.npcID;
+                        this.k(indx);
+                        this.SetDisplayContent((Object)this.NPCDlgMenus[indx]);
                     }
                 }
             } else if (comm == Menu.OKComm) {
-                if (ax.c == null) {
+                if (CurrentMenu.Next == null) {
                     System.out.println("ERROR: next is null!");
                 } else {
-                    Menu var7 = (Menu)ax.c;
+                    Menu var7 = (Menu) CurrentMenu.Next;
                     if (var7 == null) {
                         System.out.println("uic.next is null!");
                     }
                 }
 
-                this.a(ax.c);
+                this.SetDisplayContent(CurrentMenu.Next);
             }
-        } else if (disp == this.w) {
+        } else if (disp == this.ErrorForm) {
             this.b();
-        } else if (disp == this.ao) {
-            this.a((Object)this.av);
-        } else if (disp == this.W) {
-            if (comm == aS) {
+        } else if (disp == this.DebugMenu) {
+            this.SetDisplayContent((Object)this.GCanvas);
+        } else if (disp == this.ExitForm) {
+            if (comm == ExitComm) {
                 this.b();
             }
-        } else if (disp == this.aD) {
+        } else if (disp == this.NameEntry) {
             if (comm == Menu.OKComm) {
-                TextField var15 = (TextField)this.aD.get(1);
-                String name = var15.getString();
+                TextField textField = (TextField)this.NameEntry.get(1);
+                String name = textField.getString();
                 if (name.length() < 3) {
-                    Alert var12 = new Alert("Error", func.StringInsert("Your character name must be at least <TAG> letters", "<TAG>", 3), (Image)null, AlertType.ERROR);
-                    var12.setTimeout(-2);
-                    this.a((Object)var12);
+                    Alert alert = new Alert("Error", func.StringInsert("Your character name must be at least <TAG> letters", "<TAG>", 3), (Image)null, AlertType.ERROR);
+                    alert.setTimeout(-2);
+                    this.SetDisplayContent((Object)alert);
                 } else {
-                    this.k.CharName = name;
-                    this.a((Object)this.WelcomeMenu);
+                    this.Player.CharName = name;
+                    this.SetDisplayContent((Object)this.WelcomeMenu);
                 }
             } else if (comm == Menu.CancelComm) {
-                this.a((Object)this.NewCharMenu);
+                this.SetDisplayContent((Object)this.NewCharMenu);
             }
         }
 
     }
 
-    private void d(Menu var1) {
-        int var3 = var1.a();
-        int var4 = var1.B - 9;
+    private void d(Menu menu) {
+        int var3 = menu.GetSelectedIndex();
+        int var4 = menu.MenuID - 9;
         switch (var4) {
             case 0:
             case 1:
@@ -1061,80 +1061,80 @@ public class ESGame extends a implements Runnable, CommandListener {
             case 3:
                 if (var3 == 0) {
                     this.TrainMenu = this.TrainMenu(var4);
-                    this.a((Object)this.TrainMenu);
+                    this.SetDisplayContent((Object)this.TrainMenu);
                 } else if (var3 == 1) {
-                    if (this.k.InventoryCount <= 0) {
-                        this.OracleMenu.a(NPC.NPCNames[var4]);
-                        this.OracleMenu.e("You have nothing to give me!");
-                        this.a((Object)this.OracleMenu);
+                    if (this.Player.InventoryCount <= 0) {
+                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetText("You have nothing to give me!");
+                        this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
                         this.GiveMenu = this.GiveMenu(var4);
-                        this.a((Object)this.GiveMenu);
+                        this.SetDisplayContent((Object)this.GiveMenu);
                     }
                 } else if (var3 == 2) {
-                    this.X = this.a(var1, var4, 24, 2, 0);
-                    this.a((Object)this.X);
+                    this.X = this.a(menu, var4, 24, 2, 0);
+                    this.SetDisplayContent((Object)this.X);
                 } else if (var3 == 3) {
-                    this.V = this.a(var1, var4, 25, 3, 0);
-                    this.a((Object)this.V);
+                    this.V = this.a(menu, var4, 25, 3, 0);
+                    this.SetDisplayContent((Object)this.V);
                 } else if (var3 == 4) {
-                    this.an = this.a(var1, var4, 26, 6, 0);
-                    this.a((Object)this.an);
+                    this.an = this.a(menu, var4, 26, 6, 0);
+                    this.SetDisplayContent((Object)this.an);
                 }
                 break;
             case 4:
                 if (var3 == 0) {
-                    if (this.k.InventoryCount <= 0) {
-                        this.OracleMenu.a(NPC.NPCNames[var4]);
-                        this.OracleMenu.e("You have nothing to give me!");
-                        this.a((Object)this.OracleMenu);
+                    if (this.Player.InventoryCount <= 0) {
+                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetText("You have nothing to give me!");
+                        this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
                         this.GiveMenu = this.GiveMenu(var4);
-                        this.a((Object)this.GiveMenu);
+                        this.SetDisplayContent((Object)this.GiveMenu);
                     }
                 } else if (var3 == 1) {
                     this.TakeItemMenu = this.TakeItemMenu(var4);
-                    this.a((Object)this.TakeItemMenu);
+                    this.SetDisplayContent((Object)this.TakeItemMenu);
                 }
                 break;
             case 5:
                 if (var3 == 0) {
                     this.x();
                 } else if (var3 == 1) {
-                    if (this.k.InventoryCount <= 0) {
-                        this.OracleMenu.a(NPC.NPCNames[var4]);
-                        this.OracleMenu.e("You have nothing to give me!");
-                        this.a((Object)this.OracleMenu);
+                    if (this.Player.InventoryCount <= 0) {
+                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetText("You have nothing to give me!");
+                        this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
                         this.GiveMenu = this.GiveMenu(var4);
-                        this.a((Object)this.GiveMenu);
+                        this.SetDisplayContent((Object)this.GiveMenu);
                     }
                 } else if (var3 == 2) {
                     this.EnchantItemMenu = this.EnchantItemMenu(var4);
-                    this.a((Object)this.EnchantItemMenu);
+                    this.SetDisplayContent((Object)this.EnchantItemMenu);
                 } else if (var3 == 3) {
-                    this.aL = this.a(var1, var4, 352, 9, 0);
-                    this.a((Object)this.aL);
+                    this.aL = this.a(menu, var4, 352, 9, 0);
+                    this.SetDisplayContent((Object)this.aL);
                 } else if (var3 == 4) {
-                    this.H = this.a(var1, var4, 353, 10, 0);
-                    this.a((Object)this.H);
+                    this.H = this.a(menu, var4, 353, 10, 0);
+                    this.SetDisplayContent((Object)this.H);
                 } else if (var3 == 5) {
-                    this.K = this.a(var1, var4, 41, 11, 0);
-                    this.a((Object)this.K);
+                    this.K = this.a(menu, var4, 41, 11, 0);
+                    this.SetDisplayContent((Object)this.K);
                 } else if (var3 == 6) {
-                    this.s = this.a(var1, var4, 355, 12, 0);
-                    this.a((Object)this.s);
+                    this.s = this.a(menu, var4, 355, 12, 0);
+                    this.SetDisplayContent((Object)this.s);
                 }
         }
 
     }
 
-    private Menu a(Menu var1, int NPCID, int var3, int var4, int var5) {
-        Menu menu = new Menu(this, 4, var3);
-        menu.a("NPC name here", "NPC text here", true);
-        String var7 = NPC.a(this.k, NPCID, var4, var5);
-        menu.a(NPC.NPCNames[NPCID]);
-        menu.e(var7);
+    private Menu a(Menu menu1, int NPCID, int menuID, int var4, int var5) {
+        Menu menu = new Menu(this, 4, menuID);
+        menu.BuildMenu("NPC name here", "NPC text here", true);
+        String var7 = NPC.a(this.Player, NPCID, var4, var5);
+        menu.SetTitle(NPC.NPCNames[NPCID]);
+        menu.SetText(var7);
         menu.npcID = NPCID;
         return menu;
     }
@@ -1147,7 +1147,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         boolean var1 = true;
         boolean var2 = false;
         RecordStore store = null;
-        aQ.m = 0;
+        HelperMenu.LoadPct = 0;
         String RecordName = this.GetLastSave();
 
         try {
@@ -1156,17 +1156,17 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             store = RecordStore.openRecordStore(RecordName, false);
-            int var5 = store.getNumRecords();
+            int recordcount = store.getNumRecords();
             byte[] record = store.getRecord(1);
-            this.k = Character.LoadChar(record, true);
-            this.k.Game = this;
-            aQ.m = 20;
-            aQ.c();
-            aQ.f();
+            this.Player = Character.LoadChar(record, true);
+            this.Player.Game = this;
+            HelperMenu.LoadPct = 20;
+            HelperMenu.Paint();
+            HelperMenu.ServiceRepaint();
             int var7 = a((RecordStore)store, 2);
             System.out.println("Read the master lists from RecordStore");
             record = store.getRecord(var7);
-            b(record);
+            LoadNPCData(record);
         } catch (Exception var17) {
             System.out.println("Exception in loadGameState");
             System.out.println(var17);
@@ -1188,28 +1188,28 @@ public class ESGame extends a implements Runnable, CommandListener {
         boolean var1 = true;
         boolean var2 = false;
         RecordStore store = null;
-        al.m = 0;
+        al.LoadPct = 0;
         String var4 = this.f();
 
         try {
             store = RecordStore.openRecordStore(var4, true);
-            byte[] var5 = this.k.g(true);
-            al.m = 20;
-            al.c();
-            al.f();
+            byte[] var5 = this.Player.EncodeCharData(true);
+            al.LoadPct = 20;
+            al.Paint();
+            al.ServiceRepaint();
             store.addRecord(var5, 0, var5.length);
             System.gc();
             a(store);
-            var5 = k();
+            var5 = EncodeNPCData();
             store.addRecord(var5, 0, var5.length);
             Object var20 = null;
             System.gc();
             store.closeRecordStore();
             store = null;
             this.L();
-            al.m = 100;
-            al.c();
-            al.f();
+            al.LoadPct = 100;
+            al.Paint();
+            al.ServiceRepaint();
         } catch (Throwable var18) {
             System.out.println("Exception in saveGameState");
             System.out.println(var18);
@@ -1234,74 +1234,74 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void y() {
-        this.w = new Form("Error");
-        this.ad = new StringItem("Error: ", "Cannot load game");
-        this.w.append(this.ad);
-        Command var1 = new Command("Ok", 4, 1);
-        this.w.addCommand(var1);
-        this.w.setCommandListener(this);
+        this.ErrorForm = new Form("Error");
+        this.ErrorString = new StringItem("Error: ", "Cannot load game");
+        this.ErrorForm.append(this.ErrorString);
+        Command var1 = new Command("Ok", Command.OK, 1);
+        this.ErrorForm.addCommand(var1);
+        this.ErrorForm.setCommandListener(this);
     }
 
-    private void a(String var1, boolean var2) {
-        this.b(var1);
+    private void DebugMsg(String logstr, boolean var2) {
+        this.UpdateLog(logstr);
         boolean var3 = false;
         if (var3) {
-            String var4 = this.ad.getText();
-            var4 = var4 + "\n" + CheckMem(var1);
-            this.ad.setText(var4);
+            String var4 = this.ErrorString.getText();
+            var4 = var4 + "\n" + CheckMem(logstr);
+            this.ErrorString.setText(var4);
         } else {
-            this.ad.setText(CheckMem(var1));
+            this.ErrorString.setText(CheckMem(logstr));
         }
 
     }
 
-    void B() {
-        this.a("Out of memory", true);
-        this.dspl.setCurrent(this.w);
+    void OutOfMemErrorScreen() {
+        this.DebugMsg("Out of memory", true);
+        this.dspl.setCurrent(this.ErrorForm);
     }
 
-    static int d(int var0) {
-        System.out.println("In getGameAdvancementLevel, giftPoints = " + var0);
-        if (var0 < 9) {
+    static int GetGameAdvLevel(int giftpoints) {
+        System.out.println("In getGameAdvancementLevel, giftPoints = " + giftpoints);
+        if (giftpoints < 9) {
             return 0;
-        } else if (var0 < 13) {
+        } else if (giftpoints < 13) {
             return 1;
-        } else if (var0 < 17) {
+        } else if (giftpoints < 17) {
             return 2;
-        } else if (var0 < 23) {
+        } else if (giftpoints < 23) {
             return 3;
-        } else if (var0 < 28) {
+        } else if (giftpoints < 28) {
             return 4;
-        } else if (var0 < 34) {
+        } else if (giftpoints < 34) {
             return 5;
-        } else if (var0 < 40) {
+        } else if (giftpoints < 40) {
             return 6;
         } else {
-            return var0 < 48 ? 7 : 8;
+            return giftpoints < 48 ? 7 : 8;
         }
     }
 
-    void PopulateDungeons(int var1) {
-        System.out.println("In checkOpenAndPopulateDungeons, gameAdvLevel = " + var1);
-        int[] var2 = x[var1];
+    void PopulateDungeons(int AdvLevel) {
+        System.out.println("In checkOpenAndPopulateDungeons, gameAdvLevel = " + AdvLevel);
+        int[] var2 = x[AdvLevel];
         int var3 = var2.length;
 
         for(int i = 0; i < var3; ++i) {
-            int var5 = x[var1][i];
+            int var5 = x[AdvLevel][i];
             int var6 = var5 - 1;
             if (!dungeons[var6].k) {
                 dungeons[var6].k = true;
                 dungeons[var6].e();
             }
 
-            if (this.aZ != null) {
-                this.aZ.m = 100 * (i + 1) / var3;
-                if (this.aZ.m > 100) {
-                    this.aZ.m = 100;
+            if (this.NewGameLoadMenu != null) {
+                this.NewGameLoadMenu.LoadPct = 100 * (i + 1) / var3;
+                if (this.NewGameLoadMenu.LoadPct > 100) {
+                    this.NewGameLoadMenu.LoadPct = 100;
                 }
 
-                this.aZ.c();
-                this.aZ.f();
+                this.NewGameLoadMenu.Paint();
+                this.NewGameLoadMenu.ServiceRepaint();
             }
         }
 
@@ -1327,9 +1327,9 @@ public class ESGame extends a implements Runnable, CommandListener {
                 dungeons[var9].k = true;
                 dungeons[var9].h();
                 ++var1;
-                aQ.m = 100 * var1 / var2;
-                if (aQ.m > 100) {
-                    aQ.m = 100;
+                HelperMenu.LoadPct = 100 * var1 / var2;
+                if (HelperMenu.LoadPct > 100) {
+                    HelperMenu.LoadPct = 100;
                 }
             }
         }
@@ -1390,29 +1390,29 @@ public class ESGame extends a implements Runnable, CommandListener {
         Camp[12][13] = 0;
     }
 
-    private static void K() {
-        G = new Hashtable[37];
+    private static void LoadDungeonTables() {
+        MonsterTable = new Hashtable[37];
 
         for(int i = 1; i < 37; ++i) {
-            G[i] = new Hashtable();
+            MonsterTable[i] = new Hashtable();
         }
 
-        S = new Hashtable[37];
+        ChestTable = new Hashtable[37];
 
         for(int i = 1; i < 37; ++i) {
-            S[i] = new Hashtable();
+            ChestTable[i] = new Hashtable();
         }
 
-        au = new Vector[37];
+        DroppedItemsTable = new Vector[37];
 
         for(int i = 0; i < 37; ++i) {
-            au[i] = new Vector();
+            DroppedItemsTable[i] = new Vector();
         }
 
     }
 
-    private static void b(byte[] var0) throws Exception {
-        DataInputStream data = new DataInputStream(new ByteArrayInputStream(var0, 0, var0.length));
+    private static void LoadNPCData(byte[] btarr) throws Exception {
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(btarr, 0, btarr.length));
         Item.ia = data.readShort();
         Monster.J = data.readShort();
 
@@ -1452,69 +1452,69 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         for(int i = 0; i < 7; ++i) {
             if (!NPC.b[i]) {
-                Dungeon var10 = dungeons[0];
-                var10.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]] = func.c((byte)32, var10.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]]);
+                Dungeon dung = dungeons[0];
+                dung.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]] = func.c((byte)32, dung.DngnVec[NPC.NPCXPos[i]][NPC.NPCYPos[i]]);
             }
         }
 
     }
 
-    private static byte[] k() throws Exception {
-        ByteArrayOutputStream var0 = new ByteArrayOutputStream(60);
-        DataOutputStream var1 = new DataOutputStream(var0);
-        var1.writeShort(Item.ia);
-        var1.writeShort(Monster.J);
+    private static byte[] EncodeNPCData() throws Exception {
+        ByteArrayOutputStream btarr = new ByteArrayOutputStream(60);
+        DataOutputStream data = new DataOutputStream(btarr);
+        data.writeShort(Item.ia);
+        data.writeShort(Monster.J);
 
         for(int i = 0; i < 7; ++i) {
-            var1.writeBoolean(NPC.b[i]);
+            data.writeBoolean(NPC.b[i]);
         }
 
         for(int i = 0; i < 7; ++i) {
-            var1.writeBoolean(NPC.FirstMeet[i]);
+            data.writeBoolean(NPC.FirstMeet[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
-            var1.writeShort(NPC.r[i]);
+            data.writeShort(NPC.r[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
-            var1.writeShort(NPC.p[i]);
+            data.writeShort(NPC.p[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
-            var1.writeShort(NPC.h[i]);
+            data.writeShort(NPC.h[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
-            var1.writeByte(NPC.c[i]);
+            data.writeByte(NPC.c[i]);
         }
 
         for(int i = 0; i < 4; ++i) {
-            var1.writeByte(NPC.n[i]);
+            data.writeByte(NPC.n[i]);
         }
 
-        var1.writeByte(NPC.f);
-        var1.writeBoolean(NPC.WardenPresent);
-        var1.writeShort(NPC.a);
-        var1.writeShort(NPC.g);
-        var1.writeBoolean(NPC.l);
-        byte[] var9 = var0.toByteArray();
-        return var9;
+        data.writeByte(NPC.f);
+        data.writeBoolean(NPC.WardenPresent);
+        data.writeShort(NPC.a);
+        data.writeShort(NPC.g);
+        data.writeBoolean(NPC.l);
+        byte[] arr = btarr.toByteArray();
+        return arr;
     }
 
-    private static void a(RecordStore var0) throws Exception {
+    private static void a(RecordStore store) throws Exception {
         int var1;
         int var3;
         Enumeration var6;
         Monster var8;
         Enumeration var19;
         for(int i = 1; i < 37; ++i) {
-            var3 = G[i].size();
+            var3 = MonsterTable[i].size();
             var1 = 4 + var3 * 28;
             ByteArrayOutputStream var4 = new ByteArrayOutputStream(var1);
             DataOutputStream var5 = new DataOutputStream(var4);
             var5.writeInt(var3);
-            var6 = G[i].elements();
+            var6 = MonsterTable[i].elements();
 
             byte[] var7;
             while(var6.hasMoreElements()) {
@@ -1524,7 +1524,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             var7 = var4.toByteArray();
-            var0.addRecord(var7, 0, var7.length);
+            store.addRecord(var7, 0, var7.length);
 
             try {
                 var5.close();
@@ -1534,19 +1534,19 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5 = null;
             var19 = null;
             System.gc();
-            al.m = 20 + 30 * (i + 1) / 37;
-            al.c();
-            al.f();
+            al.LoadPct = 20 + 30 * (i + 1) / 37;
+            al.Paint();
+            al.ServiceRepaint();
         }
 
         int var14;
         for(var3 = 1; var3 < 37; ++var3) {
-            var14 = S[var3].size();
+            var14 = ChestTable[var3].size();
             var1 = 4 + var14 * 8;
             ByteArrayOutputStream var15 = new ByteArrayOutputStream(var1);
             DataOutputStream var17 = new DataOutputStream(var15);
             var17.writeInt(var14);
-            var19 = S[var3].elements();
+            var19 = ChestTable[var3].elements();
 
             byte[] var21;
             while(var19.hasMoreElements()) {
@@ -1555,7 +1555,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             var21 = var15.toByteArray();
-            var0.addRecord(var21, 0, var21.length);
+            store.addRecord(var21, 0, var21.length);
 
             try {
                 var17.close();
@@ -1565,18 +1565,18 @@ public class ESGame extends a implements Runnable, CommandListener {
             var6 = null;
             var8 = null;
             System.gc();
-            al.m = 50 + 30 * (var3 + 1) / 37;
-            al.c();
-            al.f();
+            al.LoadPct = 50 + 30 * (var3 + 1) / 37;
+            al.Paint();
+            al.ServiceRepaint();
         }
 
         for(var14 = 0; var14 < 37; ++var14) {
-            int var16 = au[var14].size();
+            int var16 = DroppedItemsTable[var14].size();
             var1 = 4 + var16 * 7;
             ByteArrayOutputStream var18 = new ByteArrayOutputStream(var1);
             DataOutputStream var20 = new DataOutputStream(var18);
             var20.writeInt(var16);
-            Enumeration var22 = au[var14].elements();
+            Enumeration var22 = DroppedItemsTable[var14].elements();
 
             byte[] var9;
             while(var22.hasMoreElements()) {
@@ -1585,7 +1585,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             var9 = var18.toByteArray();
-            var0.addRecord(var9, 0, var9.length);
+            store.addRecord(var9, 0, var9.length);
 
             try {
                 var20.close();
@@ -1595,9 +1595,9 @@ public class ESGame extends a implements Runnable, CommandListener {
             var19 = null;
             Object var23 = null;
             System.gc();
-            al.m = 80 + 19 * (var14 + 1) / 37;
-            al.c();
-            al.f();
+            al.LoadPct = 80 + 19 * (var14 + 1) / 37;
+            al.Paint();
+            al.ServiceRepaint();
         }
 
     }
@@ -1610,13 +1610,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 1; i < 37; ++i) {
             byte[] record = store.getRecord(var2++);
             data = new DataInputStream(new ByteArrayInputStream(record, 0, record.length));
-            G[i].clear();
+            MonsterTable[i].clear();
             int var6 = data.readInt();
 
             for(var7 = 0; var7 < var6; ++var7) {
                 Monster var8 = Monster.a(data);
                 String var9 = String.valueOf(var8.a);
-                G[i].put(var9, var8.f());
+                MonsterTable[i].put(var9, var8.f());
             }
 
             try {
@@ -1627,9 +1627,9 @@ public class ESGame extends a implements Runnable, CommandListener {
             data = null;
             Object var14 = null;
             System.gc();
-            aQ.m = 20 + 30 * (i + 1) / 37;
-            aQ.c();
-            aQ.f();
+            HelperMenu.LoadPct = 20 + 30 * (i + 1) / 37;
+            HelperMenu.Paint();
+            HelperMenu.ServiceRepaint();
         }
 
         DataInputStream var18;
@@ -1637,13 +1637,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 1; i < 37; ++i) {
             byte[] var16 = store.getRecord(var2++);
             var18 = new DataInputStream(new ByteArrayInputStream(var16, 0, var16.length));
-            S[i].clear();
+            ChestTable[i].clear();
             var7 = var18.readInt();
 
             for(var21 = 0; var21 < var7; ++var21) {
                 byte[] var22 = a((DataInputStream)var18, 8);
                 String var10 = func.StrCatComma((int)var22[0], var22[1]);
-                S[i].put(var10, var22);
+                ChestTable[i].put(var10, var22);
             }
 
             try {
@@ -1654,20 +1654,20 @@ public class ESGame extends a implements Runnable, CommandListener {
             var18 = null;
             data = null;
             System.gc();
-            aQ.m = 50 + 30 * (i + 1) / 37;
-            aQ.c();
-            aQ.f();
+            HelperMenu.LoadPct = 50 + 30 * (i + 1) / 37;
+            HelperMenu.Paint();
+            HelperMenu.ServiceRepaint();
         }
 
         for(int i = 0; i < 37; ++i) {
             byte[] var19 = store.getRecord(var2++);
             DataInputStream var20 = new DataInputStream(new ByteArrayInputStream(var19, 0, var19.length));
-            au[i].removeAllElements();
+            DroppedItemsTable[i].removeAllElements();
             var21 = var20.readInt();
 
             for(int j = 0; j < var21; ++j) {
                 byte[] var24 = a((DataInputStream)var20, 7);
-                au[i].addElement(var24);
+                DroppedItemsTable[i].addElement(var24);
             }
 
             try {
@@ -1678,9 +1678,9 @@ public class ESGame extends a implements Runnable, CommandListener {
             var20 = null;
             var18 = null;
             System.gc();
-            aQ.m = 80 + 19 * (i + 1) / 37;
-            aQ.c();
-            aQ.f();
+            HelperMenu.LoadPct = 80 + 19 * (i + 1) / 37;
+            HelperMenu.Paint();
+            HelperMenu.ServiceRepaint();
         }
 
         return var2;
@@ -1718,11 +1718,11 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void h() {
-        this.W = new Form("Done");
+        this.ExitForm = new Form("Done");
         StringItem var1 = new StringItem((String)null, "I am done");
-        this.W.append(var1);
-        this.W.addCommand(aS);
-        this.W.setCommandListener(this);
+        this.ExitForm.append(var1);
+        this.ExitForm.addCommand(ExitComm);
+        this.ExitForm.setCommandListener(this);
     }
 
     private void LoadWardenImg() {
@@ -1733,17 +1733,17 @@ public class ESGame extends a implements Runnable, CommandListener {
         var1[2] = 1;
         var1[3] = 1;
         var1[4] = 1;
-        this.a = 1;
+        this.CurrentDung = 1;
         this.ImageLoader(var1);
     }
 
     void LoadDngImgs() {
-        System.out.println("Running image loader thread for new dungeon ID: " + this.a);
+        System.out.println("Running image loader thread for new dungeon ID: " + this.CurrentDung);
         this.am = false;
         if (jj) {
-            aQ.m = 80;
+            HelperMenu.LoadPct = 80;
         } else {
-            this.ab.m = 0;
+            this.ab.LoadPct = 0;
         }
 
         byte[] var1 = new byte[5];
@@ -1752,11 +1752,11 @@ public class ESGame extends a implements Runnable, CommandListener {
             var1[i] = 0;
         }
 
-        if (this.a == 1) {
+        if (this.CurrentDung == 1) {
             this.UnloadMonImg();
             this.LoadWardenImg();
         } else {
-            Hashtable var3 = G[this.a - 1];
+            Hashtable var3 = MonsterTable[this.CurrentDung - 1];
             if (var3 == null) {
                 return;
             }
@@ -1767,13 +1767,13 @@ public class ESGame extends a implements Runnable, CommandListener {
                 while(var4.hasMoreElements()) {
                     byte[] var5 = (byte[])var4.nextElement();
                     Monster var6 = Monster.a(var5);
-                    if (var6.l >= 1 && var6.l <= 5) {
+                    if (var6.MonNum >= 1 && var6.MonNum <= 5) {
                         ++var1[0];
-                    } else if (var6.l >= 6 && var6.l <= 10) {
+                    } else if (var6.MonNum >= 6 && var6.MonNum <= 10) {
                         ++var1[1];
-                    } else if (var6.l >= 11 && var6.l <= 25) {
+                    } else if (var6.MonNum >= 11 && var6.MonNum <= 25) {
                         ++var1[2];
-                    } else if (var6.l >= 26 && var6.l <= 40) {
+                    } else if (var6.MonNum >= 26 && var6.MonNum <= 40) {
                         ++var1[3];
                     } else {
                         ++var1[4];
@@ -1804,12 +1804,12 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     void ImageLoader(byte[] var1) {
         this.am = false;
-        this.a("Inside runImageLoader", true);
+        this.DebugMsg("Inside runImageLoader", true);
 
         try {
             for(int i = 0; i < 5; ++i) {
                 if (var1[i] > 0) {
-                    this.a("Handling ichunk = " + i, true);
+                    this.DebugMsg("Handling ichunk = " + i, true);
                     int var3 = ah[i][0];
                     int var4 = ah[i][1];
 
@@ -1831,22 +1831,22 @@ public class ESGame extends a implements Runnable, CommandListener {
                 }
 
                 if (jj) {
-                    aQ.m = 80 + (i + 1) * 20 / 5;
-                    aQ.c();
-                    aQ.f();
+                    HelperMenu.LoadPct = 80 + (i + 1) * 20 / 5;
+                    HelperMenu.Paint();
+                    HelperMenu.ServiceRepaint();
                 } else {
-                    this.ab.m = (i + 1) * 100 / 5;
-                    this.ab.c();
-                    this.ab.f();
+                    this.ab.LoadPct = (i + 1) * 100 / 5;
+                    this.ab.Paint();
+                    this.ab.ServiceRepaint();
                 }
             }
 
             this.am = true;
             System.out.println("SUCCESSFULLY LOADED MONSTER IMAGES!!");
             this.ak = false;
-        } catch (Throwable var7) {
-            System.out.println("ERROR in image loader: " + var7);
-            this.dspl.setCurrent(this.w);
+        } catch (Throwable err) {
+            System.out.println("ERROR in image loader: " + err);
+            this.dspl.setCurrent(this.ErrorForm);
         }
 
     }
@@ -1867,7 +1867,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     static void KillMonster(int dngnID, int var1) {
         System.out.println("In killMonster! dungid is " + dngnID);
-        byte[] var2 = (byte[])G[dngnID - 1].remove(String.valueOf(var1));
+        byte[] var2 = (byte[]) MonsterTable[dngnID - 1].remove(String.valueOf(var1));
         byte var3 = var2[4];
         byte var4 = var2[5];
         Dungeon var5 = dungeons[dngnID - 1];
@@ -1875,54 +1875,54 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5.DngnVec[var3][var4] = func.c((byte)2, var5.DngnVec[var3][var4]);
         }
 
-        System.out.println("End of killMonster, size of HT is " + G[dngnID - 1].size());
+        System.out.println("End of killMonster, size of HT is " + MonsterTable[dngnID - 1].size());
     }
 
     private Menu InventoryItemMenu(int ItemIndx) {
         Menu menu = new Menu(this, 5, 34);
         System.out.println("In newInventoryItemUI: getting item " + ItemIndx);
-        String var3 = this.k.ItemString(ItemIndx);
-        Vector var4 = new Vector();
-        Vector var5 = new Vector();
-        var4.addElement("Drop");
-        var5.addElement(Integer.valueOf(0));
-        if (this.k.w(ItemIndx)) {
-            if (!this.k.C(ItemIndx)) {
-                var4.addElement("Equip");
+        String itemString = this.Player.ItemString(ItemIndx);
+        Vector optionvec = new Vector();
+        Vector optKeys = new Vector();
+        optionvec.addElement("Drop");
+        optKeys.addElement(Integer.valueOf(0));
+        if (this.Player.IsEquipable(ItemIndx)) {
+            if (!this.Player.IsEquiped(ItemIndx)) {
+                optionvec.addElement("Equip");
             } else {
-                var4.addElement("Unequip");
+                optionvec.addElement("Unequip");
             }
 
-            var5.addElement(Integer.valueOf(1));
+            optKeys.addElement(Integer.valueOf(1));
         }
 
-        if (this.k.e(ItemIndx)) {
-            var4.addElement("Learn");
-            var5.addElement(Integer.valueOf(2));
+        if (this.Player.e(ItemIndx)) {
+            optionvec.addElement("Learn");
+            optKeys.addElement(Integer.valueOf(2));
         }
 
-        if (this.k.v(ItemIndx)) {
-            var4.addElement("Use");
-            var5.addElement(Integer.valueOf(3));
+        if (this.Player.v(ItemIndx)) {
+            optionvec.addElement("Use");
+            optKeys.addElement(Integer.valueOf(3));
         }
 
-        String[] var6 = new String[var4.size()];
+        String[] optionStrs = new String[optionvec.size()];
 
-        for(int i = 0; i < var4.size(); ++i) {
-            var6[i] = (String)var4.elementAt(i);
+        for(int i = 0; i < optionvec.size(); ++i) {
+            optionStrs[i] = (String)optionvec.elementAt(i);
         }
 
-        menu.a("Item", var3, var6, var5);
+        menu.BuildMenu("Item", itemString, optionStrs, optKeys);
         menu.A = true;
-        menu.prev = this.InventoryMenu;
+        menu.Prev = this.InventoryMenu;
         return menu;
     }
 
     private Menu SkillsListMenu() {
         System.gc();
         Log("Start of newSkillsListUI");
-        Menu var1 = new Menu(this, 5, 35);
-        Vector var2 = this.k.GetSkillList();
+        Menu menu = new Menu(this, 5, 35);
+        Vector var2 = this.Player.GetSkillList();
         int var3 = var2.size();
         String[] var4 = new String[var3];
 
@@ -1930,73 +1930,73 @@ public class ESGame extends a implements Runnable, CommandListener {
             var4[i] = (String)var2.elementAt(i);
         }
 
-        var1.a("Skills", "Your Skills:", var4, (Vector)null, true);
-        var1.prev = this.OptionsMenu;
-        return var1;
+        menu.BuildMenu("Skills", "Your Skills:", var4, (Vector)null, true);
+        menu.Prev = this.OptionsMenu;
+        return menu;
     }
 
     private Menu SkillInfoMenu(int var1) {
         System.gc();
         Log("Start of newSkillInfoUI");
-        Menu var2 = new Menu(this, 4, 36);
-        int var3 = this.k.l(var1);
-        String var4 = this.k.GetSkillString(var3);
-        var2.a("Skill Info", var4);
-        var2.prev = this.SkillsListMenu;
-        return var2;
+        Menu menu = new Menu(this, 4, 36);
+        int var3 = this.Player.l(var1);
+        String var4 = this.Player.GetSkillString(var3);
+        menu.BuildMenu("Skill Info", var4);
+        menu.Prev = this.SkillsListMenu;
+        return menu;
     }
 
     private Menu SpellsListMenu() {
         System.gc();
         Log("Start of newSpellsListUI");
-        Menu var1 = new Menu(this, 5, 37);
-        Vector var2 = this.k.J();
-        int var3 = var2.size();
-        String[] var4 = new String[var3];
+        Menu menu = new Menu(this, 5, 37);
+        Vector knownSpells = this.Player.GetKnownSpells();
+        int spellcount = knownSpells.size();
+        String[] spellStrings = new String[spellcount];
 
-        for(int i = 0; i < var3; ++i) {
-            var4[i] = (String)var2.elementAt(i);
+        for(int i = 0; i < spellcount; ++i) {
+            spellStrings[i] = (String)knownSpells.elementAt(i);
         }
 
-        var1.a("Spells", "Your Spells:", var4, (Vector)null, true);
-        var1.prev = this.OptionsMenu;
-        return var1;
+        menu.BuildMenu("Spells", "Your Spells:", spellStrings, (Vector)null, true);
+        menu.Prev = this.OptionsMenu;
+        return menu;
     }
 
-    private Menu SpellInfoMenu(int var1) {
+    private Menu SpellInfoMenu(int indx) {
         System.gc();
         Log("Start of newSpellInfoUI");
-        Menu var2 = new Menu(this, 5, 38);
-        int var3 = this.k.B(var1);
-        String var4 = this.k.s(var3);
-        String[] var5 = new String[]{"Ready Spell"};
-        var2.a("Spell Info", var4, var5, (Vector)null);
-        var2.A = true;
-        var2.prev = this.SpellsListMenu;
-        return var2;
+        Menu menu = new Menu(this, 5, 38);
+        int spellindx = this.Player.IsSpellKnown(indx);
+        String spellStr = this.Player.GetSpellInfoStr(spellindx);
+        String[] headertxt = new String[]{"Ready Spell"};
+        menu.BuildMenu("Spell Info", spellStr, headertxt, (Vector)null);
+        menu.A = true;
+        menu.Prev = this.SpellsListMenu;
+        return menu;
     }
 
-    Menu LevelUpMenu(int var1) {
+    Menu LevelUpMenu(int indx) {
         System.gc();
-        Log("Start of newLevelUpUI: index= " + var1);
+        Log("Start of newLevelUpUI: index= " + indx);
         Menu menu = new Menu(this, 5, 39);
-        String[] var3 = this.k.q();
-        String var4 = null;
-        if (var1 == 1) {
+        String[] skilllist = this.Player.GetSkillIncreases();
+        String headrtxt = null;
+        if (indx == 1) {
             menu.npcID = 0;
-            var4 = "Select an attribute to \nincrease 3 points:";
-        } else if (var1 == 2) {
-            var4 = "Select an attribute to \nincrease 2 points:";
+            headrtxt = "Select an attribute to \nincrease 3 points:";
+        } else if (indx == 2) {
+            headrtxt = "Select an attribute to \nincrease 2 points:";
             menu.npcID = 1;
-        } else if (var1 == 3) {
+        } else if (indx == 3) {
             menu.npcID = 2;
-            var4 = "Select an attribute to \nincrease 1 point:";
+            headrtxt = "Select an attribute to \nincrease 1 point:";
         }
 
-        menu.a("Level Up", var4, var3, (Vector)null);
-        menu.t.removeCommand(Menu.CancelComm);
+        menu.BuildMenu("Level Up", headrtxt, skilllist, (Vector)null);
+        menu.displayable.removeCommand(Menu.CancelComm);
         menu.A = true;
-        menu.prev = menu;
+        menu.Prev = menu;
         return menu;
     }
 
@@ -2004,7 +2004,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         System.gc();
         Log("Start of newWardenSpeaksUI");
         Menu menu = new Menu(this, 4, 102);
-        menu.a("Varus", var1);
+        menu.BuildMenu("Varus", var1);
         return menu;
     }
 
@@ -2013,8 +2013,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("Start of newEndOfGameUI");
         String var1 = NPC.NPCStrings[7][4];
         Menu menu = new Menu(this, 4, 200);
-        menu.a("Victory!", var1);
-        menu.c = this.GameOverMenu();
+        menu.BuildMenu("Victory!", var1);
+        menu.Next = this.GameOverMenu();
         return menu;
     }
 
@@ -2023,8 +2023,8 @@ public class ESGame extends a implements Runnable, CommandListener {
         Log("Start of newGameOverUI");
         String var1 = NPC.NPCStrings[7][5];
         Menu menu = new Menu(this, 4, 201);
-        menu.a("Game Over", var1);
-        menu.c = this.MainMenu;
+        menu.BuildMenu("Game Over", var1);
+        menu.Next = this.MainMenu;
         return menu;
     }
 
@@ -2050,20 +2050,20 @@ public class ESGame extends a implements Runnable, CommandListener {
         return 1 + Math.abs(var0.nextInt() % var1);
     }
 
-    void a(Object obj) {
-        if (ax != null) {
+    void SetDisplayContent(Object obj) {
+        if (CurrentMenu != null) {
             if (obj instanceof Menu) {
-                Menu var2 = (Menu)obj;
-                if (ax != var2) {
-                    ax.q();
+                Menu menu = (Menu)obj;
+                if (CurrentMenu != menu) {
+                    CurrentMenu.q();
                 }
             } else {
-                ax.q();
+                CurrentMenu.q();
             }
         }
 
-        if (this.av != null) {
-            this.av.e();
+        if (this.GCanvas != null) {
+            this.GCanvas.PauseGame();
         }
 
         if (this.dspl == null) {
@@ -2071,18 +2071,18 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         if (obj instanceof Menu) {
-            ax = (Menu)obj;
-            MenuCanvas var3 = Menu.j();
-            var3.menu = ax;
-            ax.t = var3;
-            this.dspl.setCurrent(ax.t);
-            ax.h();
-            ax.c();
-            ax.f();
+            CurrentMenu = (Menu)obj;
+            MenuCanvas mcanvas = Menu.GetCanvas();
+            mcanvas.menu = CurrentMenu;
+            CurrentMenu.displayable = mcanvas;
+            this.dspl.setCurrent(CurrentMenu.displayable);
+            CurrentMenu.StartHelper();
+            CurrentMenu.Paint();
+            CurrentMenu.ServiceRepaint();
         } else if (obj instanceof Displayable) {
-            Displayable var4 = (Displayable)obj;
-            ax = null;
-            this.dspl.setCurrent(var4);
+            Displayable displayable = (Displayable)obj;
+            CurrentMenu = null;
+            this.dspl.setCurrent(displayable);
         }
 
     }
@@ -2113,21 +2113,21 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     }
 
-    private void Debug() {
-        this.ao = new Form("Debug");
-        String var1 = this.av.Char.K();
-        this.ar = new StringItem("Debug: ", var1);
-        this.ao.append(this.ar);
-        Command var2 = new Command("Ok", 4, 1);
-        this.ao.addCommand(var2);
-        this.ao.setCommandListener(this);
+    private void DebugMenu() {
+        this.DebugMenu = new Form("Debug");
+        String var1 = this.GCanvas.Char.GetDebugString();
+        this.DebugString = new StringItem("Debug: ", var1);
+        this.DebugMenu.append(this.DebugString);
+        Command comm = new Command("Ok", 4, 1);
+        this.DebugMenu.addCommand(comm);
+        this.DebugMenu.setCommandListener(this);
     }
 
-    synchronized void b(String var1) {
-        log = var1;
+    synchronized void UpdateLog(String logstr) {
+        Log = logstr;
     }
 
-    private void u() {
+    private void GetHelpCats() {
         helpCats[0] = NPC.NPCStrings[7][6];
         helpCats[1] = NPC.NPCStrings[7][8];
         helpCats[2] = NPC.NPCStrings[7][11];
@@ -2142,97 +2142,97 @@ public class ESGame extends a implements Runnable, CommandListener {
         helpCats[11] = NPC.NPCStrings[7][39];
     }
 
-    private void a() {
-        StringBuffer var1 = new StringBuffer(1200);
-        var1.append(NPC.NPCStrings[7][7]);
-        HelpStrings[0] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][9]);
-        var1.append(NPC.NPCStrings[7][10]);
-        HelpStrings[1] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][12]);
-        HelpStrings[2] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][14]);
-        var1.append(NPC.NPCStrings[7][15]);
-        var1.append(NPC.NPCStrings[7][16]);
-        var1.append(NPC.NPCStrings[7][17]);
-        var1.append(NPC.NPCStrings[7][18]);
-        HelpStrings[3] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][20]);
-        HelpStrings[4] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][22]);
-        var1.append(NPC.NPCStrings[7][23]);
-        HelpStrings[5] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][25]);
-        var1.append(NPC.NPCStrings[7][26]);
-        var1.append(NPC.NPCStrings[7][27]);
-        var1.append(NPC.NPCStrings[7][28]);
-        HelpStrings[6] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][30]);
-        HelpStrings[7] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][32]);
-        var1.append(NPC.NPCStrings[7][33]);
-        HelpStrings[8] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][35]);
-        var1.append(NPC.NPCStrings[7][36]);
-        HelpStrings[9] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][38]);
-        HelpStrings[10] = var1.toString();
-        var1.delete(0, 1200);
-        var1.append(NPC.NPCStrings[7][40]);
-        HelpStrings[11] = var1.toString();
-        var1.delete(0, 1200);
+    private void GetHelpStrings() {
+        StringBuffer strbuff = new StringBuffer(1200);
+        strbuff.append(NPC.NPCStrings[7][7]);
+        HelpStrings[0] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][9]);
+        strbuff.append(NPC.NPCStrings[7][10]);
+        HelpStrings[1] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][12]);
+        HelpStrings[2] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][14]);
+        strbuff.append(NPC.NPCStrings[7][15]);
+        strbuff.append(NPC.NPCStrings[7][16]);
+        strbuff.append(NPC.NPCStrings[7][17]);
+        strbuff.append(NPC.NPCStrings[7][18]);
+        HelpStrings[3] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][20]);
+        HelpStrings[4] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][22]);
+        strbuff.append(NPC.NPCStrings[7][23]);
+        HelpStrings[5] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][25]);
+        strbuff.append(NPC.NPCStrings[7][26]);
+        strbuff.append(NPC.NPCStrings[7][27]);
+        strbuff.append(NPC.NPCStrings[7][28]);
+        HelpStrings[6] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][30]);
+        HelpStrings[7] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][32]);
+        strbuff.append(NPC.NPCStrings[7][33]);
+        HelpStrings[8] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][35]);
+        strbuff.append(NPC.NPCStrings[7][36]);
+        HelpStrings[9] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][38]);
+        HelpStrings[10] = strbuff.toString();
+        strbuff.delete(0, 1200);
+        strbuff.append(NPC.NPCStrings[7][40]);
+        HelpStrings[11] = strbuff.toString();
+        strbuff.delete(0, 1200);
     }
 
     private String CreditsStr() {
-        StringBuffer var1 = new StringBuffer(400);
-        var1.append("Game Design: Anthony Gill and Greg Gorden");
-        var1.append('\n');
-        var1.append("Art: Mark Jones");
-        var1.append('\n');
-        var1.append("Programming: Marc Ilgen");
-        var1.append('\n');
-        var1.append("Technical Director: Andrew Friedman");
-        var1.append('\n');
-        var1.append("(C) 2003 Vir2L Studos, a ZeniMax Media company. The Elder Scrolls and Vir2L are ");
-        var1.append("registered trademarks of ZeniMax Media Inc. All rights reserved.");
-        var1.append('\n');
-        return var1.toString();
+        StringBuffer CredStr = new StringBuffer(400);
+        CredStr.append("Game Design: Anthony Gill and Greg Gorden");
+        CredStr.append('\n');
+        CredStr.append("Art: Mark Jones");
+        CredStr.append('\n');
+        CredStr.append("Programming: Marc Ilgen");
+        CredStr.append('\n');
+        CredStr.append("Technical Director: Andrew Friedman");
+        CredStr.append('\n');
+        CredStr.append("(C) 2003 Vir2L Studos, a ZeniMax Media company. The Elder Scrolls and Vir2L are ");
+        CredStr.append("registered trademarks of ZeniMax Media Inc. All rights reserved.");
+        CredStr.append('\n');
+        return CredStr.toString();
     }
 
     private void k(int var1) {
         String var2 = this.NPCDlgMenus[var1].M;
-        String var3 = this.NPCDlgMenus[var1].t();
+        String var3 = this.NPCDlgMenus[var1].GetText();
         short var4 = 0;
         if (NPC.b(var1)) {
             var4 = NPC.p[var1];
         } else if (var1 == 4) {
-            var4 = k.a;
+            var4 = Player.OldYPos;
         } else if (var1 == 5) {
             var4 = NPC.g;
         }
 
         var3 = func.StringInsert(var2, "<TAG>", var4);
-        this.NPCDlgMenus[var1].e(var3);
+        this.NPCDlgMenus[var1].SetText(var3);
     }
 
     private String f() {
-        String[] var1 = RecordStore.listRecordStores();
+        String[] RecordList = RecordStore.listRecordStores();
         boolean var2 = false;
         int var7;
-        if (var1 == null) {
+        if (RecordList == null) {
             var7 = 0;
         } else {
-            var7 = var1.length;
+            var7 = RecordList.length;
         }
 
         int var3 = func.a(10000);
@@ -2242,7 +2242,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             boolean var5 = false;
 
             for(int i = 0; i < var7; ++i) {
-                if (var4.equals(var1[i])) {
+                if (var4.equals(RecordList[i])) {
                     var5 = true;
                 }
             }
@@ -2325,27 +2325,27 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     void x() {
-        String var1 = NPC.a(this.k, 5, 13, 0);
+        String var1 = NPC.a(this.Player, 5, 13, 0);
         if (var1 == null) {
             var1 = "No rumors!";
         }
 
-        this.RumorMenu.a(NPC.NPCNames[5]);
-        this.RumorMenu.e(var1);
-        this.RumorMenu.c = this.NPCDlgMenus[5];
+        this.RumorMenu.SetTitle(NPC.NPCNames[5]);
+        this.RumorMenu.SetText(var1);
+        this.RumorMenu.Next = this.NPCDlgMenus[5];
         this.RumorMenu.npcID = 5;
-        Menu var2 = (Menu)this.RumorMenu.c;
+        Menu var2 = (Menu)this.RumorMenu.Next;
         String var3 = var2.M;
-        String var4 = var2.t();
+        String var4 = var2.GetText();
         boolean var5 = false;
         short var6 = NPC.g;
         var4 = func.StringInsert(var3, "<TAG>", var6);
-        var2.e(var4);
-        this.a((Object)this.RumorMenu);
+        var2.SetText(var4);
+        this.SetDisplayContent((Object)this.RumorMenu);
     }
 
     private void j() {
-        if (aT == 4) {
+        if (GameState == 4) {
             this.b();
         }
 
@@ -2356,7 +2356,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             P = new Random(System.currentTimeMillis());
             RunLoadCamp();
             LoadMonsterFPaths();
-            K();
+            LoadDungeonTables();
         } catch (Exception err) {
             System.out.println("ERROR: problem with loading camp or image record HT");
         }

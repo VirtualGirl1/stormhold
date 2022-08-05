@@ -12,8 +12,8 @@ public class Monster { // d
     private static String[] MonNames;
     private static byte[][] MonAttributes;
     short a;
-    byte l;
-    byte g;
+    byte MonNum;
+    byte Health;
     byte o;
     byte m;
     boolean ia;
@@ -34,8 +34,8 @@ public class Monster { // d
         byte[] btarr = new byte[28];
         btarr[0] = (byte)(this.a >>> 8 & 255);
         btarr[1] = (byte)(this.a & 255);
-        btarr[2] = this.l;
-        btarr[3] = this.g;
+        btarr[2] = this.MonNum;
+        btarr[3] = this.Health;
         btarr[4] = this.o;
         btarr[5] = this.m;
         btarr[6] = (byte)(this.ia ? 1 : 0);
@@ -65,80 +65,80 @@ public class Monster { // d
 
     public Monster(int var1, int var2, int var3) {
         this.a = (short)var1;
-        this.l = (byte)var2;
-        this.g = MonAttributes[this.l - 1][14];
+        this.MonNum = (byte)var2;
+        this.Health = MonAttributes[this.MonNum - 1][14];
         this.c = new byte[10];
         this.ia = false;
         this.n = (byte)var3;
         this.f = 0;
     }
 
-    static Monster a(byte[] var0) {
-        short var1 = (short)(var0[0] & 255);
-        short var2 = (short)(var0[1] & 255);
+    static Monster a(byte[] btarr) {
+        short var1 = (short)(btarr[0] & 255);
+        short var2 = (short)(btarr[1] & 255);
         Mon.a = (short)(var1 << 8 | var2);
-        Mon.l = var0[2];
-        Mon.g = var0[3];
-        Mon.o = var0[4];
-        Mon.m = var0[5];
-        Mon.ia = var0[6] != 0;
-        Mon.n = var0[7];
-        Mon.b = var0[8];
-        Mon.f = var0[9];
-        Mon.k = func.a(var0, 10);
+        Mon.MonNum = btarr[2];
+        Mon.Health = btarr[3];
+        Mon.o = btarr[4];
+        Mon.m = btarr[5];
+        Mon.ia = btarr[6] != 0;
+        Mon.n = btarr[7];
+        Mon.b = btarr[8];
+        Mon.f = btarr[9];
+        Mon.k = func.a(btarr, 10);
 
         for(int i = 0; i < 10; ++i) {
-            Mon.c[i] = var0[18 + i];
+            Mon.c[i] = btarr[18 + i];
         }
 
         return Mon;
     }
 
-    static Monster a(Monster var0, byte[] var1) {
-        short var2 = (short)(var1[0] & 255);
-        short var3 = (short)(var1[1] & 255);
-        var0.a = (short)(var2 << 8 | var3);
-        var0.l = var1[2];
-        var0.g = var1[3];
-        var0.o = var1[4];
-        var0.m = var1[5];
-        var0.ia = var1[6] != 0;
-        var0.n = var1[7];
-        var0.b = var1[8];
-        var0.f = var1[9];
-        var0.k = func.a(var1, 10);
+    static Monster a(Monster mon, byte[] btarr) {
+        short var2 = (short)(btarr[0] & 255);
+        short var3 = (short)(btarr[1] & 255);
+        mon.a = (short)(var2 << 8 | var3);
+        mon.MonNum = btarr[2];
+        mon.Health = btarr[3];
+        mon.o = btarr[4];
+        mon.m = btarr[5];
+        mon.ia = btarr[6] != 0;
+        mon.n = btarr[7];
+        mon.b = btarr[8];
+        mon.f = btarr[9];
+        mon.k = func.a(btarr, 10);
 
         for(int i = 0; i < 10; ++i) {
-            var0.c[i] = var1[18 + i];
+            mon.c[i] = btarr[18 + i];
         }
 
-        return var0;
+        return mon;
     }
 
     void d() {
-        ESGame.G[this.n - 1].put(String.valueOf(this.a), this.f());
+        ESGame.MonsterTable[this.n - 1].put(String.valueOf(this.a), this.f());
     }
 
-    String a() {
-        return MonNames[this.l - 1];
+    String GetMonName() {
+        return MonNames[this.MonNum - 1];
     }
 
-    int c(int var1) {
-        return MonAttributes[this.l - 1][var1] & 255;
+    int GetMonAtt(int AttIndx) {
+        return MonAttributes[this.MonNum - 1][AttIndx] & 255;
     }
 
     boolean e() {
-        return this.l >= 6 && this.l <= 8;
+        return this.MonNum >= 6 && this.MonNum <= 8;
     }
 
     void b(int var1) {
-        int var2 = this.g & 255;
+        int var2 = this.Health & 255;
         if (var1 > var2) {
             var1 = var2;
         }
 
         var2 -= var1;
-        this.g = (byte)var2;
+        this.Health = (byte)var2;
     }
 
     boolean a(int var1) {
@@ -184,10 +184,10 @@ public class Monster { // d
         }
     }
 
-    void a(Character var1) {
-        if (this.d(var1)) {
+    void a(Character player) {
+        if (this.d(player)) {
             if (this.b == 0) {
-                this.e(var1);
+                this.e(player);
                 ++this.b;
             } else if (this.b >= 4) {
                 this.b = 0;
@@ -198,22 +198,22 @@ public class Monster { // d
 
     }
 
-    private void e(Character var1) {
-        int var6 = Math.abs(var1.l - this.o);
-        int var7 = Math.abs(var1.Ka - this.m);
+    private void e(Character player) {
+        int var6 = Math.abs(player.XPos - this.o);
+        int var7 = Math.abs(player.YPos - this.m);
         byte var2;
-        if (this.o < var1.l) {
+        if (this.o < player.XPos) {
             var2 = 2;
-        } else if (this.o > var1.l) {
+        } else if (this.o > player.XPos) {
             var2 = 4;
         } else {
             var2 = -1;
         }
 
         byte var3;
-        if (this.m < var1.Ka) {
+        if (this.m < player.YPos) {
             var3 = 3;
-        } else if (this.m > var1.Ka) {
+        } else if (this.m > player.YPos) {
             var3 = 1;
         } else {
             var3 = -1;
@@ -266,18 +266,18 @@ public class Monster { // d
         return false;
     }
 
-    boolean d(Character var1) {
-        return this.c(var1) <= 3;
+    boolean d(Character player) {
+        return this.c(player) <= 3;
     }
 
-    int c(Character var1) {
-        int var2 = Math.abs(var1.l - this.o);
-        int var3 = Math.abs(var1.Ka - this.m);
+    int c(Character player) {
+        int var2 = Math.abs(player.XPos - this.o);
+        int var3 = Math.abs(player.YPos - this.m);
         return var2 + var3;
     }
 
-    boolean b(Character var1) {
-        if (this.c(var1) == 1) {
+    boolean b(Character player) {
+        if (this.c(player) == 1) {
             return true;
         } else {
             this.f = 0;
@@ -285,15 +285,15 @@ public class Monster { // d
         }
     }
 
-    void a(Character var1, long var2) {
+    void a(Character player, long var2) {
         this.f = 2;
         this.k = var2;
-        byte var4 = MonAttributes[this.l - 1][4];
-        int var5 = var1.f(true);
+        byte var4 = MonAttributes[this.MonNum - 1][4];
+        int var5 = player.f(true);
         int var6 = var5 - var4;
-        var6 = Math.min(var6, MonAttributes[this.l - 1][2]);
-        int var7 = MonAttributes[this.l - 1][3] - var6 * 5;
-        int var8 = var1.I() + var6 * 5;
+        var6 = Math.min(var6, MonAttributes[this.MonNum - 1][2]);
+        int var7 = MonAttributes[this.MonNum - 1][3] - var6 * 5;
+        int var8 = player.I() + var6 * 5;
         var7 = Math.min(Math.max(var7, 10), 95);
         var8 = Math.min(Math.max(var8, 10), 95);
         int var9 = func.a(100);
@@ -323,39 +323,39 @@ public class Monster { // d
         if (var21 == 0) {
             this.f = 1;
         } else {
-            byte var14 = MonAttributes[this.l - 1][5];
-            int var15 = var1.v();
+            byte var14 = MonAttributes[this.MonNum - 1][5];
+            int var15 = player.v();
             if (var21 == 1) {
                 var15 = 2 * var15;
             }
 
             int var16 = var14 - var15;
             var16 = Math.max(var16, 4);
-            int var17 = var16 * var1.CharCritAtt[3] / 100;
-            short[] var10000 = var1.CharCritAtt;
+            int var17 = var16 * player.CharCritAtt[3] / 100;
+            short[] var10000 = player.CharCritAtt;
             var10000[2] = (short)(var10000[2] - var17);
-            var1.CharCritAtt[2] = (short)Math.max(var1.CharCritAtt[2], 0);
+            player.CharCritAtt[2] = (short)Math.max(player.CharCritAtt[2], 0);
             if (var12) {
-                var1.a(var1.y(), 1);
+                player.a(player.y(), 1);
             }
 
             if (var21 < 3) {
                 this.f = 1;
             } else {
                 if (func.a(100) <= 30) {
-                    byte var18 = MonAttributes[this.l - 1][11];
+                    byte var18 = MonAttributes[this.MonNum - 1][11];
                     if (var18 > 0) {
                         int var19 = var18 - 1;
-                        var1.A = (byte)(var1.A | 1 << var19);
+                        player.Ailments = (byte)(player.Ailments | 1 << var19);
                         if (var18 != 1) {
                             if (var18 == 2) {
                                 Dungeon var20 = ESGame.dungeons[this.n - 1];
                                 var20.c(3);
                             } else if (var18 != 3) {
                                 if (var18 == 4) {
-                                    var1.ah = 30000;
+                                    player.ah = 30000;
                                 } else if (var18 == 5) {
-                                    var1.F = 30000;
+                                    player.F = 30000;
                                 } else if (var18 != 6 && var18 != 7 && var18 == 8) {
                                 }
                             }
@@ -388,29 +388,29 @@ public class Monster { // d
     }
 
     static Monster a(DataInputStream data) throws Exception {
-        Monster var1 = new Monster();
-        var1.a = data.readShort();
-        var1.l = data.readByte();
-        var1.g = data.readByte();
-        var1.o = data.readByte();
-        var1.m = data.readByte();
-        var1.ia = data.readBoolean();
-        var1.n = data.readByte();
-        var1.b = data.readByte();
-        var1.f = data.readByte();
-        var1.k = data.readLong();
+        Monster mon = new Monster();
+        mon.a = data.readShort();
+        mon.MonNum = data.readByte();
+        mon.Health = data.readByte();
+        mon.o = data.readByte();
+        mon.m = data.readByte();
+        mon.ia = data.readBoolean();
+        mon.n = data.readByte();
+        mon.b = data.readByte();
+        mon.f = data.readByte();
+        mon.k = data.readLong();
 
         for(int i = 0; i < 10; ++i) {
-            var1.c[i] = data.readByte();
+            mon.c[i] = data.readByte();
         }
 
-        return var1;
+        return mon;
     }
 
     void a(DataOutputStream data) throws Exception {
         data.writeShort(this.a);
-        data.writeByte(this.l);
-        data.writeByte(this.g);
+        data.writeByte(this.MonNum);
+        data.writeByte(this.Health);
         data.writeByte(this.o);
         data.writeByte(this.m);
         data.writeBoolean(this.ia);
@@ -429,18 +429,18 @@ public class Monster { // d
     }
 
     void a(boolean var1) {
-        byte var2 = MonAttributes[this.l - 1][15];
+        byte var2 = MonAttributes[this.MonNum - 1][15];
         if (var1) {
             var2 = 100;
         }
 
-        byte var3 = MonAttributes[this.l - 1][16];
+        byte var3 = MonAttributes[this.MonNum - 1][16];
         int var4 = func.a(100);
         boolean var5 = var4 <= var2;
         if (var5 || var1) {
             Dungeon var6 = ESGame.dungeons[this.n - 1];
             byte var7 = var6.a;
-            int var8 = Item.a(ESGame.P, var7, var3);
+            int var8 = Item.GetRandItem(ESGame.P, var7, var3);
             byte var9 = (byte)(var8 & 255);
             byte var10 = 0;
             if (var9 == 86) {
@@ -463,15 +463,15 @@ public class Monster { // d
 
     }
 
-    static Monster a(Dungeon var0) {
-        return a(ESGame.P, var0, -1);
+    static Monster a(Dungeon dung) {
+        return a(ESGame.P, dung, -1);
     }
 
-    static Monster a(Random var0, Dungeon var1, int var2) {
+    static Monster a(Random rand, Dungeon dung, int var2) {
         short var3 = b();
         int var4 = var2;
         if (var2 < 0) {
-            int var5 = var1.a - 1;
+            int var5 = dung.a - 1;
             if (var5 < 0) {
                 var5 = 0;
             }
@@ -480,7 +480,7 @@ public class Monster { // d
                 var5 = 36;
             }
 
-            int var6 = ESGame.a(var0, 10);
+            int var6 = ESGame.a(rand, 10);
             boolean var7 = false;
             byte var9;
             if (var6 <= 4) {
@@ -496,7 +496,7 @@ public class Monster { // d
             var4 = Dungeon.l[var5][var9];
         }
 
-        Monster var8 = new Monster(var3, var4, var1.DngNum);
+        Monster var8 = new Monster(var3, var4, dung.DngNum);
         return var8;
     }
 }

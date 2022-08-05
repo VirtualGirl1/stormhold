@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="microemulator">
+  <library name="microemu-nokiaui1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../microemulator-2.0.4/microemulator.jar!/" />
+      <root url="jar://$PROJECT_DIR$/DependencyLib/microemu-nokiaui.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

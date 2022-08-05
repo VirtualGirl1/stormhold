@@ -24,7 +24,7 @@ public class NPC {
     static boolean l;
     static String[][] NPCStrings;
     static int[] NPCDlgCounts = new int[]{20, 20, 20, 20, 5, 22, 5, 41};
-    static boolean m = false;
+    static boolean StringsLoaded = false;
 
     public NPC() {
     }
@@ -43,10 +43,10 @@ public class NPC {
                 GetNPCDialogue(i, NPCDlgCounts[i], data);
             }
 
-            m = true;
+            StringsLoaded = true;
         } catch (Exception var4) {
             System.out.println("ERROR loading NPC and generic strings!");
-            m = false;
+            StringsLoaded = false;
         }
 
     }
@@ -61,7 +61,7 @@ public class NPC {
         }
     }
 
-    static void c() {
+    static void WardenAppear() {
         System.out.println("WARDEN VISITS!!");
         WardenPresent = true;
         ++f;
@@ -71,7 +71,7 @@ public class NPC {
         XVec[Y] = (byte)(XVec[Y] | 32);
     }
 
-    static void a() {
+    static void WardenLeave() {
         System.out.println("WARDEN LEAVES!!");
         byte X = NPCXPos[6];
         byte Y = NPCYPos[6];
@@ -95,7 +95,7 @@ public class NPC {
         }
     }
 
-    static void b() {
+    static void InitNPCs () {
         b = new boolean[7];
         FirstMeet = new boolean[7];
 
@@ -146,7 +146,7 @@ public class NPC {
     }
 
     static int d(int var0, int var1) {
-        int var2 = Item.a(3, var1);
+        int var2 = Item.GetItemProperty(3, var1);
         if (var0 == 0) {
             return var2 >>> 6 & 3;
         } else if (var0 == 1) {
@@ -158,148 +158,148 @@ public class NPC {
         }
     }
 
-    static String a(Character var0, int var1) {
-        short var2 = var0.CharSkills[var1][0];
-        String var3;
-        if (var2 == 0) {
-            var0.CharSkills[var1][0] = 1;
-            var3 = NPCStrings[7][1];
-            var3 = func.StringInsert(var3, "<TAG>", Character.Skills[var1]);
-            return var3;
+    static String SkillIncreaseStr(Character player, int skill) {
+        short SkillRank = player.CharSkills[skill][0];
+        String str;
+        if (SkillRank == 0) {
+            player.CharSkills[skill][0] = 1;
+            str = NPCStrings[7][1];
+            str = func.StringInsert(str, "<TAG>", Character.Skills[skill]);
+            return str;
         } else {
-            var0.CharSkills[var1][0] = (short)(var2 + 1);
-            var3 = NPCStrings[7][2];
-            String[] var4 = new String[]{Character.Skills[var1], String.valueOf(var2), String.valueOf(var2 + 1)};
-            var3 = func.StringInsert(var3, "<TAG>", var4);
-            return var3;
+            player.CharSkills[skill][0] = (short)(SkillRank + 1);
+            str = NPCStrings[7][2];
+            String[] values = new String[]{Character.Skills[skill], String.valueOf(SkillRank), String.valueOf(SkillRank + 1)};
+            str = func.StringInsert(str, "<TAG>", values);
+            return str;
         }
     }
 
-    static String a(Character var0, int var1, int var2, int var3) {
+    static String a(Character player, int npc, int var2, int var3) {
         int var4;
         int var5;
         int var6;
-        switch (var1) {
+        switch (npc) {
             case 0:
             case 1:
             case 2:
             case 3:
                 if (var2 == 1) {
-                    if (FirstMeet[var1]) {
-                        FirstMeet[var1] = false;
-                        return NPCStrings[var1][0];
-                    } else if (h[var1] > 50) {
-                        return NPCStrings[var1][1];
+                    if (FirstMeet[npc]) {
+                        FirstMeet[npc] = false;
+                        return NPCStrings[npc][0];
+                    } else if (h[npc] > 50) {
+                        return NPCStrings[npc][1];
                     } else {
-                        if (var0.CharCritAtt[8] > 50) {
-                            return NPCStrings[var1][2];
+                        if (player.CharCritAtt[8] > 50) {
+                            return NPCStrings[npc][2];
                         }
 
                         var4 = ESGame.h(3);
-                        return NPCStrings[var1][3 + var4];
+                        return NPCStrings[npc][3 + var4];
                     }
                 } else {
                     short[] var10000;
                     if (var2 == 2) {
-                        if (c[var1] != 0) {
-                            return NPCStrings[var1][6];
+                        if (c[npc] != 0) {
+                            return NPCStrings[npc][6];
                         }
 
-                        var4 = var0.b(var1, var2);
+                        var4 = player.b(npc, var2);
                         if (var4 == 0) {
-                            c[var1] = 1;
+                            c[npc] = 1;
                         } else if (var4 == 1) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 2);
                         } else if (var4 == 2) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 5);
-                            ++p[var1];
-                            c[var1] = 1;
+                            ++p[npc];
+                            c[npc] = 1;
                         } else if (var4 == 3) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 8);
-                            ++p[var1];
-                            c[var1] = 1;
+                            ++p[npc];
+                            c[npc] = 1;
                         }
 
-                        ++r[var1];
-                        return NPCStrings[var1][7 + var4];
+                        ++r[npc];
+                        return NPCStrings[npc][7 + var4];
                     } else if (var2 == 3) {
-                        if (n[var1] != 0) {
-                            return NPCStrings[var1][6];
+                        if (n[npc] != 0) {
+                            return NPCStrings[npc][6];
                         }
 
-                        var4 = var0.b(var1, var2);
+                        var4 = player.b(npc, var2);
                         var5 = var3 <= 1 ? 0 : 1;
                         if (var4 == 0) {
-                            n[var1] = 2;
+                            n[npc] = 2;
                         } else if (var4 == 1) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 2);
-                            n[var1] = 2;
+                            n[npc] = 2;
                         } else if (var4 == 2) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 5);
-                            ++p[var1];
-                            n[var1] = 1;
+                            ++p[npc];
+                            n[npc] = 1;
                         } else if (var4 == 3) {
-                            var10000 = var0.CharSkills[13];
+                            var10000 = player.CharSkills[13];
                             var10000[2] = (short)(var10000[2] + 8);
-                            ++p[var1];
-                            n[var1] = 1;
+                            ++p[npc];
+                            n[npc] = 1;
                         }
 
-                        ++r[var1];
-                        return NPCStrings[var1][11 + var5];
+                        ++r[npc];
+                        return NPCStrings[npc][11 + var5];
                     } else if (var2 == 4) {
-                        if (c[var1] != 2 && n[var1] != 2) {
-                            var5 = Math.abs(var0.Inventory[var3]);
-                            if (Item.a(1, var5) == 15) {
-                                var0.y(var3);
-                                var6 = Item.a(3, var5);
+                        if (c[npc] != 2 && n[npc] != 2) {
+                            var5 = Math.abs(player.Inventory[var3]);
+                            if (Item.GetItemProperty(1, var5) == 15) {
+                                player.RemoveFromInv(var3);
+                                var6 = Item.GetItemProperty(3, var5);
                                 var10000 = h;
-                                var10000[var1] = (short)(var10000[var1] - var6);
-                                h[var1] = (short)Math.max(h[var1], 0);
-                                return NPCStrings[var1][17];
+                                var10000[npc] = (short)(var10000[npc] - var6);
+                                h[npc] = (short)Math.max(h[npc], 0);
+                                return NPCStrings[npc][17];
                             }
 
-                            if (Item.a(1, var5) == 11) {
-                                var6 = d(var1, var5);
+                            if (Item.GetItemProperty(1, var5) == 11) {
+                                var6 = d(npc, var5);
                                 if (var6 > 0) {
-                                    var0.y(var3);
+                                    player.RemoveFromInv(var3);
                                     var10000 = p;
-                                    var10000[var1] = (short)(var10000[var1] + var6);
-                                    c[var1] = 0;
-                                    n[var1] = 0;
+                                    var10000[npc] = (short)(var10000[npc] + var6);
+                                    c[npc] = 0;
+                                    n[npc] = 0;
                                 }
 
-                                return NPCStrings[var1][13 + var6];
+                                return NPCStrings[npc][13 + var6];
                             }
 
-                            return NPCStrings[var1][13];
+                            return NPCStrings[npc][13];
                         }
 
-                        return NPCStrings[var1][13];
+                        return NPCStrings[npc][13];
                     } else if (var2 == 5) {
-                        if (p[var1] == 0) {
-                            return NPCStrings[var1][18];
-                        } else if (h[var1] > 50) {
-                            return NPCStrings[var1][1];
+                        if (p[npc] == 0) {
+                            return NPCStrings[npc][18];
+                        } else if (h[npc] > 50) {
+                            return NPCStrings[npc][1];
                         } else {
-                            if (var0.CharCritAtt[8] > 50) {
-                                return NPCStrings[var1][2];
+                            if (player.CharCritAtt[8] > 50) {
+                                return NPCStrings[npc][2];
                             }
 
-                            --p[var1];
-                            return a(var0, var3);
+                            --p[npc];
+                            return SkillIncreaseStr(player, var3);
                         }
                     } else {
                         if (var2 == 6) {
-                            b[var1] = false;
+                            b[npc] = false;
                             Dungeon var7 = ESGame.dungeons[0];
-                            var7.DngnVec[NPCXPos[var1]][NPCYPos[var1]] = func.c((byte)32, var7.DngnVec[NPCXPos[var1]][NPCYPos[var1]]);
-                            return NPCStrings[var1][19];
+                            var7.DngnVec[NPCXPos[npc]][NPCYPos[npc]] = func.c((byte)32, var7.DngnVec[NPCXPos[npc]][NPCYPos[npc]]);
+                            return NPCStrings[npc][19];
                         }
 
                         return null;
@@ -307,36 +307,36 @@ public class NPC {
                 }
             case 4:
                 if (var2 == 1) {
-                    if (FirstMeet[var1]) {
-                        FirstMeet[var1] = false;
-                        return NPCStrings[var1][0];
+                    if (FirstMeet[npc]) {
+                        FirstMeet[npc] = false;
+                        return NPCStrings[npc][0];
                     }
 
                     return null;
                 } else if (var2 == 4) {
-                    var5 = Math.abs(var0.Inventory[var3]);
-                    var6 = Item.a(1, var5);
+                    var5 = Math.abs(player.Inventory[var3]);
+                    var6 = Item.GetItemProperty(1, var5);
                     if (var6 != 13 && var6 != 15 && var6 != 17) {
                         ++a;
-                        var0.y(var3);
-                        return NPCStrings[var1][2];
+                        player.RemoveFromInv(var3);
+                        return NPCStrings[npc][2];
                     }
 
-                    return NPCStrings[var1][1];
+                    return NPCStrings[npc][1];
                 } else {
                     if (var2 == 7) {
                         if (a / 3 > 0) {
                             short var8 = Item.a();
-                            boolean var9 = var0.AddToInventory(var3, var8, 0);
+                            boolean var9 = player.AddToInventory(var3, var8, 0);
                             if (!var9) {
                                 return NPCStrings[7][0];
                             }
 
                             a = (short)(a - 3);
-                            return NPCStrings[var1][3];
+                            return NPCStrings[npc][3];
                         }
 
-                        return NPCStrings[var1][4];
+                        return NPCStrings[npc][4];
                     }
 
                     return null;
@@ -344,29 +344,29 @@ public class NPC {
             case 5:
                 if (var2 == 1) {
                     System.out.println("Greeting Helga");
-                    if (FirstMeet[var1]) {
+                    if (FirstMeet[npc]) {
                         System.out.println("first meeting");
-                        FirstMeet[var1] = false;
-                        var0.Y = 0;
-                        System.out.println("message[iNPC] length is " + NPCStrings[var1].length);
-                        System.out.println(NPCStrings[var1][0]);
-                        System.out.println(NPCStrings[var1][2]);
+                        FirstMeet[npc] = false;
+                        player.Y = 0;
+                        System.out.println("message[iNPC] length is " + NPCStrings[npc].length);
+                        System.out.println(NPCStrings[npc][0]);
+                        System.out.println(NPCStrings[npc][2]);
                         if (l) {
                             l = false;
-                            return NPCStrings[5][21] + "\n" + NPCStrings[var1][0] + "\n" + NPCStrings[var1][2];
+                            return NPCStrings[5][21] + "\n" + NPCStrings[npc][0] + "\n" + NPCStrings[npc][2];
                         }
 
-                        return NPCStrings[var1][0] + "\n" + NPCStrings[var1][2];
+                        return NPCStrings[npc][0] + "\n" + NPCStrings[npc][2];
                     } else {
-                        var4 = ESGame.d(var0.GiftPoints);
-                        if (var4 > var0.Y) {
-                            ++var0.Y;
+                        var4 = ESGame.GetGameAdvLevel(player.GiftPoints);
+                        if (var4 > player.Y) {
+                            ++player.Y;
                             if (l) {
                                 l = false;
-                                return NPCStrings[5][21] + "\n" + NPCStrings[var1][2 + var0.Y];
+                                return NPCStrings[5][21] + "\n" + NPCStrings[npc][2 + player.Y];
                             }
 
-                            return NPCStrings[var1][2 + var0.Y];
+                            return NPCStrings[npc][2 + player.Y];
                         } else {
                             if (l) {
                                 l = false;
@@ -377,72 +377,72 @@ public class NPC {
                         }
                     }
                 } else if (var2 == 13) {
-                    return NPCStrings[var1][2 + var0.Y];
+                    return NPCStrings[npc][2 + player.Y];
                 } else if (var2 == 4) {
-                    var5 = Math.abs(var0.Inventory[var3]);
-                    if (Item.a(1, var5) == 13) {
-                        var6 = var0.D(var3);
+                    var5 = Math.abs(player.Inventory[var3]);
+                    if (Item.GetItemProperty(1, var5) == 13) {
+                        var6 = player.D(var3);
                         if (var6 > 3) {
                             g = (short)(g + 5);
                         } else {
                             g = (short)(g + 3);
                         }
 
-                        var0.y(var3);
-                        return NPCStrings[var1][11];
+                        player.RemoveFromInv(var3);
+                        return NPCStrings[npc][11];
                     }
 
-                    return NPCStrings[var1][12];
+                    return NPCStrings[npc][12];
                 } else if (var2 == 8) {
                     if (g < 7) {
-                        return NPCStrings[var1][1];
+                        return NPCStrings[npc][1];
                     } else {
-                        var5 = Math.abs(var0.Inventory[var3]);
-                        if (Item.b(var5) && !var0.j(var3)) {
+                        var5 = Math.abs(player.Inventory[var3]);
+                        if (Item.IsEquipment(var5) && !player.j(var3)) {
                             g = (short)(g - 7);
-                            var0.h(var3);
-                            return NPCStrings[var1][13];
+                            player.h(var3);
+                            return NPCStrings[npc][13];
                         }
 
-                        return NPCStrings[var1][14];
+                        return NPCStrings[npc][14];
                     }
                 } else if (var2 == 9) {
                     if (g < 2) {
-                        return NPCStrings[var1][1];
+                        return NPCStrings[npc][1];
                     } else {
-                        if (var0.f) {
-                            return NPCStrings[var1][15];
+                        if (player.f) {
+                            return NPCStrings[npc][15];
                         }
 
-                        var0.f = true;
+                        player.f = true;
                         g = (short)(g - 2);
-                        return NPCStrings[var1][16];
+                        return NPCStrings[npc][16];
                     }
                 } else if (var2 == 10) {
                     if (g < 1) {
-                        return NPCStrings[var1][1];
+                        return NPCStrings[npc][1];
                     }
 
-                    var0.A = 0;
+                    player.Ailments = 0;
                     --g;
-                    return NPCStrings[var1][17];
+                    return NPCStrings[npc][17];
                 } else if (var2 == 11) {
                     if (g < 1) {
-                        return NPCStrings[var1][1];
+                        return NPCStrings[npc][1];
                     } else {
-                        if (!var0.x()) {
-                            return NPCStrings[var1][18];
+                        if (!player.x()) {
+                            return NPCStrings[npc][18];
                         }
 
                         --g;
-                        var0.e();
-                        return NPCStrings[var1][19];
+                        player.e();
+                        return NPCStrings[npc][19];
                     }
                 } else {
                     if (var2 == 12) {
-                        var0.CharCritAtt[2] = var0.CharCritAtt[3];
-                        var0.CharCritAtt[4] = var0.CharCritAtt[5];
-                        return NPCStrings[var1][20];
+                        player.CharCritAtt[2] = player.CharCritAtt[3];
+                        player.CharCritAtt[4] = player.CharCritAtt[5];
+                        return NPCStrings[npc][20];
                     }
 
                     return null;
@@ -450,19 +450,19 @@ public class NPC {
             case 6:
                 if (f == 0) {
                     return null;
-                } else if (f == 1 && var0.m == 0) {
-                    var0.m = 1;
-                    return NPCStrings[var1][0];
-                } else if (f == 2 && var0.m <= 1) {
-                    var0.m = 2;
-                    return NPCStrings[var1][1];
-                } else if (f == 3 && var0.m <= 2) {
-                    var0.m = 3;
-                    return NPCStrings[var1][2];
+                } else if (f == 1 && player.m == 0) {
+                    player.m = 1;
+                    return NPCStrings[npc][0];
+                } else if (f == 2 && player.m <= 1) {
+                    player.m = 2;
+                    return NPCStrings[npc][1];
+                } else if (f == 3 && player.m <= 2) {
+                    player.m = 3;
+                    return NPCStrings[npc][2];
                 } else {
-                    if (f == 4 && var0.m <= 3) {
-                        var0.m = 4;
-                        return NPCStrings[var1][3] + "\n" + NPCStrings[var1][4];
+                    if (f == 4 && player.m <= 3) {
+                        player.m = 4;
+                        return NPCStrings[npc][3] + "\n" + NPCStrings[npc][4];
                     }
 
                     return null;
@@ -472,12 +472,12 @@ public class NPC {
         }
     }
 
-    static boolean a(Character var0) {
-        if (var0.CurDung != 1) {
+    static boolean a(Character player) {
+        if (player.CurDung != 1) {
             return false;
         } else {
-            int var1 = Math.abs(var0.l - NPCXPos[6]);
-            int var2 = Math.abs(var0.Ka - NPCYPos[6]);
+            int var1 = Math.abs(player.XPos - NPCXPos[6]);
+            int var2 = Math.abs(player.YPos - NPCYPos[6]);
             return var1 + var2 == 1;
         }
     }
@@ -578,6 +578,6 @@ public class NPC {
     }
 
     static {
-        b();
+        InitNPCs();
     }
 }

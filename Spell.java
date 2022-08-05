@@ -10,7 +10,7 @@ public class Spell { // b
     byte School;
     byte Cost;
     byte f;
-    byte d;
+    byte Target;
     byte J;
     byte g;
     String Description;
@@ -20,22 +20,22 @@ public class Spell { // b
     Spell() {
     }
 
-    static int Dcrmnt(int var0) {
-        return var0 - 1;
+    static int FormatIndex(int indx) {
+        return indx - 1;
     }
 
-    static Spell GetSpell(int var0) {
-        return spells[Dcrmnt(var0)];
+    static Spell GetSpell(int spellnum) {
+        return spells[FormatIndex(spellnum)];
     }
 
-    static boolean ValidateSpellNum(int var0) {
-        return var0 >= 1 && var0 <= SpellCount;
+    static boolean ValidateSpellNum(int spellnum) {
+        return spellnum >= 1 && spellnum <= SpellCount;
     }
 
-    static boolean b(int var0) {
-        int var1 = Dcrmnt(var0);
-        Spell var2 = spells[var1];
-        return var2.d == 2;
+    static boolean DoesTargetMonster(int indx0) {
+        int indx = FormatIndex(indx0);
+        Spell spell = spells[indx];
+        return spell.Target == 2;
     }
 
     static void LoadSpells() {
@@ -67,7 +67,7 @@ public class Spell { // b
             }
 
             for(int i = 0; i < SpellCount; ++i) {
-                spells[i].d = data.readByte();
+                spells[i].Target = data.readByte();
             }
 
             for(int i = 0; i < SpellCount; ++i) {

@@ -16,7 +16,7 @@ public class MenuCanvas extends FullCanvas {
 
     public void paint(Graphics graphics) {
         if (this.menu != null) {
-            this.menu.e(graphics);
+            this.menu.Paint(graphics);
         }
 
     }
@@ -42,9 +42,9 @@ public class MenuCanvas extends FullCanvas {
 
     }
 
-    protected void keyPressed(int var1) {
+    protected void keyPressed(int key) {
         if (this.menu != null) {
-            this.menu.b(var1);
+            this.menu.KeyPressed(key);
         }
 
     }

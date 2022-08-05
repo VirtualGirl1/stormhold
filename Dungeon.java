@@ -92,28 +92,28 @@ public class Dungeon { // i
     void c() {
         int var1 = this.t.size();
         short var2 = (short)(this.DngNum << 8);
-        Monster var3 = null;
+        Monster mon = null;
 
         for(int i = 0; i < var1; ++i) {
             short[] var5 = (short[])this.t.elementAt(i);
             if (this.DngNum == 37 && i == var1 - 1) {
-                var3 = Monster.a(this.e, this, 41);
+                mon = Monster.a(this.e, this, 41);
             } else {
-                var3 = Monster.a(this.e, this, -1);
+                mon = Monster.a(this.e, this, -1);
             }
 
-            this.a(var3, var5);
-            var3.d();
+            this.a(mon, var5);
+            mon.d();
         }
 
         System.gc();
     }
 
-    void a(Monster var1, short[] var2) {
-        var1.o = (byte)var2[4];
-        var1.m = (byte)var2[5];
-        byte[] var10000 = this.DngnVec[var1.o];
-        byte var10001 = var1.m;
+    void a(Monster mon, short[] var2) {
+        mon.o = (byte)var2[4];
+        mon.m = (byte)var2[5];
+        byte[] var10000 = this.DngnVec[mon.o];
+        byte var10001 = mon.m;
         var10000[var10001] = (byte)(var10000[var10001] | 2);
     }
 
@@ -143,11 +143,11 @@ public class Dungeon { // i
 
     }
 
-    void a(Character var1) {
+    void a(Character player) {
         if (this.DngNum != 1) {
-            Monster var2 = Monster.a(this);
-            byte var3 = var1.l;
-            byte var4 = var1.Ka;
+            Monster mon = Monster.a(this);
+            byte var3 = player.XPos;
+            byte var4 = player.YPos;
             boolean var5 = true;
 
             for(int i = 0; i <= 4; ++i) {
@@ -160,10 +160,10 @@ public class Dungeon { // i
                 }
 
                 if (this.d(var7, var8)) {
-                    var2.o = (byte)var7;
-                    var2.m = (byte)var8;
-                    var2.d();
-                    this.DngnVec[var2.o][var2.m] = func.b((byte)2, this.DngnVec[var2.o][var2.m]);
+                    mon.o = (byte)var7;
+                    mon.m = (byte)var8;
+                    mon.d();
+                    this.DngnVec[mon.o][mon.m] = func.b((byte)2, this.DngnVec[mon.o][mon.m]);
                     break;
                 }
             }
@@ -236,7 +236,7 @@ public class Dungeon { // i
                 var18 = Item.a(this.e, var3);
                 var4 = false;
             } else {
-                var18 = Item.a(this.e, this.a, 2);
+                var18 = Item.GetRandItem(this.e, this.a, 2);
             }
 
             short var9 = (short)(var7[2] - var7[0] + 1);
@@ -275,7 +275,7 @@ public class Dungeon { // i
     void a(byte[] var1) {
         byte var2 = var1[0];
         byte var3 = var1[1];
-        ESGame.S[this.DngNum - 1].put(func.b(var2, var3), var1);
+        ESGame.ChestTable[this.DngNum - 1].put(func.b(var2, var3), var1);
         byte[] var10000 = this.DngnVec[var2];
         var10000[var3] = (byte)(var10000[var3] | 16);
     }
@@ -283,7 +283,7 @@ public class Dungeon { // i
     void c(byte[] var1) {
         byte var2 = var1[0];
         byte var3 = var1[1];
-        ESGame.au[this.DngNum - 1].addElement(var1);
+        ESGame.DroppedItemsTable[this.DngNum - 1].addElement(var1);
         byte[] var10000 = this.DngnVec[var2];
         var10000[var3] = (byte)(var10000[var3] | 4);
     }
@@ -304,13 +304,13 @@ public class Dungeon { // i
 
     void h() {
         boolean var1 = false;
-        Hashtable var2 = ESGame.G[this.DngNum - 1];
+        Hashtable montbl = ESGame.MonsterTable[this.DngNum - 1];
         byte[] var10000;
         Enumeration var3;
         byte[] var4;
-        if (var2 != null) {
+        if (montbl != null) {
             byte var10001;
-            for(var3 = var2.elements(); var3.hasMoreElements(); var10000[var10001] = (byte)(var10000[var10001] | 2)) {
+            for(var3 = montbl.elements(); var3.hasMoreElements(); var10000[var10001] = (byte)(var10000[var10001] | 2)) {
                 var4 = (byte[])var3.nextElement();
                 Monster var5 = Monster.a(var4);
                 var10000 = this.DngnVec[var5.o];
@@ -321,9 +321,9 @@ public class Dungeon { // i
         }
 
         var1 = false;
-        var2 = ESGame.S[this.DngNum - 1];
-        if (var2 != null) {
-            for(var3 = var2.elements(); var3.hasMoreElements(); var10000[var4[1]] = (byte)(var10000[var4[1]] | 16)) {
+        montbl = ESGame.ChestTable[this.DngNum - 1];
+        if (montbl != null) {
+            for(var3 = montbl.elements(); var3.hasMoreElements(); var10000[var4[1]] = (byte)(var10000[var4[1]] | 16)) {
                 var4 = (byte[])var3.nextElement();
                 var10000 = this.DngnVec[var4[0]];
             }
@@ -331,7 +331,7 @@ public class Dungeon { // i
 
         var1 = false;
 
-        for(var3 = ESGame.au[this.DngNum - 1].elements(); var3.hasMoreElements(); var10000[var4[1]] = (byte)(var10000[var4[1]] | 4)) {
+        for(var3 = ESGame.DroppedItemsTable[this.DngNum - 1].elements(); var3.hasMoreElements(); var10000[var4[1]] = (byte)(var10000[var4[1]] | 4)) {
             var4 = (byte[])var3.nextElement();
             var10000 = this.DngnVec[var4[0]];
         }
@@ -481,7 +481,7 @@ public class Dungeon { // i
     }
 
     private void d() {
-        Object var1 = null;
+        Object obj = null;
         int var2 = this.m.size();
 
         for(int i = 0; i < var2; ++i) {
@@ -620,14 +620,14 @@ public class Dungeon { // i
         }
     }
 
-    Monster c(int var1, int var2) {
-        byte var3 = this.DngnVec[var1][var2];
+    Monster c(int x, int y) {
+        byte var3 = this.DngnVec[x][y];
         if (func.a((byte)1, var3)) {
             return null;
         } else if (!func.a((byte)2, var3)) {
             return null;
         } else {
-            Enumeration var4 = ESGame.G[this.DngNum - 1].elements();
+            Enumeration var4 = ESGame.MonsterTable[this.DngNum - 1].elements();
 
             Monster var6;
             do {
@@ -637,7 +637,7 @@ public class Dungeon { // i
 
                 byte[] var5 = (byte[])var4.nextElement();
                 var6 = Monster.a(var5);
-            } while(var6.o != var1 || var6.m != var2);
+            } while(var6.o != x || var6.m != y);
 
             return var6;
         }
@@ -649,7 +649,7 @@ public class Dungeon { // i
         byte var4 = this.DngnVec[var2][var3];
         if (!func.a((byte)1, var4)) {
             if (func.a((byte)16, var4)) {
-                ESGame.S[this.DngNum - 1].remove(func.b(var2, var3));
+                ESGame.ChestTable[this.DngNum - 1].remove(func.b(var2, var3));
                 this.DngnVec[var2][var3] = func.c((byte)16, this.DngnVec[var2][var3]);
             }
         }
@@ -661,7 +661,7 @@ public class Dungeon { // i
         byte var4 = this.DngnVec[var2][var3];
         if (!func.a((byte)1, var4)) {
             if (func.a((byte)4, var4)) {
-                ESGame.au[this.DngNum - 1].removeElement(var1);
+                ESGame.DroppedItemsTable[this.DngNum - 1].removeElement(var1);
                 if (this.f(var2, var3) == 0) {
                     this.DngnVec[var2][var3] = func.c((byte)4, this.DngnVec[var2][var3]);
                 }
@@ -672,7 +672,7 @@ public class Dungeon { // i
 
     int f(int var1, int var2) {
         int var3 = 0;
-        Enumeration var4 = ESGame.au[this.DngNum - 1].elements();
+        Enumeration var4 = ESGame.DroppedItemsTable[this.DngNum - 1].elements();
 
         while(var4.hasMoreElements()) {
             byte[] var5 = (byte[])var4.nextElement();
@@ -685,7 +685,7 @@ public class Dungeon { // i
     }
 
     byte[] e(int var1, int var2) {
-        Enumeration var3 = ESGame.au[this.DngNum - 1].elements();
+        Enumeration var3 = ESGame.DroppedItemsTable[this.DngNum - 1].elements();
 
         byte[] var4;
         do {
@@ -701,7 +701,7 @@ public class Dungeon { // i
 
     Vector b(int var1, int var2) {
         Vector var3 = new Vector(5);
-        Enumeration var4 = ESGame.au[this.DngNum - 1].elements();
+        Enumeration var4 = ESGame.DroppedItemsTable[this.DngNum - 1].elements();
 
         while(var4.hasMoreElements()) {
             byte[] var5 = (byte[])var4.nextElement();
@@ -795,21 +795,21 @@ public class Dungeon { // i
 
     }
 
-    void c(int var1, int var2, int var3, byte[][] var4) {
-        this.a(var1, var2, var3, 7, var4);
+    void UpdateMiniMap(int x, int y, int dirFacing, byte[][] map) {
+        this.UpdateMapVec(x, y, dirFacing, 7, map);
     }
 
-    void a(int var1, int var2, int var3, byte[][] var4) {
-        this.a(var1, var2, var3, 17, var4);
+    void UpdateMap(int x, int y, int dirFacing, byte[][] map) {
+        this.UpdateMapVec(x, y, dirFacing, 17, map);
     }
 
-    void a(int var1, int var2, int var3, int var4, byte[][] var5) {
-        int var6 = var4 / 2;
+    void UpdateMapVec(int x, int y, int dirFacing, int size, byte[][] map) {
+        int center = size / 2;
         boolean var7;
         int var8;
         int var9;
         byte[] var10;
-        Monster var11;
+        Monster mon;
         int var12;
         int var13;
         boolean var14;
@@ -824,68 +824,68 @@ public class Dungeon { // i
         byte[] var23;
         boolean var24;
         int var25;
-        if (var3 != 1 && var3 != 3) {
-            if (var3 == 2 || var3 == 4) {
+        if (dirFacing != GD.DIR_NORTH && dirFacing != GD.DIR_SOUTH) {
+            if (dirFacing == GD.DIR_EAST || dirFacing == GD.DIR_WEST) { // rotated +- 90
                 var7 = false;
-                if (var3 == 2) {
+                if (dirFacing == GD.DIR_EAST) {
                     var16 = 1;
                 } else {
                     var16 = -1;
                 }
 
-                for(var8 = 0; var8 < var4; ++var8) {
-                    for(var9 = 0; var9 < var4; ++var9) {
-                        var5[var9][var8] = (byte)(this.i(var1 - (var8 - var6) * var16, var2 + (var9 - var6) * var16) & 1);
-                        if ((var5[var9][var8] & 1) == 0) {
-                            var5[var9][var8] = (byte)(this.i(var1 - (var8 - var6) * var16, var2 + (var9 - var6) * var16) & 8);
+                for(var8 = 0; var8 < size; ++var8) {
+                    for(var9 = 0; var9 < size; ++var9) {
+                        map[var9][var8] = (byte)(this.i(x - (var8 - center) * var16, y + (var9 - center) * var16) & 1);
+                        if ((map[var9][var8] & 1) == 0) {
+                            map[var9][var8] = (byte)(this.i(x - (var8 - center) * var16, y + (var9 - center) * var16) & 8);
                         }
                     }
                 }
 
                 if (this.DngNum > 1) {
-                    var17 = ESGame.G[this.DngNum - 1].elements();
+                    var17 = ESGame.MonsterTable[this.DngNum - 1].elements();
 
                     while(var17.hasMoreElements()) {
                         var10 = (byte[])var17.nextElement();
-                        var11 = Monster.a(var10);
-                        var12 = var16 * (var11.m - var2) + var6;
-                        var13 = var6 - var16 * (var11.o - var1);
-                        if (var12 >= 0 && var12 < var4 && var13 >= 0 && var13 < var4 && var11.ia) {
-                            var5[var12][var13] = (byte)(var5[var12][var13] | 2);
+                        mon = Monster.a(var10);
+                        var12 = var16 * (mon.m - y) + center;
+                        var13 = center - var16 * (mon.o - x);
+                        if (var12 >= 0 && var12 < size && var13 >= 0 && var13 < size && mon.ia) {
+                            map[var12][var13] = (byte)(map[var12][var13] | 2);
                         }
                     }
 
-                    var18 = ESGame.S[this.DngNum - 1].elements();
+                    var18 = ESGame.ChestTable[this.DngNum - 1].elements();
 
                     while(var18.hasMoreElements()) {
                         var20 = (byte[])var18.nextElement();
-                        var12 = var16 * (var20[1] - var2) + var6;
-                        var13 = var6 - var16 * (var20[0] - var1);
+                        var12 = var16 * (var20[1] - y) + center;
+                        var13 = center - var16 * (var20[0] - x);
                         var14 = true;
-                        if (var12 >= 0 && var12 < var4 && var13 >= 0 && var13 < var4 && var14) {
-                            var5[var12][var13] = (byte)(var5[var12][var13] | 4);
+                        if (var12 >= 0 && var12 < size && var13 >= 0 && var13 < size && var14) {
+                            map[var12][var13] = (byte)(map[var12][var13] | 4);
                         }
                     }
 
-                    var21 = ESGame.au[this.DngNum - 1].elements();
+                    var21 = ESGame.DroppedItemsTable[this.DngNum - 1].elements();
 
                     while(var21.hasMoreElements()) {
                         var23 = (byte[])var21.nextElement();
-                        var13 = var16 * (var23[1] - var2) + var6;
-                        var25 = var6 - var16 * (var23[0] - var1);
+                        var13 = var16 * (var23[1] - y) + center;
+                        var25 = center - var16 * (var23[0] - x);
                         var15 = (var23[6] & 1) != 0;
-                        if (var13 >= 0 && var13 < var4 && var25 >= 0 && var25 < var4 && var15) {
-                            var5[var13][var25] = (byte)(var5[var13][var25] | 4);
+                        if (var13 >= 0 && var13 < size && var25 >= 0 && var25 < size && var15) {
+                            map[var13][var25] = (byte)(map[var13][var25] | 4);
                         }
                     }
                 } else {
                     for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.WardenPresent); ++var9) {
                         if (NPC.b[var9]) {
-                            var19 = var16 * (NPC.NPCYPos[var9] - var2) + var6;
-                            var22 = var6 - var16 * (NPC.NPCXPos[var9] - var1);
+                            var19 = var16 * (NPC.NPCYPos[var9] - y) + center;
+                            var22 = center - var16 * (NPC.NPCXPos[var9] - x);
                             var24 = true;
-                            if (var19 >= 0 && var19 < var4 && var22 >= 0 && var22 < var4 && var24) {
-                                var5[var19][var22] = (byte)(var5[var19][var22] | 4);
+                            if (var19 >= 0 && var19 < size && var22 >= 0 && var22 < size && var24) {
+                                map[var19][var22] = (byte)(map[var19][var22] | 4);
                             }
                         }
                     }
@@ -893,65 +893,65 @@ public class Dungeon { // i
             }
         } else {
             var7 = false;
-            if (var3 == 1) {
+            if (dirFacing == 1) {
                 var16 = 1;
             } else {
                 var16 = -1;
             }
 
-            for(var8 = 0; var8 < var4; ++var8) {
-                for(var9 = 0; var9 < var4; ++var9) {
-                    var5[var9][var8] = (byte)(this.i(var1 + (var9 - var6) * var16, var2 + (var8 - var6) * var16) & 1);
-                    if ((var5[var9][var8] & 1) == 0) {
-                        var5[var9][var8] = (byte)(this.i(var1 + (var9 - var6) * var16, var2 + (var8 - var6) * var16) & 8);
+            for(var8 = 0; var8 < size; ++var8) {
+                for(var9 = 0; var9 < size; ++var9) {
+                    map[var9][var8] = (byte)(this.i(x + (var9 - center) * var16, y + (var8 - center) * var16) & 1);
+                    if ((map[var9][var8] & 1) == 0) {
+                        map[var9][var8] = (byte)(this.i(x + (var9 - center) * var16, y + (var8 - center) * var16) & 8);
                     }
                 }
             }
 
             if (this.DngNum > 1) {
-                var17 = ESGame.G[this.DngNum - 1].elements();
+                var17 = ESGame.MonsterTable[this.DngNum - 1].elements();
 
                 while(var17.hasMoreElements()) {
                     var10 = (byte[])var17.nextElement();
-                    var11 = Monster.a(var10);
-                    var12 = var16 * (var11.o - var1) + var6;
-                    var13 = var16 * (var11.m - var2) + var6;
-                    if (var12 >= 0 && var12 < var4 && var13 >= 0 && var13 < var4 && var11.ia) {
-                        var5[var12][var13] = (byte)(var5[var12][var13] | 2);
+                    mon = Monster.a(var10);
+                    var12 = var16 * (mon.o - x) + center;
+                    var13 = var16 * (mon.m - y) + center;
+                    if (var12 >= 0 && var12 < size && var13 >= 0 && var13 < size && mon.ia) {
+                        map[var12][var13] = (byte)(map[var12][var13] | 2);
                     }
                 }
 
-                var18 = ESGame.S[this.DngNum - 1].elements();
+                var18 = ESGame.ChestTable[this.DngNum - 1].elements();
 
                 while(var18.hasMoreElements()) {
                     var20 = (byte[])var18.nextElement();
-                    var12 = var16 * (var20[0] - var1) + var6;
-                    var13 = var16 * (var20[1] - var2) + var6;
+                    var12 = var16 * (var20[0] - x) + center;
+                    var13 = var16 * (var20[1] - y) + center;
                     var14 = true;
-                    if (var12 >= 0 && var12 < var4 && var13 >= 0 && var13 < var4 && var14) {
-                        var5[var12][var13] = (byte)(var5[var12][var13] | 4);
+                    if (var12 >= 0 && var12 < size && var13 >= 0 && var13 < size && var14) {
+                        map[var12][var13] = (byte)(map[var12][var13] | 4);
                     }
                 }
 
-                var21 = ESGame.au[this.DngNum - 1].elements();
+                var21 = ESGame.DroppedItemsTable[this.DngNum - 1].elements();
 
                 while(var21.hasMoreElements()) {
                     var23 = (byte[])var21.nextElement();
-                    var13 = var16 * (var23[0] - var1) + var6;
-                    var25 = var16 * (var23[1] - var2) + var6;
+                    var13 = var16 * (var23[0] - x) + center;
+                    var25 = var16 * (var23[1] - y) + center;
                     var15 = (var23[6] & 1) != 0;
-                    if (var13 >= 0 && var13 < var4 && var25 >= 0 && var25 < var4 && var15) {
-                        var5[var13][var25] = (byte)(var5[var13][var25] | 4);
+                    if (var13 >= 0 && var13 < size && var25 >= 0 && var25 < size && var15) {
+                        map[var13][var25] = (byte)(map[var13][var25] | 4);
                     }
                 }
             } else {
                 for(var9 = 0; var9 < 7 && (var9 != 6 || NPC.WardenPresent); ++var9) {
                     if (NPC.b[var9]) {
-                        var19 = var16 * (NPC.NPCXPos[var9] - var1) + var6;
-                        var22 = var16 * (NPC.NPCYPos[var9] - var2) + var6;
+                        var19 = var16 * (NPC.NPCXPos[var9] - x) + center;
+                        var22 = var16 * (NPC.NPCYPos[var9] - y) + center;
                         var24 = true;
-                        if (var19 >= 0 && var19 < var4 && var22 >= 0 && var22 < var4 && var24) {
-                            var5[var19][var22] = (byte)(var5[var19][var22] | 4);
+                        if (var19 >= 0 && var19 < size && var22 >= 0 && var22 < size && var24) {
+                            map[var19][var22] = (byte)(map[var19][var22] | 4);
                         }
                     }
                 }
@@ -1072,7 +1072,7 @@ public class Dungeon { // i
         return var2 < 4 ? var3[var1 + var2 + 1][var2] : var3[var1 + var2][var2];
     }
 
-    String[] a() {
+    String[] GetDungName() {
         return DngnNames[this.DngNum - 1];
     }
 
@@ -1103,7 +1103,7 @@ public class Dungeon { // i
             }
         }
 
-        Hashtable var13 = ESGame.G[this.DngNum - 1];
+        Hashtable var13 = ESGame.MonsterTable[this.DngNum - 1];
         if (var13 != null) {
             Enumeration var14 = var13.elements();
 

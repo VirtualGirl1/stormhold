@@ -45,8 +45,8 @@ public class func { // f
         return ESGame.f(var0);
     }
 
-    static int a(Random var0, int var1) {
-        return ESGame.a(var0, var1);
+    static int a(Random rand, int var1) {
+        return ESGame.a(rand, var1);
     }
 
     static String StrCatComma(int v1, int v2) {
@@ -130,7 +130,7 @@ public class func { // f
         return var2;
     }
 
-    public static String[] c(String str) {
+    public static String[] SeparateStringBySpace(String str) {
         str = str.trim();
         int spcCount = 1;
         int strlen = str.length();

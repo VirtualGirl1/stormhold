@@ -8,7 +8,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="src" level="project" />
+    <orderEntry type="library" name="microemu-nokiaui" level="project" />
     <orderEntry type="library" name="microemulator" level="project" />
-    <orderEntry type="library" name="com" level="project" />
+    <orderEntry type="library" exported="" name="microemu-nokiaui1" level="project" />
+    <orderEntry type="library" exported="" name="microemulator1" level="project" />
   </component>
 </module>
