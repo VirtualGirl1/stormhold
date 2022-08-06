@@ -214,16 +214,16 @@ public class Menu implements Runnable {
                 this.PaintSplashScreens(imgGraphics);
                 break;
             case 3:
-                this.c(imgGraphics);
+                this.PaintMenuType3(imgGraphics);
                 break;
             case 4:
-                this.d(imgGraphics);
+                this.PaintMenuType4(imgGraphics);
                 break;
             case 5:
-                this.a(imgGraphics, 1);
+                this.PaintMenuType5(imgGraphics, 1);
                 break;
             case 6:
-                this.a(imgGraphics, 2);
+                this.PaintMenuType5(imgGraphics, 2);
             case 7:
             default:
                 break;
@@ -309,7 +309,7 @@ public class Menu implements Runnable {
         graphics.setFont(font);
     }
 
-    private void c(Graphics graphics) {
+    private void PaintMenuType3(Graphics graphics) {
         graphics.setColor(0XAE682E);
         graphics.fillRect(0, 0, this.GetWidth(), 20 + this.GetHeight());
         this.DrawTopBar(graphics, this.Scrn.getTitle());
@@ -338,7 +338,7 @@ public class Menu implements Runnable {
 
     }
 
-    private void a(Graphics graphics, int var2) {
+    private void PaintMenuType5(Graphics graphics, int var2) {
         Form form = (Form)this.Scrn;
         graphics.setColor(0XAE682E);
         graphics.fillRect(0, 0, this.GetWidth(), 20 + this.GetHeight());
@@ -394,7 +394,7 @@ public class Menu implements Runnable {
 
     }
 
-    private void DrawOptionTxt(Graphics graphics, String var2, boolean highlight) {
+    private void DrawOptionTxt(Graphics graphics, String txt, boolean highlight) {
         if (highlight) {
             graphics.setColor(0X666666);
             int var4 = this.GetWidth() - 2 * (this.G - 10);
@@ -403,12 +403,12 @@ public class Menu implements Runnable {
         }
 
         graphics.setColor(0XFFFF00);
-        graphics.drawString(var2, this.G, this.e, 20);
+        graphics.drawString(txt, this.G, this.e, 20);
         this.e += this.o;
         ++this.e;
     }
 
-    private void d(Graphics graphics) {
+    private void PaintMenuType4(Graphics graphics) {
         Form form = (Form)this.Scrn;
         graphics.setColor(0XAE682E);
         graphics.fillRect(0, 0, this.GetWidth(), 20 + this.GetHeight());
@@ -467,7 +467,7 @@ public class Menu implements Runnable {
 
         for(int i = 0; i < len; ++i) {
             String newStr = strlist[i];
-            this.a(strvec, newStr);
+            this.AddStringToVector(strvec, newStr);
         }
 
         return VectoList(strvec);
@@ -493,7 +493,7 @@ public class Menu implements Runnable {
         return VectoList(vec);
     }
 
-    private void a(Vector vec, String str) {
+    private void AddStringToVector(Vector vec, String str) {
         int strspace = this.GetWidth() - this.g - this.F;
         String[] strlist = func.SeparateStringBySpace(str);
         int len = strlist.length;

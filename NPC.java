@@ -40,7 +40,7 @@ public class NPC {
             NPCStrings = new String[NPCCount][];
 
             for(int i = 0; i < NPCCount; ++i) {
-                GetNPCDialogue(i, NPCDlgCounts[i], data);
+                LoadNPCStrings(i, NPCDlgCounts[i], data);
             }
 
             StringsLoaded = true;
@@ -80,7 +80,7 @@ public class NPC {
         ESGame.dungeons[0].DngnVec[X][Y] = func.c((byte)32, WardenPos);
     }
 
-    static void GetNPCDialogue(int npcNum, int dlgCount, DataInputStream stream) throws Exception {
+    static void LoadNPCStrings(int npcNum, int dlgCount, DataInputStream stream) throws Exception {
         int EncodedCount = stream.readInt();
         if (EncodedCount != dlgCount) {
             System.out.println("Unexpected number of messages for whichNPC = " + npcNum);
@@ -175,7 +175,7 @@ public class NPC {
         }
     }
 
-    static String a(Character player, int npc, int var2, int var3) {
+    static String GetNPCDialogue(Character player, int npc, int var2, int var3) {
         int var4;
         int var5;
         int var6;

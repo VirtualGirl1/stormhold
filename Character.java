@@ -46,7 +46,7 @@ public class Character {
     byte InventoryCount;
     byte[] Inventory;
     int[] P;
-    byte[] T;
+    byte[] Equiped;
     int KnownSpells;
     byte CurSpell;
     short GiftPoints;
@@ -77,8 +77,8 @@ public class Character {
     byte NextDung;
     boolean i;
     boolean Q;
-    boolean u;
-    boolean O;
+    boolean EnteringWC;
+    boolean EnteringOC;
     byte[][] ae;
     byte OldXPos;
     byte OldYPos;
@@ -98,7 +98,7 @@ public class Character {
         this.InventoryCount = 0;
         this.Inventory = new byte[24];
         this.P = new int[24];
-        this.T = new byte[7];
+        this.Equiped = new byte[7];
         this.G = new byte[25];
         this.ae = new byte[9][5];
         this.Game = game;
@@ -151,10 +151,10 @@ public class Character {
         }
 
         for(int i = 0; i < 7; ++i) {
-            this.T[i] = 0;
+            this.Equiped[i] = 0;
         }
 
-        this.KnownSpells = this.A();
+        this.KnownSpells = this.GetDefaultSpells();
     }
 
     void CalcAttributesMax() {
@@ -163,19 +163,19 @@ public class Character {
         this.CharCritAtt[7] = (short)(this.AttLvl[0] + this.AttLvl[4] + this.AttLvl[6] + this.AttLvl[10]);
     }
 
-    private int A() {
-        int var1 = 0;
+    private int GetDefaultSpells() {
+        int defaultsplls = 0;
         int SkillOffset = 13;
         boolean var3 = true;
-        boolean var4 = true;
+        boolean first = true;
 
         for(int i = 0; i < 14; ++i) {
             short SkillRank = ClassPreset[this.CharClass][SkillOffset++];
             short SkillLevel = ClassPreset[this.CharClass][SkillOffset++];
-            byte var8;
+            byte spllindx;
             switch (i) {
                 case 1:
-                    var8 = 0;
+                    spllindx = 0;
                     break;
                 case 2:
                 case 5:
@@ -183,39 +183,39 @@ public class Character {
                 case 8:
                 case 9:
                 default:
-                    var8 = -1;
+                    spllindx = -1;
                     break;
                 case 3:
-                    var8 = 5;
+                    spllindx = 5;
                     break;
                 case 4:
-                    var8 = 10;
+                    spllindx = 10;
                     break;
                 case 6:
-                    var8 = 15;
+                    spllindx = 15;
                     break;
                 case 10:
-                    var8 = 20;
+                    spllindx = 20;
             }
 
-            if (var8 != -1 && SkillRank > 0) {
-                var1 |= 1 << var8;
-                if (var4) {
-                    this.CurSpell = (byte)(var8 + 1);
-                    var4 = false;
+            if (spllindx != -1 && SkillRank > 0) {
+                defaultsplls |= 1 << spllindx;
+                if (first) {
+                    this.CurSpell = (byte)(spllindx + 1);
+                    first = false;
                 }
             }
         }
 
-        return var1;
+        return defaultsplls;
     }
 
-    public void d(int var1) {
-        this.c(var1, false);
+    public void InitDefaultChar(int clss) {
+        this.ResetChar(clss, false);
     }
 
-    public void c(int var1, boolean var2) {
-        if (!var2) {
+    public void ResetChar(int clss, boolean respawn) {
+        if (!respawn) {
             this.GiftPoints = 0;
             this.Y = 0;
             this.m = 0;
@@ -226,9 +226,9 @@ public class Character {
         this.F = 0;
         this.ap = 0;
         this.f = false;
-        this.c(var2);
+        this.TeleportPlayer(respawn);
         this.w();
-        if (!var2) {
+        if (!respawn) {
             this.C = 0;
             this.ao = 0;
             this.an = 0;
@@ -244,14 +244,14 @@ public class Character {
         this.s = false;
         this.L = false;
         this.I = false;
-        if (!var2) {
+        if (!respawn) {
             this.C();
         }
 
     }
 
-    private void c(boolean dead) {
-        if (!dead) {
+    private void TeleportPlayer(boolean teleport) {
+        if (!teleport) {
             this.CurDung = this.NextDung = 1;
             this.XPos = this.NewXPos = 9;
             this.YPos = this.NewYPos = 10;
@@ -376,7 +376,7 @@ public class Character {
         NewChar.CharClass = data.readShort();
         if (!var1) {
             NewChar.LoadClassDefaults(NewChar.CharClass);
-            NewChar.d(NewChar.CharClass);
+            NewChar.InitDefaultChar(NewChar.CharClass);
         }
 
         NewChar.CharRace = data.readShort();
@@ -418,7 +418,7 @@ public class Character {
             }
 
             for(int var9 = 0; var9 < 7; ++var9) {
-                NewChar.T[var9] = data.readByte();
+                NewChar.Equiped[var9] = data.readByte();
             }
 
             NewChar.KnownSpells = data.readInt();
@@ -517,13 +517,13 @@ public class Character {
             }
 
             for(int var9 = 0; var9 < 7; ++var9) {
-                data.writeByte(this.T[var9]);
+                data.writeByte(this.Equiped[var9]);
             }
 
             data.writeInt(this.KnownSpells);
             data.writeByte(this.CurSpell);
         } else {
-            k = this.A();
+            k = this.GetDefaultSpells();
             data.writeInt(k);
         }
 
@@ -705,7 +705,7 @@ public class Character {
                         return false;
                     } else {
                         if (this.NextDung == 37 && this.CurDung != 37) {
-                            Enumeration var5 = ESGame.MonsterTable[this.NextDung - 1].elements();
+                            Enumeration var5 = ESGame.MonsterTables[this.NextDung - 1].elements();
 
                             while(var5.hasMoreElements()) {
                                 byte[] var6 = (byte[])var5.nextElement();
@@ -720,15 +720,15 @@ public class Character {
                         }
 
                         if (!this.a(this.CurDung, this.XPos, this.YPos) && this.a(this.NextDung, this.NewXPos, this.NewYPos)) {
-                            this.u = true;
+                            this.EnteringWC = true;
                         } else {
-                            this.u = false;
+                            this.EnteringWC = false;
                         }
 
                         if (this.a(this.CurDung, this.XPos, this.YPos) && !this.a(this.NextDung, this.NewXPos, this.NewYPos)) {
-                            this.O = true;
+                            this.EnteringOC = true;
                         } else {
-                            this.O = false;
+                            this.EnteringOC = false;
                         }
 
                         this.CurDung = this.NextDung;
@@ -912,8 +912,8 @@ public class Character {
         byte var8;
         if (var9.length == 28) {
             Monster mon = Monster.a(var9);
-            var7 = mon.o;
-            var8 = mon.m;
+            var7 = mon.XPos;
+            var8 = mon.YPos;
         } else {
             var7 = var9[0];
             var8 = var9[1];
@@ -958,7 +958,7 @@ public class Character {
 
     void d(boolean var1) {
         this.i();
-        Vector ditable = ESGame.DroppedItemsTable[this.CurDung - 1];
+        Vector ditable = ESGame.DroppedItemsTables[this.CurDung - 1];
         if (ditable != null) {
             Enumeration var3 = ditable.elements();
 
@@ -968,7 +968,7 @@ public class Character {
             }
         }
 
-        Hashtable chesttable = ESGame.ChestTable[this.CurDung - 1];
+        Hashtable chesttable = ESGame.ChestTables[this.CurDung - 1];
         if (chesttable != null) {
             Enumeration var8 = chesttable.elements();
 
@@ -978,7 +978,7 @@ public class Character {
             }
         }
 
-        Hashtable montable = ESGame.MonsterTable[this.CurDung - 1];
+        Hashtable montable = ESGame.MonsterTables[this.CurDung - 1];
         if (montable != null) {
             Enumeration var10 = montable.elements();
 
@@ -1298,8 +1298,8 @@ public class Character {
     }
 
     int f(boolean var1) {
-        if (this.T[1] != 0) {
-            int var2 = Item.GetItemProperty(1, this.T[1]);
+        if (this.Equiped[1] != 0) {
+            int var2 = Item.GetItemProperty(1, this.Equiped[1]);
             var2 = Math.abs(var2);
             return var2 == 5 ? this.GetSkillVal(5, var1) : this.GetSkillVal(7, var1);
         } else {
@@ -1308,8 +1308,8 @@ public class Character {
     }
 
     int I() {
-        if (this.T[1] != 0) {
-            int var1 = Item.GetItemProperty(1, this.T[1]);
+        if (this.Equiped[1] != 0) {
+            int var1 = Item.GetItemProperty(1, this.Equiped[1]);
             var1 = Math.abs(var1);
             return var1 == 5 ? this.GetSkillLevel(5) : this.GetSkillLevel(7);
         } else {
@@ -1343,8 +1343,8 @@ public class Character {
     int F() {
         if (this.t(6)) {
             return this.t();
-        } else if (this.T[0] != 0) {
-            int var1 = Item.GetItemProperty(1, this.T[0]);
+        } else if (this.Equiped[0] != 0) {
+            int var1 = Item.GetItemProperty(1, this.Equiped[0]);
             var1 = Math.abs(var1);
             if (var1 == 1) {
                 return 0;
@@ -1368,8 +1368,8 @@ public class Character {
                 return this.GetSkillVal(var4, var1);
             } else {
                 boolean var2 = false;
-                if (this.T[0] != 0) {
-                    int var3 = Item.GetItemProperty(1, this.T[0]);
+                if (this.Equiped[0] != 0) {
+                    int var3 = Item.GetItemProperty(1, this.Equiped[0]);
                     var3 = Math.abs(var3);
                     if (var3 == 1) {
                         var4 = this.GetSkillVal(0, var1);
@@ -1396,8 +1396,8 @@ public class Character {
     int s() {
         int var1;
         if (!this.t(6) && !this.t(14)) {
-            if (this.T[0] != 0) {
-                var1 = Item.GetItemProperty(1, this.T[0]);
+            if (this.Equiped[0] != 0) {
+                var1 = Item.GetItemProperty(1, this.Equiped[0]);
                 var1 = Math.abs(var1);
                 if (var1 == 1) {
                     return this.GetSkillLevel(0);
@@ -1422,8 +1422,8 @@ public class Character {
             var2 = 5 + this.GetSkillVal(4, false);
         } else if (this.t(6)) {
             var2 = 20 + this.GetSkillVal(3, false);
-        } else if (this.T[0] != 0) {
-            var2 = Item.GetItemProperty(3, this.T[0]);
+        } else if (this.Equiped[0] != 0) {
+            var2 = Item.GetItemProperty(3, this.Equiped[0]);
         } else {
             var2 = 0;
         }
@@ -1440,8 +1440,8 @@ public class Character {
     }
 
     int y() {
-        if (this.T[1] != 0) {
-            int var1 = Item.GetItemProperty(1, this.T[1]);
+        if (this.Equiped[1] != 0) {
+            int var1 = Item.GetItemProperty(1, this.Equiped[1]);
             var1 = Math.abs(var1);
             return var1 == 5 ? 5 : 7;
         } else {
@@ -1453,28 +1453,28 @@ public class Character {
         int var1 = 0;
         boolean var2 = false;
         int var3;
-        if (this.T[1] != 0) {
-            var3 = Item.GetItemProperty(3, this.T[1]);
+        if (this.Equiped[1] != 0) {
+            var3 = Item.GetItemProperty(3, this.Equiped[1]);
             var1 += 4 * var3;
         }
 
-        if (this.T[2] != 0) {
-            var3 = Item.GetItemProperty(3, this.T[2]);
+        if (this.Equiped[2] != 0) {
+            var3 = Item.GetItemProperty(3, this.Equiped[2]);
             var1 += 2 * var3;
         }
 
-        if (this.T[3] != 0) {
-            var3 = Item.GetItemProperty(3, this.T[3]);
+        if (this.Equiped[3] != 0) {
+            var3 = Item.GetItemProperty(3, this.Equiped[3]);
             var1 += 2 * var3;
         }
 
-        if (this.T[4] != 0) {
-            var3 = Item.GetItemProperty(3, this.T[4]);
+        if (this.Equiped[4] != 0) {
+            var3 = Item.GetItemProperty(3, this.Equiped[4]);
             var1 += var3;
         }
 
-        if (this.T[5] != 0) {
-            var3 = Item.GetItemProperty(3, this.T[5]);
+        if (this.Equiped[5] != 0) {
+            var3 = Item.GetItemProperty(3, this.Equiped[5]);
             var1 += var3;
         }
 
@@ -1539,8 +1539,8 @@ public class Character {
         if (this.NextDung <= 0) {
             return null;
         } else {
-            Dungeon var1 = ESGame.dungeons[this.NextDung - 1];
-            Monster mon = var1.c(this.NewXPos, this.NewYPos);
+            Dungeon dung = ESGame.dungeons[this.NextDung - 1];
+            Monster mon = dung.c(this.NewXPos, this.NewYPos);
             if (mon != null) {
                 mon.c();
             }
@@ -1555,15 +1555,15 @@ public class Character {
             return null;
         } else {
             byte var1 = this.NextDung;
-            Hashtable var2 = ESGame.ChestTable[var1 - 1];
-            if (var2 == null) {
+            Hashtable chesttable = ESGame.ChestTables[var1 - 1];
+            if (chesttable == null) {
                 return null;
             } else {
-                Object var3 = var2.get(func.b(this.NewXPos, this.NewYPos));
-                if (var3 == null) {
+                Object obj = chesttable.get(func.b(this.NewXPos, this.NewYPos));
+                if (obj == null) {
                     return null;
                 } else {
-                    byte[] var4 = (byte[])var3;
+                    byte[] var4 = (byte[])obj;
                     return var4;
                 }
             }
@@ -1655,7 +1655,7 @@ public class Character {
                 break;
             case 6:
                 byte var14 = 0;
-                if (this.c(109, var14) && this.a(true)) {
+                if (this.AddSpecialItem(109, var14) && this.a(true)) {
                     this.G[spellindx - 1] = (byte)(f1 * var13);
                 }
                 break;
@@ -1867,13 +1867,13 @@ public class Character {
         return this.AddToInventory(var2, var3, var4);
     }
 
-    boolean c(int var1, int var2) {
-        return this.AddToInventory(var1, var2, 0);
+    boolean AddSpecialItem(int itemindx, int var2) {
+        return this.AddToInventory(itemindx, var2, 0);
     }
 
-    boolean AddToInventory(int var1, int var2, int var3) {
+    boolean AddToInventory(int itemindx, int var2, int var3) {
         if (this.InventoryCount < 24) {
-            this.Inventory[this.InventoryCount] = (byte)var1;
+            this.Inventory[this.InventoryCount] = (byte)itemindx;
             int var4 = (var2 << 16) + (byte)var3;
             this.P[this.InventoryCount] = var4;
             ++this.InventoryCount;
@@ -1887,7 +1887,7 @@ public class Character {
         if (invindx >= this.InventoryCount) {
             return false;
         } else {
-            this.A(invindx);
+            this.UneqpuipItem(invindx);
             this.Inventory[invindx] = 0;
 
             for(int i = invindx; i < this.InventoryCount - 1; ++i) {
@@ -1925,24 +1925,24 @@ public class Character {
         }
     }
 
-    boolean d(int var1, boolean var2) {
-        byte var3 = this.Inventory[var1];
+    boolean EquipItem(int invid, boolean UnequipOther) {
+        byte var3 = this.Inventory[invid];
         if (var3 < 0) {
             return false;
         } else if (!Item.IsEquipable(var3)) {
             return false;
         } else {
             int var4 = Item.GetItemSlot(var3);
-            if (this.T[var4] != 0) {
-                if (!var2) {
+            if (this.Equiped[var4] != 0) {
+                if (!UnequipOther) {
                     return false;
                 }
 
                 this.f(var4);
             }
 
-            this.T[var4] = var3;
-            this.Inventory[var1] = (byte)(-Math.abs(this.Inventory[var1]));
+            this.Equiped[var4] = var3;
+            this.Inventory[invid] = (byte)(-Math.abs(this.Inventory[invid]));
             return true;
         }
     }
@@ -1953,7 +1953,7 @@ public class Character {
             var3 = (byte)Math.abs(var3);
             int var4 = Item.GetItemSlot(var3);
             if (var4 == var1) {
-                this.A(i);
+                this.UneqpuipItem(i);
             }
         }
 
@@ -1961,10 +1961,10 @@ public class Character {
 
     boolean a(boolean var1) {
         int var2 = this.InventoryCount - 1;
-        return this.d(var2, var1);
+        return this.EquipItem(var2, var1);
     }
 
-    void A(int var1) {
+    void UneqpuipItem(int var1) {
         if (this.IsEquiped(var1)) {
             if (var1 >= 0 && var1 <= 23) {
                 byte var2 = this.Inventory[var1];
@@ -1972,8 +1972,8 @@ public class Character {
                 this.Inventory[var1] = var2;
 
                 for(int i = 0; i < 7; ++i) {
-                    if (this.T[i] == var2) {
-                        this.T[i] = 0;
+                    if (this.Equiped[i] == var2) {
+                        this.Equiped[i] = 0;
                         break;
                     }
                 }
@@ -2011,18 +2011,18 @@ public class Character {
         return Item.Level[var2 - 1];
     }
 
-    int o(int var1) {
-        int var2 = -1;
-        int var3 = -Math.abs(var1);
+    int FindItemInInv(int itemindx) {
+        int invindx = -1;
+        int var3 = -Math.abs(itemindx);
 
         for(int i = 0; i < this.InventoryCount; ++i) {
             if (var3 == this.Inventory[i]) {
-                var2 = i;
+                invindx = i;
                 break;
             }
         }
 
-        return var2;
+        return invindx;
     }
 
     boolean InventoryNotFull() {
@@ -2095,7 +2095,7 @@ public class Character {
     }
 
     void a(int var1) {
-        this.a(var1, GameCanvas.Mon);
+        this.a(var1, GameCanvas.Mon1);
     }
 
     boolean IsEquipable(int Invindx) {
@@ -2187,7 +2187,7 @@ public class Character {
         this.ao = this.XPos;
         this.an = this.YPos;
         this.Z = this.DirFacing;
-        this.c(true);
+        this.TeleportPlayer(true);
         this.w();
         this.Q = true;
     }
@@ -2200,21 +2200,21 @@ public class Character {
         this.Q = true;
     }
 
-    int E() {
-        int var1 = 0;
+    int GetAilmentCount() {
+        int ailcount = 0;
 
         for(int i = 0; i < 8; ++i) {
-            int var3 = this.Ailments >> i & 1;
-            if (var3 != 0) {
-                ++var1;
+            int ail = this.Ailments >> i & 1;
+            if (ail != 0) {
+                ++ailcount;
             }
         }
 
-        return var1;
+        return ailcount;
     }
 
     void H() {
-        int var1 = this.E();
+        int var1 = this.GetAilmentCount();
         if (var1 > 0) {
             boolean var2 = false;
             int var6;
@@ -2354,16 +2354,16 @@ public class Character {
         return vec;
     }
 
-    int l(int var1) {
-        int var2 = 0;
+    int GetSkillIndx(int skillindx) {
+        int knownindx = 0;
 
         for(int i = 0; i < 14; ++i) {
             if (this.CharSkills[i][0] > 0) {
-                if (var2 == var1) {
+                if (knownindx == skillindx) {
                     return i;
                 }
 
-                ++var2;
+                ++knownindx;
             }
         }
 
@@ -2376,7 +2376,7 @@ public class Character {
     }
 
     Vector GetKnownSpells() {
-        Vector vector = new Vector();
+        Vector vec = new Vector();
 
         for(int i = 0; i < Spell.SpellCount; ++i) {
             if ((this.KnownSpells & 1 << i) != 0) {
@@ -2386,11 +2386,11 @@ public class Character {
                     spllStr = "R: " + spllStr;
                 }
 
-                vector.addElement(spllStr);
+                vec.addElement(spllStr);
             }
         }
 
-        return vector;
+        return vec;
     }
 
     int IsSpellKnown(int indx) {
@@ -2638,12 +2638,12 @@ public class Character {
 
     private void C() {
         short var1 = Item.a();
-        int[] var2 = StartingGear[this.CharClass];
+        int[] strtgear = StartingGear[this.CharClass];
 
-        for(int i = 0; i < var2.length; ++i) {
-            this.c(var2[i], var1);
+        for(int i = 0; i < strtgear.length; ++i) {
+            this.AddSpecialItem(strtgear[i], var1);
             int var4 = this.InventoryCount - 1;
-            this.d(var4, true);
+            this.EquipItem(var4, true);
         }
 
     }
@@ -2741,7 +2741,7 @@ public class Character {
             System.out.println("New a and y are " + this.NewXPos + ", " + this.NewYPos);
             strBuff.append("map value = " + this.GetCurrentDungeon().DngnVec[this.NewXPos][this.NewYPos] + "\n");
             System.out.println("New dungeon id is " + this.NextDung);
-            Hashtable hash = ESGame.MonsterTable[this.NextDung - 1];
+            Hashtable hash = ESGame.MonsterTables[this.NextDung - 1];
             Enumeration vec;
             byte[] objbuff;
             if (hash != null) {
@@ -2758,7 +2758,7 @@ public class Character {
             }
 
             System.out.println("here 3, i =" + i);
-            hash = ESGame.ChestTable[this.NextDung - 1];
+            hash = ESGame.ChestTables[this.NextDung - 1];
             if (hash != null) {
                 vec = hash.elements();
 
@@ -2772,7 +2772,7 @@ public class Character {
             }
 
             System.out.println("here 4, i =" + i);
-            vec = ESGame.DroppedItemsTable[this.NextDung - 1].elements();
+            vec = ESGame.DroppedItemsTables[this.NextDung - 1].elements();
 
             while(vec.hasMoreElements()) {
                 objbuff = (byte[])vec.nextElement();

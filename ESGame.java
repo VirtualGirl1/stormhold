@@ -114,9 +114,9 @@ public class ESGame extends a implements Runnable, CommandListener {
     boolean aW;
     byte CurrentDung;
     boolean am;
-    static Hashtable[] MonsterTable;
-    static Hashtable[] ChestTable;
-    static Vector[] DroppedItemsTable;
+    static Hashtable[] MonsterTables;
+    static Hashtable[] ChestTables;
+    static Vector[] DroppedItemsTables;
     static Menu CurrentMenu = null;
     int Y;
     int g;
@@ -526,7 +526,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 0; i < 14; ++i) {
             int var6 = this.Player.GetSkillVal(i, false);
             String skillstr = Character.Skills[i] + " (<TAG>)";
-            if (Player.c(npc, i)) {
+            if (Player.AddSpecialItem(npc, i)) {
                 skillstrs[var4++] = func.StringInsert(skillstr, "<TAG>", var6);
             }
         }
@@ -690,7 +690,7 @@ public class ESGame extends a implements Runnable, CommandListener {
                     System.gc();
                     this.DefaultPlayer = new Character(this);
                     this.DefaultPlayer.LoadClassDefaults(indx);
-                    this.DefaultPlayer.d(indx);
+                    this.DefaultPlayer.InitDefaultChar(indx);
                     this.CharacterMenu.a(1, optStrs[indx]);
                     this.SetDisplayContent((Object)this.CharacterMenu);
                 }
@@ -878,9 +878,9 @@ public class ESGame extends a implements Runnable, CommandListener {
                                         this.SetDisplayContent((Object)this.InventoryMenu);
                                     } else if (var10 == 1) {
                                         if (!this.Player.IsEquiped(this.Y)) {
-                                            this.Player.d(this.Y, true);
+                                            this.Player.EquipItem(this.Y, true);
                                         } else {
-                                            this.Player.A(this.Y);
+                                            this.Player.UneqpuipItem(this.Y);
                                         }
 
                                         this.InventoryMenu = this.InventoryMenu();
@@ -1052,77 +1052,77 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void d(Menu menu) {
-        int var3 = menu.GetSelectedIndex();
-        int var4 = menu.MenuID - 9;
-        switch (var4) {
+        int indx = menu.GetSelectedIndex();
+        int id = menu.MenuID - 9;
+        switch (id) {
             case 0:
             case 1:
             case 2:
             case 3:
-                if (var3 == 0) {
-                    this.TrainMenu = this.TrainMenu(var4);
+                if (indx == 0) {
+                    this.TrainMenu = this.TrainMenu(id);
                     this.SetDisplayContent((Object)this.TrainMenu);
-                } else if (var3 == 1) {
+                } else if (indx == 1) {
                     if (this.Player.InventoryCount <= 0) {
-                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetTitle(NPC.NPCNames[id]);
                         this.OracleMenu.SetText("You have nothing to give me!");
                         this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
-                        this.GiveMenu = this.GiveMenu(var4);
+                        this.GiveMenu = this.GiveMenu(id);
                         this.SetDisplayContent((Object)this.GiveMenu);
                     }
-                } else if (var3 == 2) {
-                    this.X = this.a(menu, var4, 24, 2, 0);
+                } else if (indx == 2) {
+                    this.X = this.a(menu, id, 24, 2, 0);
                     this.SetDisplayContent((Object)this.X);
-                } else if (var3 == 3) {
-                    this.V = this.a(menu, var4, 25, 3, 0);
+                } else if (indx == 3) {
+                    this.V = this.a(menu, id, 25, 3, 0);
                     this.SetDisplayContent((Object)this.V);
-                } else if (var3 == 4) {
-                    this.an = this.a(menu, var4, 26, 6, 0);
+                } else if (indx == 4) {
+                    this.an = this.a(menu, id, 26, 6, 0);
                     this.SetDisplayContent((Object)this.an);
                 }
                 break;
             case 4:
-                if (var3 == 0) {
+                if (indx == 0) {
                     if (this.Player.InventoryCount <= 0) {
-                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetTitle(NPC.NPCNames[id]);
                         this.OracleMenu.SetText("You have nothing to give me!");
                         this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
-                        this.GiveMenu = this.GiveMenu(var4);
+                        this.GiveMenu = this.GiveMenu(id);
                         this.SetDisplayContent((Object)this.GiveMenu);
                     }
-                } else if (var3 == 1) {
-                    this.TakeItemMenu = this.TakeItemMenu(var4);
+                } else if (indx == 1) {
+                    this.TakeItemMenu = this.TakeItemMenu(id);
                     this.SetDisplayContent((Object)this.TakeItemMenu);
                 }
                 break;
             case 5:
-                if (var3 == 0) {
+                if (indx == 0) {
                     this.x();
-                } else if (var3 == 1) {
+                } else if (indx == 1) {
                     if (this.Player.InventoryCount <= 0) {
-                        this.OracleMenu.SetTitle(NPC.NPCNames[var4]);
+                        this.OracleMenu.SetTitle(NPC.NPCNames[id]);
                         this.OracleMenu.SetText("You have nothing to give me!");
                         this.SetDisplayContent((Object)this.OracleMenu);
                     } else {
-                        this.GiveMenu = this.GiveMenu(var4);
+                        this.GiveMenu = this.GiveMenu(id);
                         this.SetDisplayContent((Object)this.GiveMenu);
                     }
-                } else if (var3 == 2) {
-                    this.EnchantItemMenu = this.EnchantItemMenu(var4);
+                } else if (indx == 2) {
+                    this.EnchantItemMenu = this.EnchantItemMenu(id);
                     this.SetDisplayContent((Object)this.EnchantItemMenu);
-                } else if (var3 == 3) {
-                    this.aL = this.a(menu, var4, 352, 9, 0);
+                } else if (indx == 3) {
+                    this.aL = this.a(menu, id, 352, 9, 0);
                     this.SetDisplayContent((Object)this.aL);
-                } else if (var3 == 4) {
-                    this.H = this.a(menu, var4, 353, 10, 0);
+                } else if (indx == 4) {
+                    this.H = this.a(menu, id, 353, 10, 0);
                     this.SetDisplayContent((Object)this.H);
-                } else if (var3 == 5) {
-                    this.K = this.a(menu, var4, 41, 11, 0);
+                } else if (indx == 5) {
+                    this.K = this.a(menu, id, 41, 11, 0);
                     this.SetDisplayContent((Object)this.K);
-                } else if (var3 == 6) {
-                    this.s = this.a(menu, var4, 355, 12, 0);
+                } else if (indx == 6) {
+                    this.s = this.a(menu, id, 355, 12, 0);
                     this.SetDisplayContent((Object)this.s);
                 }
         }
@@ -1132,7 +1132,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu a(Menu menu1, int NPCID, int menuID, int var4, int var5) {
         Menu menu = new Menu(this, 4, menuID);
         menu.BuildMenu("NPC name here", "NPC text here", true);
-        String var7 = NPC.a(this.Player, NPCID, var4, var5);
+        String var7 = NPC.GetNPCDialogue(this.Player, NPCID, var4, var5);
         menu.SetTitle(NPC.NPCNames[NPCID]);
         menu.SetText(var7);
         menu.npcID = NPCID;
@@ -1284,9 +1284,9 @@ public class ESGame extends a implements Runnable, CommandListener {
     void PopulateDungeons(int AdvLevel) {
         System.out.println("In checkOpenAndPopulateDungeons, gameAdvLevel = " + AdvLevel);
         int[] var2 = x[AdvLevel];
-        int var3 = var2.length;
+        int len = var2.length;
 
-        for(int i = 0; i < var3; ++i) {
+        for(int i = 0; i < len; ++i) {
             int var5 = x[AdvLevel][i];
             int var6 = var5 - 1;
             if (!dungeons[var6].k) {
@@ -1295,7 +1295,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             }
 
             if (this.NewGameLoadMenu != null) {
-                this.NewGameLoadMenu.LoadPct = 100 * (i + 1) / var3;
+                this.NewGameLoadMenu.LoadPct = 100 * (i + 1) / len;
                 if (this.NewGameLoadMenu.LoadPct > 100) {
                     this.NewGameLoadMenu.LoadPct = 100;
                 }
@@ -1391,22 +1391,22 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private static void LoadDungeonTables() {
-        MonsterTable = new Hashtable[37];
+        MonsterTables = new Hashtable[37];
 
         for(int i = 1; i < 37; ++i) {
-            MonsterTable[i] = new Hashtable();
+            MonsterTables[i] = new Hashtable();
         }
 
-        ChestTable = new Hashtable[37];
+        ChestTables = new Hashtable[37];
 
         for(int i = 1; i < 37; ++i) {
-            ChestTable[i] = new Hashtable();
+            ChestTables[i] = new Hashtable();
         }
 
-        DroppedItemsTable = new Vector[37];
+        DroppedItemsTables = new Vector[37];
 
         for(int i = 0; i < 37; ++i) {
-            DroppedItemsTable[i] = new Vector();
+            DroppedItemsTables[i] = new Vector();
         }
 
     }
@@ -1509,12 +1509,12 @@ public class ESGame extends a implements Runnable, CommandListener {
         Monster var8;
         Enumeration var19;
         for(int i = 1; i < 37; ++i) {
-            var3 = MonsterTable[i].size();
+            var3 = MonsterTables[i].size();
             var1 = 4 + var3 * 28;
             ByteArrayOutputStream var4 = new ByteArrayOutputStream(var1);
             DataOutputStream var5 = new DataOutputStream(var4);
             var5.writeInt(var3);
-            var6 = MonsterTable[i].elements();
+            var6 = MonsterTables[i].elements();
 
             byte[] var7;
             while(var6.hasMoreElements()) {
@@ -1541,12 +1541,12 @@ public class ESGame extends a implements Runnable, CommandListener {
 
         int var14;
         for(var3 = 1; var3 < 37; ++var3) {
-            var14 = ChestTable[var3].size();
+            var14 = ChestTables[var3].size();
             var1 = 4 + var14 * 8;
             ByteArrayOutputStream var15 = new ByteArrayOutputStream(var1);
             DataOutputStream var17 = new DataOutputStream(var15);
             var17.writeInt(var14);
-            var19 = ChestTable[var3].elements();
+            var19 = ChestTables[var3].elements();
 
             byte[] var21;
             while(var19.hasMoreElements()) {
@@ -1571,12 +1571,12 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
 
         for(var14 = 0; var14 < 37; ++var14) {
-            int var16 = DroppedItemsTable[var14].size();
+            int var16 = DroppedItemsTables[var14].size();
             var1 = 4 + var16 * 7;
             ByteArrayOutputStream var18 = new ByteArrayOutputStream(var1);
             DataOutputStream var20 = new DataOutputStream(var18);
             var20.writeInt(var16);
-            Enumeration var22 = DroppedItemsTable[var14].elements();
+            Enumeration var22 = DroppedItemsTables[var14].elements();
 
             byte[] var9;
             while(var22.hasMoreElements()) {
@@ -1610,13 +1610,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 1; i < 37; ++i) {
             byte[] record = store.getRecord(var2++);
             data = new DataInputStream(new ByteArrayInputStream(record, 0, record.length));
-            MonsterTable[i].clear();
+            MonsterTables[i].clear();
             int var6 = data.readInt();
 
             for(var7 = 0; var7 < var6; ++var7) {
                 Monster var8 = Monster.a(data);
                 String var9 = String.valueOf(var8.a);
-                MonsterTable[i].put(var9, var8.f());
+                MonsterTables[i].put(var9, var8.f());
             }
 
             try {
@@ -1637,13 +1637,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 1; i < 37; ++i) {
             byte[] var16 = store.getRecord(var2++);
             var18 = new DataInputStream(new ByteArrayInputStream(var16, 0, var16.length));
-            ChestTable[i].clear();
+            ChestTables[i].clear();
             var7 = var18.readInt();
 
             for(var21 = 0; var21 < var7; ++var21) {
                 byte[] var22 = a((DataInputStream)var18, 8);
                 String var10 = func.StrCatComma((int)var22[0], var22[1]);
-                ChestTable[i].put(var10, var22);
+                ChestTables[i].put(var10, var22);
             }
 
             try {
@@ -1662,12 +1662,12 @@ public class ESGame extends a implements Runnable, CommandListener {
         for(int i = 0; i < 37; ++i) {
             byte[] var19 = store.getRecord(var2++);
             DataInputStream var20 = new DataInputStream(new ByteArrayInputStream(var19, 0, var19.length));
-            DroppedItemsTable[i].removeAllElements();
+            DroppedItemsTables[i].removeAllElements();
             var21 = var20.readInt();
 
             for(int j = 0; j < var21; ++j) {
                 byte[] var24 = a((DataInputStream)var20, 7);
-                DroppedItemsTable[i].addElement(var24);
+                DroppedItemsTables[i].addElement(var24);
             }
 
             try {
@@ -1726,15 +1726,15 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     private void LoadWardenImg() {
-        byte[] var1 = new byte[5];
+        byte[] arr = new byte[5];
         System.out.println("LOADING WARDEN IMAGES");
-        var1[0] = 1;
-        var1[1] = 1;
-        var1[2] = 1;
-        var1[3] = 1;
-        var1[4] = 1;
+        arr[0] = 1;
+        arr[1] = 1;
+        arr[2] = 1;
+        arr[3] = 1;
+        arr[4] = 1;
         this.CurrentDung = 1;
-        this.ImageLoader(var1);
+        this.ImageLoader(arr);
     }
 
     void LoadDngImgs() {
@@ -1756,7 +1756,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             this.UnloadMonImg();
             this.LoadWardenImg();
         } else {
-            Hashtable var3 = MonsterTable[this.CurrentDung - 1];
+            Hashtable var3 = MonsterTables[this.CurrentDung - 1];
             if (var3 == null) {
                 return;
             }
@@ -1802,13 +1802,13 @@ public class ESGame extends a implements Runnable, CommandListener {
         }
     }
 
-    void ImageLoader(byte[] var1) {
+    void ImageLoader(byte[] btarr) {
         this.am = false;
         this.DebugMsg("Inside runImageLoader", true);
 
         try {
             for(int i = 0; i < 5; ++i) {
-                if (var1[i] > 0) {
+                if (btarr[i] > 0) {
                     this.DebugMsg("Handling ichunk = " + i, true);
                     int var3 = ah[i][0];
                     int var4 = ah[i][1];
@@ -1867,7 +1867,7 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     static void KillMonster(int dngnID, int var1) {
         System.out.println("In killMonster! dungid is " + dngnID);
-        byte[] var2 = (byte[]) MonsterTable[dngnID - 1].remove(String.valueOf(var1));
+        byte[] var2 = (byte[]) MonsterTables[dngnID - 1].remove(String.valueOf(var1));
         byte var3 = var2[4];
         byte var4 = var2[5];
         Dungeon var5 = dungeons[dngnID - 1];
@@ -1875,7 +1875,7 @@ public class ESGame extends a implements Runnable, CommandListener {
             var5.DngnVec[var3][var4] = func.c((byte)2, var5.DngnVec[var3][var4]);
         }
 
-        System.out.println("End of killMonster, size of HT is " + MonsterTable[dngnID - 1].size());
+        System.out.println("End of killMonster, size of HT is " + MonsterTables[dngnID - 1].size());
     }
 
     private Menu InventoryItemMenu(int ItemIndx) {
@@ -1922,26 +1922,26 @@ public class ESGame extends a implements Runnable, CommandListener {
         System.gc();
         Log("Start of newSkillsListUI");
         Menu menu = new Menu(this, 5, 35);
-        Vector var2 = this.Player.GetSkillList();
-        int var3 = var2.size();
-        String[] var4 = new String[var3];
+        Vector skillList = this.Player.GetSkillList();
+        int len = skillList.size();
+        String[] skillNames = new String[len];
 
-        for(int i = 0; i < var3; ++i) {
-            var4[i] = (String)var2.elementAt(i);
+        for(int i = 0; i < len; ++i) {
+            skillNames[i] = (String)skillList.elementAt(i);
         }
 
-        menu.BuildMenu("Skills", "Your Skills:", var4, (Vector)null, true);
+        menu.BuildMenu("Skills", "Your Skills:", skillNames, (Vector)null, true);
         menu.Prev = this.OptionsMenu;
         return menu;
     }
 
-    private Menu SkillInfoMenu(int var1) {
+    private Menu SkillInfoMenu(int indx) {
         System.gc();
         Log("Start of newSkillInfoUI");
         Menu menu = new Menu(this, 4, 36);
-        int var3 = this.Player.l(var1);
-        String var4 = this.Player.GetSkillString(var3);
-        menu.BuildMenu("Skill Info", var4);
+        int skillIndx = this.Player.GetSkillIndx(indx);
+        String skillstr = this.Player.GetSkillString(skillIndx);
+        menu.BuildMenu("Skill Info", skillstr);
         menu.Prev = this.SkillsListMenu;
         return menu;
     }
@@ -2011,9 +2011,9 @@ public class ESGame extends a implements Runnable, CommandListener {
     Menu EndOfGameMenu() {
         System.gc();
         Log("Start of newEndOfGameUI");
-        String var1 = NPC.NPCStrings[7][4];
+        String victoryTxt = NPC.NPCStrings[7][4];
         Menu menu = new Menu(this, 4, 200);
-        menu.BuildMenu("Victory!", var1);
+        menu.BuildMenu("Victory!", victoryTxt);
         menu.Next = this.GameOverMenu();
         return menu;
     }
@@ -2021,9 +2021,9 @@ public class ESGame extends a implements Runnable, CommandListener {
     private Menu GameOverMenu() {
         System.gc();
         Log("Start of newGameOverUI");
-        String var1 = NPC.NPCStrings[7][5];
+        String endGameTxt = NPC.NPCStrings[7][5];
         Menu menu = new Menu(this, 4, 201);
-        menu.BuildMenu("Game Over", var1);
+        menu.BuildMenu("Game Over", endGameTxt);
         menu.Next = this.MainMenu;
         return menu;
     }
@@ -2115,8 +2115,8 @@ public class ESGame extends a implements Runnable, CommandListener {
 
     private void DebugMenu() {
         this.DebugMenu = new Form("Debug");
-        String var1 = this.GCanvas.Char.GetDebugString();
-        this.DebugString = new StringItem("Debug: ", var1);
+        String dbgstr = this.GCanvas.Char.GetDebugString();
+        this.DebugString = new StringItem("Debug: ", dbgstr);
         this.DebugMenu.append(this.DebugString);
         Command comm = new Command("Ok", 4, 1);
         this.DebugMenu.addCommand(comm);
@@ -2228,11 +2228,11 @@ public class ESGame extends a implements Runnable, CommandListener {
     private String f() {
         String[] RecordList = RecordStore.listRecordStores();
         boolean var2 = false;
-        int var7;
+        int recordcount;
         if (RecordList == null) {
-            var7 = 0;
+            recordcount = 0;
         } else {
-            var7 = RecordList.length;
+            recordcount = RecordList.length;
         }
 
         int var3 = func.a(10000);
@@ -2241,7 +2241,7 @@ public class ESGame extends a implements Runnable, CommandListener {
         while(true) {
             boolean var5 = false;
 
-            for(int i = 0; i < var7; ++i) {
+            for(int i = 0; i < recordcount; ++i) {
                 if (var4.equals(RecordList[i])) {
                     var5 = true;
                 }
@@ -2325,7 +2325,7 @@ public class ESGame extends a implements Runnable, CommandListener {
     }
 
     void x() {
-        String var1 = NPC.a(this.Player, 5, 13, 0);
+        String var1 = NPC.GetNPCDialogue(this.Player, 5, 13, 0);
         if (var1 == null) {
             var1 = "No rumors!";
         }

@@ -44,7 +44,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
     static boolean aa;
     static boolean m;
     static boolean R;
-    static boolean W;
+    static boolean FacingNPC;
     static Image floor3;
     static Image newwallsnok;
     static CusImg[] MonImgs;
@@ -60,7 +60,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
     static boolean AnimCastMon = false;
     static boolean AnimCastSelf = false;
     static int aq;
-    static boolean av = false;
+    static boolean Attacking = false;
     static boolean ay = false;
     static boolean I = false;
     static boolean Z = false;
@@ -91,11 +91,11 @@ public class GameCanvas extends FullCanvas implements Runnable {
     static final String[] ItemFndMsg = new String[]{"Found", "item!"};
     static final String[] MultItemsMsg = new String[]{"Several", "items!"};
     static final String[][] NPCMsg = new String[][]{{"Arantamo", ""}, {"Celegil", ""}, {"Favela Dralor", ""}, {"Vander", ""}, {"Beneca", ""}, {"Helga", ""}, {"Varus", ""}};
-    static Monster k = new Monster();
-    static Monster Mon = null;
+    static Monster Mon2 = new Monster();
+    static Monster Mon1 = null;
     private static long ai = 0L;
-    private static boolean az = false;
-    private static String G = null;
+    private static boolean ErrorOccured = false;
+    private static String ErrorStr = null;
 
     public GameCanvas(ESGame game) {
         this.Game = game;
@@ -115,7 +115,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
         aa = false;
         m = false;
         R = false;
-        W = false;
+        FacingNPC = false;
         MapVecSmall = new byte[7][7];
         MapVecLarge = new byte[17][17];
         aq = 0;
@@ -153,11 +153,11 @@ public class GameCanvas extends FullCanvas implements Runnable {
     private void DrawGame(Graphics graphics) {
         graphics.setColor(0X000000); // Black
         graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
-        this.DrawFloors(graphics);
+        this.DrawRoom(graphics);
         this.b(graphics);
-        if (W) {
+        if (FacingNPC) {
             int npcID = this.Char.GetNPCInfront();
-            this.b(graphics, npcID);
+            this.DrawNPC(graphics, npcID);
         }
 
         try {
@@ -170,8 +170,8 @@ public class GameCanvas extends FullCanvas implements Runnable {
         this.DrawBottomBar(graphics);
         this.DrawPopUp(graphics);
         this.DrawActionAnimation(graphics);
-        if (az) {
-            this.i(graphics);
+        if (ErrorOccured) {
+            this.DrawErrorStr(graphics);
         }
 
         if (MapState == GD.MAP_SMALL && !this.Char.GetAilment(3)) {
@@ -184,9 +184,9 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private void i(Graphics graphics) {
+    private void DrawErrorStr(Graphics graphics) {
         graphics.setColor(0XFFFFFF); // White
-        graphics.drawString(G, 60, 10, 17);
+        graphics.drawString(ErrorStr, 60, 10, 17);
     }
 
     private void DrawActionAnimation(Graphics graphics) {
@@ -215,55 +215,55 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private void DrawFloors(Graphics graphics) {
+    private void DrawRoom(Graphics graphics) {
         Dungeon dung = this.Char.GetCurrentDungeon();
         byte[][] var3 = this.Char.ae;
-        int var6;
+        int i;
         if (!this.Char.GetAilment(3)) {
             if (this.Char.GetAilment(4)) {
                 graphics.setColor(0XA00000); // Dark Red
                 graphics.fillRect(0, 0, this.getWidth(), floor3.getHeight());
             } else {
-                for(var6 = 0; var6 < 5; ++var6) {
-                    graphics.drawImage(floor3, var6 * 36, 0, 20);
+                for(i = 0; i < 5; ++i) {
+                    graphics.drawImage(floor3, i * 36, 0, 20);
                 }
             }
         }
 
         int var4;
         int var5;
-        int var7;
-        int var8;
+        int j;
+        int k;
         int var9;
         int var10;
         int var11;
-        for(var6 = 0; var6 < 5; ++var6) {
-            var5 = var6 * 18;
+        for(i = 0; i < 5; ++i) {
+            var5 = i * 18;
 
-            for(var7 = 0; var7 < 6; ++var7) {
-                var8 = n[var6][var7][0];
-                var9 = n[var6][var7][1];
-                var10 = n[var6][var7][2];
-                var11 = n[var6][var7][3];
+            for(j = 0; j < 6; ++j) {
+                k = n[i][j][0];
+                var9 = n[i][j][1];
+                var10 = n[i][j][2];
+                var11 = n[i][j][3];
                 if (func.a((byte)1, dung.a(var10, var11, var3))) {
-                    var4 = this.a(var8, var9, -1);
-                    this.a(graphics, var4, var5);
+                    var4 = this.a(k, var9, -1);
+                    this.DrawWalls(graphics, var4, var5);
                     break;
                 }
             }
         }
 
-        for(var7 = 5; var7 < 10; ++var7) {
-            var5 = var7 * 18;
+        for(j = 5; j < 10; ++j) {
+            var5 = j * 18;
 
-            for(var8 = 0; var8 < 6; ++var8) {
-                var9 = n[9 - var7][var8][0];
-                var10 = n[9 - var7][var8][1];
-                var11 = -n[9 - var7][var8][2];
-                int var12 = n[9 - var7][var8][3];
+            for(k = 0; k < 6; ++k) {
+                var9 = n[9 - j][k][0];
+                var10 = n[9 - j][k][1];
+                var11 = -n[9 - j][k][2];
+                int var12 = n[9 - j][k][3];
                 if (func.a((byte)1, dung.a(var11, var12, var3))) {
                     var4 = this.a(var9, var10, 1);
-                    this.a(graphics, var4, var5);
+                    this.DrawWalls(graphics, var4, var5);
                     break;
                 }
             }
@@ -273,38 +273,38 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     private void b(Graphics graphics) {
         for(int i = 8; i <= 12; ++i) {
-            Object var3 = Character.ad.elementAt(i);
-            if (var3 instanceof byte[]) {
-                byte[] var4 = (byte[])var3;
-                if (var4.length == 8 || var4.length == 7) {
-                    this.a(graphics, var4, i);
+            Object obj1 = Character.ad.elementAt(i);
+            if (obj1 instanceof byte[]) {
+                byte[] btarr = (byte[])obj1;
+                if (btarr.length == 8 || btarr.length == 7) {
+                    this.a(graphics, btarr, i);
                 }
             }
         }
 
-        byte[] var5;
-        Object var7;
+        byte[] btarr;
+        Object obj2;
         for(int i = 4; i <= 6; ++i) {
-            var7 = Character.ad.elementAt(i);
-            if (var7 instanceof byte[]) {
-                var5 = (byte[])var7;
-                if (var5.length == 8 || var5.length == 7) {
-                    this.a(graphics, var5, i);
+            obj2 = Character.ad.elementAt(i);
+            if (obj2 instanceof byte[]) {
+                btarr = (byte[])obj2;
+                if (btarr.length == 8 || btarr.length == 7) {
+                    this.a(graphics, btarr, i);
                 }
             }
         }
 
-        var7 = Character.ad.elementAt(1);
-        if (var7 instanceof byte[]) {
-            var5 = (byte[])var7;
-            if (var5.length == 8 || var5.length == 7) {
-                this.a(graphics, var5, 1);
+        obj2 = Character.ad.elementAt(1);
+        if (obj2 instanceof byte[]) {
+            btarr = (byte[])obj2;
+            if (btarr.length == 8 || btarr.length == 7) {
+                this.a(graphics, btarr, 1);
             }
         }
 
     }
 
-    private void a(Graphics graphics, int var2, int var3) {
+    private void DrawWalls(Graphics graphics, int var2, int var3) {
         graphics.setClip(var3, 0, 18, this.getHeight());
         if (var2 > 7) {
             int var4 = var2 - 8;
@@ -338,16 +338,16 @@ public class GameCanvas extends FullCanvas implements Runnable {
         byte var3 = dung.a(0, 1, var2);
         if (func.a((byte)32, var3)) {
             int var4 = this.Char.GetNPCInfront();
-            W = true;
+            FacingNPC = true;
             String[] var5 = NPCMsg[var4];
             if (this.a((String[])var5, 1)) {
                 as = System.currentTimeMillis();
                 ad = true;
             }
         } else {
-            W = false;
-            if (!this.d() && NPC.WardenPresent && this.Char.m == k.f) {
-                k.GetMonName();
+            FacingNPC = false;
+            if (!this.d() && NPC.WardenPresent && this.Char.m == Mon2.f) {
+                Mon2.GetMonName();
             }
         }
 
@@ -361,12 +361,12 @@ public class GameCanvas extends FullCanvas implements Runnable {
         }
     }
 
-    private void b(Graphics graphics, int var2) {
+    private void DrawNPC(Graphics graphics, int npcid) {
         boolean var5 = false;
         boolean var6 = false;
         boolean var7 = false;
         boolean var8 = false;
-        switch (var2) {
+        switch (npcid) {
             case 0:
                 this.e(graphics, 1, 1);
                 break;
@@ -386,7 +386,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
                 this.e(graphics, 8, 0);
                 break;
             case 6:
-                int var9 = Math.min(k.f, 3) - 1;
+                int var9 = Math.min(Mon2.f, 3) - 1;
                 this.a(graphics, var9);
         }
 
@@ -406,15 +406,15 @@ public class GameCanvas extends FullCanvas implements Runnable {
         A = false;
 
         for(int i = 8; i <= 12; ++i) {
-            Object var3 = Character.ad.elementAt(i);
-            if (var3 instanceof byte[]) {
-                byte[] var4 = (byte[])var3;
+            Object obj = Character.ad.elementAt(i);
+            if (obj instanceof byte[]) {
+                byte[] var4 = (byte[])obj;
                 if (var4.length == 28 && var4[6] != 0) {
                     A = true;
                     this.c(graphics, var4[2], i);
                 }
-            } else if (var3 instanceof String) {
-                String var7 = (String)var3;
+            } else if (obj instanceof String) {
+                String var7 = (String)obj;
                 if (var7.equals("W")) {
                     this.b(graphics, 32, i);
                 }
@@ -451,13 +451,13 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private void a(Graphics graphics, byte[] var2, int var3) {
+    private void a(Graphics graphics, byte[] arr, int var3) {
         if (var3 == 1) {
-            this.a(graphics, var2, false);
+            this.DrawItemClose(graphics, arr, false);
         } else if (var3 >= 4 && var3 <= 6) {
-            this.b(graphics, var2, false, var3);
+            this.DrawItemMid(graphics, arr, false, var3);
         } else if (var3 >= 8 && var3 <= 12) {
-            this.a(graphics, var2, false, var3);
+            this.DrawItemFar(graphics, arr, false, var3);
         }
 
     }
@@ -470,7 +470,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
         }
     }
 
-    private void a(Graphics graphics, byte[] var2, boolean var3) {
+    private void DrawItemClose(Graphics graphics, byte[] var2, boolean var3) {
         byte var4;
         int var5;
         if (a(var2)) {
@@ -491,7 +491,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private void b(Graphics graphics, byte[] var2, boolean var3, int var4) {
+    private void DrawItemMid(Graphics graphics, byte[] var2, boolean var3, int var4) {
         byte var5 = 1;
         short var6 = 0;
         int var7 = 0;
@@ -541,7 +541,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private void a(Graphics graphics, byte[] var2, boolean var3, int var4) {
+    private void DrawItemFar(Graphics graphics, byte[] var2, boolean var3, int var4) {
         byte var5 = 2;
         short var6 = 0;
         int var7 = 0;
@@ -823,9 +823,9 @@ public class GameCanvas extends FullCanvas implements Runnable {
         graphics.setColor(0XC79967); // beige
         graphics.fillRoundRect(2, 158, this.getWidth() - 4, 48, 5, 5);
         graphics.setColor(0X000000); // Black
-        int var2 = this.j();
-        aq = var2;
-        if (var2 == 0) {
+        int infront = this.GetBarState();
+        aq = infront;
+        if (infront == 0) { // nothing infront
             graphics.drawImage(MenuIcons[1], 14, 174, 20);
             graphics.drawImage(MenuIcons[2], 62, 174, 20);
             graphics.drawImage(MenuIcons[3], 104, 174, 20);
@@ -834,7 +834,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
             graphics.drawChar(MenuNums[2], 53, 180, 20);
             graphics.drawChar(MenuNums[3], 96, 180, 20);
             graphics.drawChar(MenuNums[5], 135, 180, 20);
-        } else if (var2 == 1) {
+        } else if (infront == 1) { // monster
             graphics.drawImage(MenuIcons[0], 14, 174, 20);
             graphics.drawImage(MenuIcons[1], 62, 174, 20);
             graphics.drawImage(MenuIcons[2], 104, 174, 20);
@@ -843,7 +843,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
             graphics.drawChar(MenuNums[1], 53, 180, 20);
             graphics.drawChar(MenuNums[2], 96, 180, 20);
             graphics.drawChar(MenuNums[3], 135, 180, 20);
-        } else if (var2 == 2) {
+        } else if (infront == 2) { // npc or chest
             graphics.drawImage(MenuIcons[1], 14, 174, 20);
             graphics.drawImage(MenuIcons[2], 62, 174, 20);
             graphics.drawImage(MenuIcons[3], 104, 174, 20);
@@ -856,11 +856,11 @@ public class GameCanvas extends FullCanvas implements Runnable {
 
     }
 
-    private int j() {
+    private int GetBarState() {
         if (aa) {
             return 1;
         } else if (!m && !R) {
-            return W && !this.d() ? 2 : 0;
+            return FacingNPC && !this.d() ? 2 : 0;
         } else {
             return 2;
         }
@@ -948,7 +948,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
         this.T = this.ac;
         if (key == KEY_NUM1) {
             if (aq == 1) {
-                av = true;
+                Attacking = true;
             }
 
         } else if (key == KEY_NUM2) {
@@ -1122,7 +1122,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
                                 }
                             }
 
-                            this.Char.c(this.Char.CharClass, true);
+                            this.Char.ResetChar(this.Char.CharClass, true);
                             this.s = 0L;
                             this.aD = 1;
                             NPC.l = true;
@@ -1131,9 +1131,9 @@ public class GameCanvas extends FullCanvas implements Runnable {
                             var10 = true;
                             if (E) {
                                 String[] var12 = null;
-                                if (this.Char.u) {
+                                if (this.Char.EnteringWC) {
                                     var12 = WCMsg;
-                                } else if (this.Char.O) {
+                                } else if (this.Char.EnteringOC) {
                                     var12 = OCMsg;
                                 } else {
                                     var12 = this.Char.GetCurrentDungeon().GetDungName();
@@ -1150,12 +1150,12 @@ public class GameCanvas extends FullCanvas implements Runnable {
                     }
 
                     if (var10) {
-                        if (k.a(this.Char.GiftPoints)) {
-                            k.c();
+                        if (Mon2.a(this.Char.GiftPoints)) {
+                            Mon2.c();
                         }
 
-                        if (this.d() && k.f > this.Char.m) {
-                            String var20 = NPC.a(this.Char, 6, -1, -1);
+                        if (this.d() && Mon2.f > this.Char.m) {
+                            String var20 = NPC.GetNPCDialogue(this.Char, 6, -1, -1);
                             this.Game.aV = this.Game.WardenSpeaksMenu(var20);
                             var9 = true;
                         }
@@ -1222,8 +1222,8 @@ public class GameCanvas extends FullCanvas implements Runnable {
             System.out.println("ERROR: An error was thrown in GameCanvas run method!");
             System.out.println(err4);
             err4.printStackTrace();
-            az = true;
-            G = String.valueOf(err4);
+            ErrorOccured = true;
+            ErrorStr = String.valueOf(err4);
             this.repaint();
             this.serviceRepaints();
 
@@ -1247,7 +1247,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
     }
 
     private void b(long var1) {
-        Hashtable var3 = ESGame.MonsterTable[this.Char.CurDung - 1];
+        Hashtable var3 = ESGame.MonsterTables[this.Char.CurDung - 1];
         if (var3 != null) {
             Enumeration var4 = var3.elements();
 
@@ -1299,7 +1299,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
             this.h(var1);
         } else if (U) {
             this.g(var1);
-        } else if (av) {
+        } else if (Attacking) {
             this.d(var1);
         } else if (Z) {
             this.f();
@@ -1314,26 +1314,26 @@ public class GameCanvas extends FullCanvas implements Runnable {
     }
 
     private void d(long var1) {
-        if (var1 - this.B >= 500L && Mon != null) {
+        if (var1 - this.B >= 500L && Mon1 != null) {
             at = true;
-            this.Char.a(Mon);
-            System.out.println("monster health is " + Mon.Health);
+            this.Char.a(Mon1);
+            System.out.println("monster health is " + Mon1.Health);
             this.B = var1;
             AnimAttack = true;
         }
 
-        av = false;
+        Attacking = false;
     }
 
     private void m() {
-        if (Mon != null && Mon.Health <= 0) {
-            if (Mon.MonNum == 41) {
-                Mon.a(true);
+        if (Mon1 != null && Mon1.Health <= 0) {
+            if (Mon1.MonNum == 41) {
+                Mon1.a(true);
             } else {
-                Mon.a(false);
+                Mon1.a(false);
             }
 
-            ESGame.KillMonster(this.Char.CurDung, Mon.a);
+            ESGame.KillMonster(this.Char.CurDung, Mon1.a);
             if (this.Char.GetAilment(4)) {
                 short[] var10000 = this.Char.CharCritAtt;
                 var10000[2] = (short)(var10000[2] + 3 * this.Char.CharCritAtt[3] / 10);
@@ -1345,24 +1345,24 @@ public class GameCanvas extends FullCanvas implements Runnable {
                 ad = true;
             }
 
-            Mon = null;
+            Mon1 = null;
             aa = false;
         }
 
     }
 
     private void a() {
-        Mon = this.Char.n();
-        if (Mon != null) {
+        Mon1 = this.Char.n();
+        if (Mon1 != null) {
             aa = true;
-            byte[] var1 = Mon.f();
-            Mon = Monster.a(k, var1);
+            byte[] var1 = Mon1.f();
+            Mon1 = Monster.a(Mon2, var1);
         } else {
             aa = false;
         }
 
         if (aa) {
-            String var4 = Mon.GetMonName();
+            String var4 = Mon1.GetMonName();
             String[] var2 = new String[2];
             int var3 = var4.indexOf(32);
             if (var3 < 0) {
@@ -1406,13 +1406,13 @@ public class GameCanvas extends FullCanvas implements Runnable {
                 this.Game.SetDisplayContent(this.Game.EndOfGameMenu);
                 al = false;
             } else {
-                if (this.Char.i || this.Char.u || this.Char.O) {
+                if (this.Char.i || this.Char.EnteringWC || this.Char.EnteringOC) {
                     E = true;
                     if (E) {
                         String[] var2 = null;
-                        if (this.Char.u) {
+                        if (this.Char.EnteringWC) {
                             var2 = WCMsg;
-                        } else if (this.Char.O) {
+                        } else if (this.Char.EnteringOC) {
                             var2 = OCMsg;
                         } else {
                             var2 = this.Char.GetCurrentDungeon().GetDungName();
@@ -1470,8 +1470,8 @@ public class GameCanvas extends FullCanvas implements Runnable {
                             ad = true;
                         }
                     } else {
-                        this.Char.CastOnMonster(spellID, Mon);
-                        System.out.println("monster health is " + Mon.Health);
+                        this.Char.CastOnMonster(spellID, Mon1);
+                        System.out.println("monster health is " + Mon1.Health);
                         AnimCastMon = true;
                     }
                 } else {
@@ -1523,7 +1523,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
         int NPCNum = this.Char.GetNPCInfront();
         System.out.println("NPC In front is " + NPCNum);
         if (NPCNum >= 0) {
-            this.d(NPCNum);
+            this.SpeakToNPC(NPCNum);
             System.out.println("done interacting with NPC, must paint as well");
         } else if (m) {
             byte[] var4 = this.Char.h();
@@ -1584,57 +1584,57 @@ public class GameCanvas extends FullCanvas implements Runnable {
         I = false;
     }
 
-    void d(int var1) {
-        String var2 = NPC.a(this.Char, var1, 1, 0);
+    void SpeakToNPC(int npcid) {
+        String var2 = NPC.GetNPCDialogue(this.Char, npcid, 1, 0);
         System.out.println("Just after NPC interaction in game canvas!");
-        Menu var3;
+        Menu menu;
         String var4;
         String var5;
         short var6;
         if (var2 != null) {
-            this.Game.NPCHelloMenu.SetTitle(NPC.NPCNames[var1]);
+            this.Game.NPCHelloMenu.SetTitle(NPC.NPCNames[npcid]);
             this.Game.NPCHelloMenu.SetText(var2);
-            this.Game.NPCHelloMenu.Next = this.Game.NPCDlgMenus[var1];
-            this.Game.NPCHelloMenu.npcID = var1;
-            var3 = (Menu)this.Game.NPCHelloMenu.Next;
-            var4 = var3.M;
-            var5 = var3.GetText();
+            this.Game.NPCHelloMenu.Next = this.Game.NPCDlgMenus[npcid];
+            this.Game.NPCHelloMenu.npcID = npcid;
+            menu = (Menu)this.Game.NPCHelloMenu.Next;
+            var4 = menu.M;
+            var5 = menu.GetText();
             var6 = 0;
-            if (NPC.b(var1)) {
-                var6 = NPC.p[var1];
-            } else if (var1 == 4) {
-                var6 = k.a;
-            } else if (var1 == 5) {
-                var6 = k.Health;
+            if (NPC.b(npcid)) {
+                var6 = NPC.p[npcid];
+            } else if (npcid == 4) {
+                var6 = Mon2.a;
+            } else if (npcid == 5) {
+                var6 = Mon2.Health;
             }
 
             var5 = func.StringInsert(var4, "<TAG>", var6);
-            var3.SetText(var5);
+            menu.SetText(var5);
             this.Game.SetDisplayContent(this.Game.NPCHelloMenu);
             al = false;
         } else {
             boolean var7;
-            if (var1 == 4) {
+            if (npcid == 4) {
                 System.out.println("BENECA has nothing more to say!");
-                var3 = this.Game.NPCDlgMenus[4];
-                var4 = var3.M;
-                var5 = var3.GetText();
+                menu = this.Game.NPCDlgMenus[4];
+                var4 = menu.M;
+                var5 = menu.GetText();
                 var7 = false;
-                var6 = k.a;
+                var6 = Mon2.a;
                 var5 = func.StringInsert(var4, "<TAG>", var6);
-                var3.SetText(var5);
-                this.Game.SetDisplayContent(var3);
+                menu.SetText(var5);
+                this.Game.SetDisplayContent(menu);
                 al = false;
-            } else if (var1 == 5) {
+            } else if (npcid == 5) {
                 System.out.println("HELGA has nothing more to say!");
-                var3 = this.Game.NPCDlgMenus[5];
-                var4 = var3.M;
-                var5 = var3.GetText();
+                menu = this.Game.NPCDlgMenus[5];
+                var4 = menu.M;
+                var5 = menu.GetText();
                 var7 = false;
-                var6 = k.Health;
+                var6 = Mon2.Health;
                 var5 = func.StringInsert(var4, "<TAG>", var6);
-                var3.SetText(var5);
-                this.Game.SetDisplayContent(var3);
+                menu.SetText(var5);
+                this.Game.SetDisplayContent(menu);
                 al = false;
             }
         }
@@ -1676,9 +1676,9 @@ public class GameCanvas extends FullCanvas implements Runnable {
         this.UnpauseGame();
         if (E) {
             String[] var1 = null;
-            if (this.Char.u) {
+            if (this.Char.EnteringWC) {
                 var1 = WCMsg;
-            } else if (this.Char.O) {
+            } else if (this.Char.EnteringOC) {
                 var1 = OCMsg;
             } else {
                 var1 = this.Char.GetCurrentDungeon().GetDungName();
@@ -1764,7 +1764,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
                     this.Char.G[var1] = 0;
                     if (var1 == 5) {
                         System.out.println("Removing daedric weapon!");
-                        indx = this.Char.o(109);
+                        indx = this.Char.FindItemInInv(109);
                         System.out.println("Removing daedric weapon!: index is " + indx);
                         this.Char.RemoveFromInv(indx);
                     }
@@ -1772,7 +1772,7 @@ public class GameCanvas extends FullCanvas implements Runnable {
             }
         }
 
-        Hashtable var6 = ESGame.MonsterTable[this.Char.CurDung - 1];
+        Hashtable var6 = ESGame.MonsterTables[this.Char.CurDung - 1];
         if (var6 != null) {
             Enumeration var3 = var6.elements();
 
@@ -1794,11 +1794,11 @@ public class GameCanvas extends FullCanvas implements Runnable {
     private boolean d() {
         if (NPC.a(this.Char)) {
             return true;
-        } else if (Mon == null) {
+        } else if (Mon1 == null) {
             return false;
-        } else if (this.Char.CurDung == 37 && Mon.MonNum == 41) {
-            int var1 = Math.abs(this.Char.XPos - Mon.o);
-            int var2 = Math.abs(this.Char.YPos - Mon.m);
+        } else if (this.Char.CurDung == 37 && Mon1.MonNum == 41) {
+            int var1 = Math.abs(this.Char.XPos - Mon1.XPos);
+            int var2 = Math.abs(this.Char.YPos - Mon1.YPos);
             return var1 + var2 == 1;
         } else {
             return false;

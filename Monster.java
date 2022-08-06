@@ -14,8 +14,8 @@ public class Monster { // d
     short a;
     byte MonNum;
     byte Health;
-    byte o;
-    byte m;
+    byte XPos;
+    byte YPos;
     boolean ia;
     byte n;
     byte[] c;
@@ -36,8 +36,8 @@ public class Monster { // d
         btarr[1] = (byte)(this.a & 255);
         btarr[2] = this.MonNum;
         btarr[3] = this.Health;
-        btarr[4] = this.o;
-        btarr[5] = this.m;
+        btarr[4] = this.XPos;
+        btarr[5] = this.YPos;
         btarr[6] = (byte)(this.ia ? 1 : 0);
         btarr[7] = this.n;
         btarr[8] = this.b;
@@ -63,9 +63,9 @@ public class Monster { // d
         this.ia = false;
     }
 
-    public Monster(int var1, int var2, int var3) {
+    public Monster(int var1, int monnum, int var3) {
         this.a = (short)var1;
-        this.MonNum = (byte)var2;
+        this.MonNum = (byte)monnum;
         this.Health = MonAttributes[this.MonNum - 1][14];
         this.c = new byte[10];
         this.ia = false;
@@ -79,8 +79,8 @@ public class Monster { // d
         Mon.a = (short)(var1 << 8 | var2);
         Mon.MonNum = btarr[2];
         Mon.Health = btarr[3];
-        Mon.o = btarr[4];
-        Mon.m = btarr[5];
+        Mon.XPos = btarr[4];
+        Mon.YPos = btarr[5];
         Mon.ia = btarr[6] != 0;
         Mon.n = btarr[7];
         Mon.b = btarr[8];
@@ -100,8 +100,8 @@ public class Monster { // d
         mon.a = (short)(var2 << 8 | var3);
         mon.MonNum = btarr[2];
         mon.Health = btarr[3];
-        mon.o = btarr[4];
-        mon.m = btarr[5];
+        mon.XPos = btarr[4];
+        mon.YPos = btarr[5];
         mon.ia = btarr[6] != 0;
         mon.n = btarr[7];
         mon.b = btarr[8];
@@ -116,7 +116,7 @@ public class Monster { // d
     }
 
     void d() {
-        ESGame.MonsterTable[this.n - 1].put(String.valueOf(this.a), this.f());
+        ESGame.MonsterTables[this.n - 1].put(String.valueOf(this.a), this.f());
     }
 
     String GetMonName() {
@@ -143,37 +143,37 @@ public class Monster { // d
 
     boolean a(int var1) {
         byte var2 = 1;
-        byte var3 = this.o;
-        byte var4 = this.m;
-        Dungeon var5 = ESGame.dungeons[this.n - 1];
+        byte var3 = this.XPos;
+        byte var4 = this.YPos;
+        Dungeon dung = ESGame.dungeons[this.n - 1];
         switch (var1) {
             case 1:
                 var2 = -1;
             case 3:
-                var3 = this.o;
-                var4 = (byte)(this.m + var2);
+                var3 = this.XPos;
+                var4 = (byte)(this.YPos + var2);
                 break;
             case 4:
                 var2 = -1;
             case 2:
-                var4 = this.m;
-                var3 = (byte)(this.o + var2);
+                var4 = this.YPos;
+                var3 = (byte)(this.XPos + var2);
                 break;
             default:
                 return false;
         }
 
         if (var3 >= 0 && var4 >= 0) {
-            if (var3 < var5.Width && var4 < var5.Height) {
+            if (var3 < dung.Width && var4 < dung.Height) {
                 if (this.a(var3, var4)) {
                     return false;
-                } else if (!var5.d(var3, var4)) {
+                } else if (!dung.d(var3, var4)) {
                     return false;
                 } else {
-                    var5.DngnVec[this.o][this.m] = func.c((byte)2, var5.DngnVec[this.o][this.m]);
-                    var5.DngnVec[var3][var4] = func.b((byte)2, var5.DngnVec[var3][var4]);
-                    this.o = var3;
-                    this.m = var4;
+                    dung.DngnVec[this.XPos][this.YPos] = func.c((byte)2, dung.DngnVec[this.XPos][this.YPos]);
+                    dung.DngnVec[var3][var4] = func.b((byte)2, dung.DngnVec[var3][var4]);
+                    this.XPos = var3;
+                    this.YPos = var4;
                     return true;
                 }
             } else {
@@ -199,21 +199,21 @@ public class Monster { // d
     }
 
     private void e(Character player) {
-        int var6 = Math.abs(player.XPos - this.o);
-        int var7 = Math.abs(player.YPos - this.m);
+        int var6 = Math.abs(player.XPos - this.XPos);
+        int var7 = Math.abs(player.YPos - this.YPos);
         byte var2;
-        if (this.o < player.XPos) {
+        if (this.XPos < player.XPos) {
             var2 = 2;
-        } else if (this.o > player.XPos) {
+        } else if (this.XPos > player.XPos) {
             var2 = 4;
         } else {
             var2 = -1;
         }
 
         byte var3;
-        if (this.m < player.YPos) {
+        if (this.YPos < player.YPos) {
             var3 = 3;
-        } else if (this.m > player.YPos) {
+        } else if (this.YPos > player.YPos) {
             var3 = 1;
         } else {
             var3 = -1;
@@ -246,11 +246,11 @@ public class Monster { // d
     }
 
     private boolean a(int var1, int var2) {
-        Dungeon var3 = ESGame.dungeons[this.n - 1];
-        if (var3.s != 1 && var3.v != 1) {
-            if (var3.s != 3 && var3.v != 3) {
-                if (var3.s != 4 && var3.v != 4) {
-                    if ((var3.s == 2 || var3.v == 2) && var1 == 30 && var2 == 17) {
+        Dungeon dung = ESGame.dungeons[this.n - 1];
+        if (dung.s != 1 && dung.v != 1) {
+            if (dung.s != 3 && dung.v != 3) {
+                if (dung.s != 4 && dung.v != 4) {
+                    if ((dung.s == 2 || dung.v == 2) && var1 == 30 && var2 == 17) {
                         return true;
                     }
                 } else if (var1 == 5 && var2 == 17) {
@@ -271,8 +271,8 @@ public class Monster { // d
     }
 
     int c(Character player) {
-        int var2 = Math.abs(player.XPos - this.o);
-        int var3 = Math.abs(player.YPos - this.m);
+        int var2 = Math.abs(player.XPos - this.XPos);
+        int var3 = Math.abs(player.YPos - this.YPos);
         return var2 + var3;
     }
 
@@ -392,8 +392,8 @@ public class Monster { // d
         mon.a = data.readShort();
         mon.MonNum = data.readByte();
         mon.Health = data.readByte();
-        mon.o = data.readByte();
-        mon.m = data.readByte();
+        mon.XPos = data.readByte();
+        mon.YPos = data.readByte();
         mon.ia = data.readBoolean();
         mon.n = data.readByte();
         mon.b = data.readByte();
@@ -411,8 +411,8 @@ public class Monster { // d
         data.writeShort(this.a);
         data.writeByte(this.MonNum);
         data.writeByte(this.Health);
-        data.writeByte(this.o);
-        data.writeByte(this.m);
+        data.writeByte(this.XPos);
+        data.writeByte(this.YPos);
         data.writeBoolean(this.ia);
         data.writeByte(this.n);
         data.writeByte(this.b);
@@ -438,8 +438,8 @@ public class Monster { // d
         int var4 = func.a(100);
         boolean var5 = var4 <= var2;
         if (var5 || var1) {
-            Dungeon var6 = ESGame.dungeons[this.n - 1];
-            byte var7 = var6.a;
+            Dungeon dung = ESGame.dungeons[this.n - 1];
+            byte var7 = dung.a;
             int var8 = Item.GetRandItem(ESGame.P, var7, var3);
             byte var9 = (byte)(var8 & 255);
             byte var10 = 0;
@@ -447,7 +447,7 @@ public class Monster { // d
                 var10 = (byte)(var8 >>> 8 & 255);
             }
 
-            byte[] var11 = new byte[]{this.o, this.m, var9, 0, 0, var10, 0};
+            byte[] var11 = new byte[]{this.XPos, this.YPos, var9, 0, 0, var10, 0};
             short var12 = Item.a();
             var9 = (byte)(var12 >>> 8 & 255);
             var10 = (byte)(var12 & 255);
@@ -458,7 +458,7 @@ public class Monster { // d
                 var11[6] = (byte)(var11[6] | 4);
             }
 
-            var6.c(var11);
+            dung.c(var11);
         }
 
     }
@@ -496,7 +496,7 @@ public class Monster { // d
             var4 = Dungeon.l[var5][var9];
         }
 
-        Monster var8 = new Monster(var3, var4, dung.DngNum);
-        return var8;
+        Monster mon = new Monster(var3, var4, dung.DngNum);
+        return mon;
     }
 }
